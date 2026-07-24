@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VoiceOC · View Bugs</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    
+    <!-- SESSION MANAGER - Auto Logout for ALL Pages -->
+    <script src="session-manager.js"></script>
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #F1F5F9; }
+
+        /* Pulse Animation for Countdown */
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* ========================================= */
+        /* DARK MODE */
+        /* ========================================= */
+
+        .dark-mode {
+            background: #020617 !important;
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .top-nav {
+            background: #111827 !important;
+            color: white !important;
+            border-color: #1E293B !important;
+        }
+
+        .dark-mode .top-nav .user-badge {
+            background: #1E293B !important;
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .bug-card {
+            background: #111827 !important;
+            border-color: #1E293B !important;
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .bug-card .text-muted {
+            color: #94A3B8 !important;
+        }
+
+        .dark-mode .bug-card h5 {
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .modal-content {
+            background: #111827 !important;
+            border-color: #1E293B !important;
+        }
+
+        .dark-mode .modal-header {
+            background: linear-gradient(95deg, #0F172A 0%, #020617 100%) !important;
+        }
+
+        .dark-mode .modal-body {
+            background: #111827 !important;
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .modal-body .form-label {
+            color: #94A3B8 !important;
+        }
+
+        .dark-mode .modal-body .form-control,
+        .dark-mode .modal-body .form-select {
+            background: #1E293B !important;
+            color: #F8FAFC !important;
+            border-color: #334155 !important;
+        }
+
+        .dark-mode .modal-body .form-control:focus,
+        .dark-mode .modal-body .form-select:focus {
+            background: #1E293B !important;
+            border-color: #2DD4BF !important;
+            box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.1) !important;
+        }
+
+        .dark-mode .modal-footer {
+            background: #111827 !important;
+            border-top-color: #1E293B !important;
+        }
+
+        .dark-mode .modal-footer .btn-secondary {
+            background: #1E293B !important;
+            border-color: #334155 !important;
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .modal-footer .btn-secondary:hover {
+            background: #334155 !important;
+        }
+
+        .dark-mode .toast-msg {
+            background: #1E293B !important;
+            color: #F8FAFC !important;
+            border-left-color: #2DD4BF !important;
+        }
+
+        .dark-mode .btn-secondary {
+            background: #1E293B !important;
+            border-color: #334155 !important;
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .btn-secondary:hover {
+            background: #334155 !important;
+        }
+
+        .dark-mode ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        .dark-mode ::-webkit-scrollbar-track {
+            background: #1E293B;
+        }
+
+        .dark-mode ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+
+        .dark-mode ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+
+        .sidebar {
+            width: 280px;
+            height: 100vh;
+            background: linear-gradient(180deg, #0F172A 0%, #020617 100%);
+            position: fixed;
+            left: 0;
+            top: 0;
+            padding-top: 25px;
+            z-index: 999;
+            overflow-y: auto;
+        }
+        .logo-area { text-align: center; margin-bottom: 40px; }
+        .logo-area h2 { color: white; font-weight: 800; font-size: 1.7rem; }
+        .logo-area h2 i { color: #2DD4BF; margin-right: 10px; }
+        .logo-area p { color: #64748B; font-size: 11px; margin-top: 10px; }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: #94A3B8;
+            margin: 6px 12px;
+            padding: 14px 18px;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .nav-item:hover { background: rgba(45,212,191,0.12); color: white; }
+        .nav-item.active { background: linear-gradient(95deg, #0D9488, #0F766E); color: white; }
+        .nav-item i { width: 24px; font-size: 18px; }
+
+        .main-content { margin-left: 280px; padding: 30px; }
+        .top-nav {
+            background: white;
+            padding: 18px 25px;
+            border-radius: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border: 1px solid #E2E8F0;
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+        .user-badge { background: #F1F5F9; padding: 10px 18px; border-radius: 50px; font-weight: 700; transition: background 0.3s ease, color 0.3s ease; }
+        .btn-primary-custom {
+            background: linear-gradient(95deg, #0D9488, #0F766E);
+            border: none;
+            color: white;
+            padding: 10px 24px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+        .btn-primary-custom:hover { transform: scale(1.02); opacity: 0.9; }
+
+        .bug-card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid #E2E8F0;
+            transition: 0.3s;
+            margin-bottom: 16px;
+        }
+        .bug-card:hover { transform: translateY(-2px); box-shadow: 0 8px 20px -5px rgba(0,0,0,0.08); }
+
+        .badge-priority-high { background: #FEE2E2; color: #DC2626; }
+        .badge-priority-medium { background: #FEF3C7; color: #D97706; }
+        .badge-priority-low { background: #D1FAE5; color: #059669; }
+
+        .toast-msg {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #1E293B;
+            color: white;
+            padding: 14px 24px;
+            border-radius: 50px;
+            z-index: 9999;
+            display: none;
+            border-left: 4px solid #2DD4BF;
+            animation: slideInRight 0.3s ease;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            max-width: 90%;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .toast-msg.error {
+            border-left-color: #DC2626;
+        }
+
+        .toast-msg.success {
+            border-left-color: #10B981;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @media(max-width:992px) {
+            .sidebar {
+                width: 90px;
+            }
+            .sidebar .nav-item span,
+            .sidebar .logo-area p,
+            .sidebar .logo-text {
+                display: none;
+            }
+            .main-content {
+                margin-left: 90px;
+            }
+        }
+
+        @media(max-width:768px) {
+            .main-content {
+                margin-left: 0;
+                padding: 15px;
+            }
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .top-nav {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<div class="sidebar">
+    <div class="logo-area">
+        <h2><i class="fas fa-microphone-alt"></i><span class="logo-text">VoiceOC</span></h2>
+        <p>ENTERPRISE QA SUITE</p>
+    </div>
+    <div class="nav-item" onclick="goPage('dashboard.html')">
+        <i class="fas fa-chart-line"></i><span>Dashboard</span>
+    </div>
+    <div class="nav-item" onclick="goPage('tasks.html')">
+        <i class="fas fa-tasks"></i><span>Tasks</span>
+    </div>
+    <div class="nav-item" onclick="goPage('clientdetails.html')">
+        <i class="fas fa-building"></i><span>Clients Detail</span>
+    </div>
+    <div class="nav-item active" onclick="goPage('bugtracker.html')">
+        <i class="fas fa-bug"></i><span>Bug Tracker</span>
+    </div>
+    
+    <div class="nav-item" onclick="location.href='json-sheet.html'">
+        <i class="fas fa-code"></i>
+        <span>JSON Sheets</span>
+    </div>
+    
+    <div class="nav-item" onclick="goPage('journey-map.html')">
+    <i class="fas fa-route"></i>
+    <span>Journey Map</span>
+</div>
+
+    <div class="nav-item" onclick="location.href='api-doc.html'">
+        <i class="fas fa-book"></i>
+        <span>API Doc</span>
+    </div>
+
+    <div class="nav-item" onclick="location.href='dashboard-monitor.html'">
+        <i class="fas fa-heartbeat"></i>
+        <span>Monitor</span>
+    </div>
+    
+    <div class="nav-item" onclick="window.location.href='json-diff.html'">
+	    <i class="fas fa-code-branch"></i>
+	    <span>JSON Diff</span>
+	</div>
+    <div class="nav-item" onclick="goPage('reports.html')">
+        <i class="fas fa-chart-pie"></i><span>Reports</span>
+    </div>
+    <div class="nav-item" onclick="goPage('settings.html')">
+        <i class="fas fa-gear"></i><span>Settings</span>
+    </div>
+    <div class="nav-item" id="logoutBtn">
+        <i class="fas fa-sign-out-alt"></i><span>Logout</span>
+    </div>
+</div>
+
+<!-- Main Content -->
+<div class="main-content">
+    <div class="top-nav">
+        <div>
+            <h3><i class="fas fa-bug" style="color:#2DD4BF;"></i> Bug List</h3>
+            <p style="color:#64748B; margin:0;" id="sheetNameDisplay">Loading...</p>
+        </div>
+        <div class="d-flex align-items-center gap-3">
+            <div id="liveClock" class="fw-bold"></div>
+            <div class="user-badge">
+                <i class="fas fa-user-check"></i>
+                <span id="userNameDisplay">Admin</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="mb-4 d-flex gap-3 flex-wrap">
+        <button class="btn btn-secondary" onclick="goBack()">
+            <i class="fas fa-arrow-left me-1"></i> Back
+        </button>
+        <button class="btn btn-primary-custom" onclick="loadBugs()">
+            <i class="fas fa-sync-alt me-2"></i> Refresh
+        </button>
+    </div>
+
+    <!-- Bugs List -->
+    <div id="bugsContainer">
+        <div class="text-center py-5">
+            <i class="fas fa-bug fa-3x text-muted mb-3"></i>
+            <h5 class="text-muted">Loading bugs...</h5>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Bug Modal -->
+<div class="modal fade" id="editBugModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="border-radius: 20px;">
+            <div class="modal-header" style="background: linear-gradient(95deg, #0F172A, #020617); color: white; border-radius: 20px 20px 0 0;">
+                <h5 class="modal-title"><i class="fas fa-edit me-2"></i> Edit Bug</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editBugForm">
+                    <input type="hidden" id="editBugId">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Bug ID</label>
+                            <input type="text" class="form-control" id="editBugIdField">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Developer</label>
+                            <input type="text" class="form-control" id="editDeveloper">
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label">Scenario</label>
+                            <textarea class="form-control" id="editScenario" rows="2"></textarea>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Expected Result</label>
+                            <textarea class="form-control" id="editExpectedResult" rows="2"></textarea>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Actual Result</label>
+                            <textarea class="form-control" id="editActualResult" rows="2"></textarea>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Priority</label>
+                            <select class="form-select" id="editPriority">
+                                <option value="High">High</option>
+                                <option value="Medium">Medium</option>
+                                <option value="Low">Low</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Status</label>
+                            <select class="form-select" id="editStatus">
+                                <option value="Open">Open</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Fixed">Fixed</option>
+                                <option value="Closed">Closed</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Remarks</label>
+                            <input type="text" class="form-control" id="editRemarks">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button class="btn btn-primary" onclick="updateBug()">
+                    <i class="fas fa-save me-1"></i> Save
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Toast -->
+<div class="toast-msg" id="toastMsg">
+    <span id="toastText"></span>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    const API_BASE = 'http://localhost:8080/api';
+    let sheetId = null;
+    let sheetName = '';
+    let editModal;
+
+    // =====================================
+    // DISPLAY USERNAME
+    // =====================================
+
+    function displayUserName() {
+        try {
+            const userDataStr = localStorage.getItem('voiceoc_user');
+            const userNameDisplay = document.getElementById('userNameDisplay');
+            if (userDataStr && userNameDisplay) {
+                try {
+                    const userData = JSON.parse(userDataStr);
+                    userNameDisplay.innerText = userData.fullName || userData.username || 'User';
+                } catch (e) {
+                    userNameDisplay.innerText = userDataStr;
+                }
+            }
+        } catch (error) {
+            console.error('Error displaying username:', error);
+        }
+    }
+
+    // =====================================
+    // LIVE CLOCK
+    // =====================================
+
+    function updateClock() {
+        const liveClock = document.getElementById('liveClock');
+        if (liveClock) {
+            liveClock.innerText = new Date().toLocaleTimeString();
+        }
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // =====================================
+    // TOAST
+    // =====================================
+
+    function showToast(message, isError = false) {
+        const toastText = document.getElementById('toastText');
+        const toast = document.getElementById('toastMsg');
+
+        if (toastText) toastText.innerText = message;
+        if (toast) {
+            toast.className = 'toast-msg';
+            if (isError) {
+                toast.classList.add('error');
+            } else {
+                toast.classList.add('success');
+            }
+            toast.style.display = 'block';
+            clearTimeout(toast._timeout);
+            toast._timeout = setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+    }
+
+    // =====================================
+    // NAVIGATION
+    // =====================================
+
+    function goPage(page) { window.location.href = page; }
+
+    function goBack() {
+        window.location.href = `bugsheet.html?hospitalId=${new URLSearchParams(window.location.search).get('hospitalId') || ''}`;
+    }
+
+    // =====================================
+    // AUTH CHECK
+    // =====================================
+
+    function checkAuth() {
+        if (localStorage.getItem('voiceoc_logged_in') !== 'true') {
+            window.location.href = 'index.html';
+            return false;
+        }
+        return true;
+    }
+
+    // =====================================
+    // LOGOUT
+    // =====================================
+
+    document.getElementById('logoutBtn')?.addEventListener('click', () => {
+        localStorage.removeItem('voiceoc_logged_in');
+        localStorage.removeItem('voiceoc_user');
+        showToast('Logged out successfully');
+        setTimeout(() => { window.location.href = 'index.html'; }, 1000);
+    });
+
+    // =====================================
+    // DARK MODE
+    // =====================================
+
+    function applyDarkMode() {
+        const settings = JSON.parse(localStorage.getItem('voiceoc_settings') || '{}');
+        if (settings.darkMode) {
+            document.body.classList.add('dark-mode');
+        } else {
+            document.body.classList.remove('dark-mode');
+        }
+    }
+
+    // =====================================
+    // BUG FUNCTIONS
+    // =====================================
+
+    function getPriorityClass(priority) {
+        if (!priority) return '';
+        const p = priority.toLowerCase();
+        if (p === 'high') return 'badge-priority-high';
+        if (p === 'medium') return 'badge-priority-medium';
+        if (p === 'low') return 'badge-priority-low';
+        return '';
+    }
+
+    async function loadBugs() {
+        try {
+            const response = await fetch(`${API_BASE}/bugs/sheet/${sheetId}`);
+            if (!response.ok) throw new Error('Failed to load bugs');
+            const bugs = await response.json();
+
+            document.getElementById('sheetNameDisplay').innerText = `Sheet: ${sheetName}`;
+
+            if (bugs.length === 0) {
+                document.getElementById('bugsContainer').innerHTML = `
+                    <div class="text-center py-5">
+                        <i class="fas fa-bug fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No Bugs Found</h5>
+                        <p>This sheet doesn't contain any bugs</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '<div class="row">';
+            bugs.forEach(bug => {
+                html += `
+                    <div class="col-12">
+                        <div class="bug-card">
+                            <div class="d-flex justify-content-between align-items-start flex-wrap">
+                                <div>
+                                    <h5>
+                                        <i class="fas fa-bug" style="color:#DC2626;"></i>
+                                        ${bug.bugId || 'N/A'}
+                                        <span class="badge ${getPriorityClass(bug.priority)}">${bug.priority || 'Medium'}</span>
+                                        <span class="badge bg-secondary">${bug.status || 'Open'}</span>
+                                    </h5>
+                                    <small class="text-muted">Developer: ${bug.developer || 'Unassigned'}</small>
+                                </div>
+                                <div class="d-flex gap-2">
+                                    <button class="btn btn-sm btn-primary" onclick="openEditBug(${bug.id})">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-danger" onclick="deleteBug(${bug.id})">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-md-4">
+                                    <small class="text-muted">Scenario:</small>
+                                    <div>${bug.scenario || '-'}</div>
+                                </div>
+                                <div class="col-md-4">
+                                    <small class="text-muted">Expected Result:</small>
+                                    <div>${bug.expectedResult || '-'}</div>
+                                </div>
+                                <div class="col-md-4">
+                                    <small class="text-muted">Actual Result:</small>
+                                    <div>${bug.actualResult || '-'}</div>
+                                </div>
+                            </div>
+                            ${bug.remarks ? `<div class="mt-2"><small class="text-muted">Remarks: ${bug.remarks}</small></div>` : ''}
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            document.getElementById('bugsContainer').innerHTML = html;
+        } catch (error) {
+            console.error('Error loading bugs:', error);
+            showToast('Failed to load bugs', true);
+        }
+    }
+
+    function openEditBug(bugId) {
+        fetch(`${API_BASE}/bugs/${bugId}`)
+            .then(res => {
+                if (!res.ok) throw new Error('Failed to load bug');
+                return res.json();
+            })
+            .then(bug => {
+                document.getElementById('editBugId').value = bug.id;
+                document.getElementById('editBugIdField').value = bug.bugId || '';
+                document.getElementById('editDeveloper').value = bug.developer || '';
+                document.getElementById('editScenario').value = bug.scenario || '';
+                document.getElementById('editExpectedResult').value = bug.expectedResult || '';
+                document.getElementById('editActualResult').value = bug.actualResult || '';
+                document.getElementById('editPriority').value = bug.priority || 'Medium';
+                document.getElementById('editStatus').value = bug.status || 'Open';
+                document.getElementById('editRemarks').value = bug.remarks || '';
+                
+                if (!editModal) {
+                    editModal = new bootstrap.Modal(document.getElementById('editBugModal'));
+                }
+                editModal.show();
+            })
+            .catch(error => {
+                console.error('Error loading bug:', error);
+                showToast('Failed to load bug details', true);
+            });
+    }
+
+    async function updateBug() {
+        const id = document.getElementById('editBugId').value;
+        const bugData = {
+            bugId: document.getElementById('editBugIdField').value,
+            developer: document.getElementById('editDeveloper').value,
+            scenario: document.getElementById('editScenario').value,
+            expectedResult: document.getElementById('editExpectedResult').value,
+            actualResult: document.getElementById('editActualResult').value,
+            priority: document.getElementById('editPriority').value,
+            status: document.getElementById('editStatus').value,
+            remarks: document.getElementById('editRemarks').value
+        };
+
+        try {
+            const response = await fetch(`${API_BASE}/bugs/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(bugData)
+            });
+
+            if (!response.ok) throw new Error('Failed to update bug');
+
+            showToast('Bug updated successfully!');
+            if (editModal) editModal.hide();
+            loadBugs();
+        } catch (error) {
+            console.error('Error updating bug:', error);
+            showToast('Failed to update bug', true);
+        }
+    }
+
+    async function deleteBug(id) {
+        if (!confirm('Delete this bug?')) return;
+        try {
+            const response = await fetch(`${API_BASE}/bugs/${id}`, { 
+                method: 'DELETE' 
+            });
+            if (!response.ok) throw new Error('Failed to delete bug');
+            showToast('Bug deleted successfully');
+            loadBugs();
+        } catch (error) {
+            console.error('Error deleting bug:', error);
+            showToast('Failed to delete bug', true);
+        }
+    }
+
+    // =====================================
+    // DOM CONTENT LOADED
+    // =====================================
+
+    document.addEventListener('DOMContentLoaded', () => {
+        if (!checkAuth()) return;
+
+        displayUserName();
+        applyDarkMode();
+
+        const params = new URLSearchParams(window.location.search);
+        sheetId = params.get('sheetId');
+        sheetName = params.get('sheetName') || 'Sheet';
+
+        if (!sheetId) {
+            showToast('No sheet selected', true);
+            setTimeout(() => { window.location.href = 'bugtracker.html'; }, 1500);
+            return;
+        }
+
+        loadBugs();
+    });
+
+    // Make functions globally available
+    window.goPage = goPage;
+    window.goBack = goBack;
+    window.loadBugs = loadBugs;
+    window.openEditBug = openEditBug;
+    window.updateBug = updateBug;
+    window.deleteBug = deleteBug;
+    window.showToast = showToast;
+</script>
+</body>
+</html>

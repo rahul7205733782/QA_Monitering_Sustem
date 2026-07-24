@@ -1,0 +1,1605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VoiceOC · Clients Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- SESSION MANAGER - Auto Logout for ALL Pages -->
+    <script src="js/session-manager.js"></script>
+    
+    <style>
+        /* Pulse Animation for Countdown */
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            background: #F1F5F9; 
+            font-family: 'Inter', sans-serif; 
+            overflow-x: auto;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+        
+        /* ========================================= */
+        /* DARK MODE - COMPLETE */
+        /* ========================================= */
+
+        .dark-mode {
+            background: #020617 !important;
+            color: #F8FAFC !important;
+        }
+
+        /* Top Nav */
+        .dark-mode .top-nav {
+            background: #111827 !important;
+            color: #F8FAFC !important;
+            border-color: #1E293B !important;
+        }
+
+        .dark-mode .top-nav h3 {
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .top-nav p {
+            color: #94A3B8 !important;
+        }
+
+        .dark-mode .top-nav .user-badge {
+            background: #1E293B !important;
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .top-nav .refresh-btn {
+            background: #1E293B !important;
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .top-nav .refresh-btn:hover {
+            background: #334155 !important;
+        }
+
+        .dark-mode .top-nav .refresh-btn.spinning {
+            color: #2DD4BF !important;
+        }
+
+        /* Stats Cards */
+        .dark-mode .stat-card {
+            background: #111827 !important;
+            border-color: #1E293B !important;
+        }
+
+        .dark-mode .stat-card .stat-label {
+            color: #94A3B8 !important;
+        }
+
+        .dark-mode .stat-card .stat-value {
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .stat-card .stat-icon {
+            opacity: 0.05 !important;
+        }
+
+        .dark-mode .stat-card:hover {
+            box-shadow: 0 20px 30px -12px rgba(45, 212, 191, 0.05) !important;
+        }
+
+        /* Table Card */
+        .dark-mode .table-card {
+            background: #111827 !important;
+            border-color: #1E293B !important;
+        }
+
+        .dark-mode .table-card h5 {
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .table-card .btn-success {
+            background: #065F46 !important;
+            border-color: #065F46 !important;
+            color: #34D399 !important;
+        }
+
+        .dark-mode .table-card .btn-success:hover {
+            background: #047857 !important;
+            border-color: #047857 !important;
+        }
+
+        /* DataTable */
+        .dark-mode .dataTables_wrapper {
+            color: #E2E8F0 !important;
+        }
+
+        .dark-mode .dataTables_wrapper .dataTables_length label,
+        .dark-mode .dataTables_wrapper .dataTables_filter label,
+        .dark-mode .dataTables_wrapper .dataTables_info,
+        .dark-mode .dataTables_wrapper .dataTables_paginate {
+            color: #94A3B8 !important;
+        }
+
+        .dark-mode .dataTables_wrapper .dataTables_filter input,
+        .dark-mode .dataTables_wrapper .dataTables_length select {
+            background: #1E293B !important;
+            color: #F8FAFC !important;
+            border-color: #334155 !important;
+        }
+
+        .dark-mode .dataTables_wrapper .dataTables_filter input::placeholder {
+            color: #64748B !important;
+        }
+
+        .dark-mode .dataTables_wrapper .dataTables_filter input:focus,
+        .dark-mode .dataTables_wrapper .dataTables_length select:focus {
+            background: #1E293B !important;
+            border-color: #2DD4BF !important;
+            box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.1) !important;
+        }
+
+        .dark-mode .dataTables_wrapper .dataTables_paginate .paginate_button {
+            color: #94A3B8 !important;
+        }
+
+        .dark-mode .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+            background: #1E293B !important;
+            color: #F8FAFC !important;
+            border-color: #334155 !important;
+        }
+
+        .dark-mode .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+            background: #1E293B !important;
+            color: #F8FAFC !important;
+        }
+
+        /* Table */
+        .dark-mode table {
+            background: #111827 !important;
+        }
+
+        .dark-mode table thead th {
+            background: #0F172A !important;
+            color: #94A3B8 !important;
+            border-bottom-color: #1E293B !important;
+        }
+
+        .dark-mode table tbody td {
+            background: #111827 !important;
+            color: #E2E8F0 !important;
+            border-bottom-color: #1E293B !important;
+        }
+
+        .dark-mode table tbody tr:hover td {
+            background: #1E293B !important;
+        }
+
+        .dark-mode table tbody td strong {
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode table tbody td .text-muted {
+            color: #64748B !important;
+        }
+
+        /* Status Badges */
+        .dark-mode .status-200 {
+            background: #065F46 !important;
+            color: #34D399 !important;
+        }
+
+        .dark-mode .status-401,
+        .dark-mode .status-403 {
+            background: #78350F !important;
+            color: #FBBF24 !important;
+        }
+
+        .dark-mode .status-500,
+        .dark-mode .status-error {
+            background: #7F1D1D !important;
+            color: #F87171 !important;
+        }
+
+        .dark-mode .status-default {
+            background: #1E293B !important;
+            color: #94A3B8 !important;
+        }
+
+        /* URL Links */
+        .dark-mode .url-link {
+            color: #60A5FA !important;
+        }
+
+        .dark-mode .url-link:hover {
+            color: #93BBFC !important;
+        }
+
+        .dark-mode .copy-btn {
+            color: #64748B !important;
+        }
+
+        .dark-mode .copy-btn:hover {
+            color: #60A5FA !important;
+        }
+
+        /* Action Buttons */
+        .dark-mode .btn-primary {
+            background: #1E3A5F !important;
+            border-color: #1E3A5F !important;
+            color: #60A5FA !important;
+        }
+
+        .dark-mode .btn-primary:hover {
+            background: #2D4A7A !important;
+            border-color: #2D4A7A !important;
+        }
+
+        .dark-mode .btn-danger {
+            background: #7F1D1D !important;
+            border-color: #7F1D1D !important;
+            color: #F87171 !important;
+        }
+
+        .dark-mode .btn-danger:hover {
+            background: #991B1B !important;
+            border-color: #991B1B !important;
+            color: #FCA5A5 !important;
+        }
+
+        /* Modal */
+        .dark-mode .modal-content {
+            background: #111827 !important;
+            border-color: #1E293B !important;
+        }
+
+        .dark-mode .modal-header-gradient {
+            background: linear-gradient(95deg, #0F172A 0%, #020617 100%) !important;
+        }
+
+        .dark-mode .modal-header-gradient .modal-title {
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .modal-body {
+            background: #111827 !important;
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .modal-body .form-label {
+            color: #94A3B8 !important;
+        }
+
+        .dark-mode .modal-body .form-control {
+            background: #1E293B !important;
+            color: #F8FAFC !important;
+            border-color: #334155 !important;
+        }
+
+        .dark-mode .modal-body .form-control::placeholder {
+            color: #64748B !important;
+        }
+
+        .dark-mode .modal-body .form-control:focus {
+            background: #1E293B !important;
+            border-color: #2DD4BF !important;
+            box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.1) !important;
+        }
+
+        .dark-mode .modal-body .form-select {
+            background: #1E293B !important;
+            color: #F8FAFC !important;
+            border-color: #334155 !important;
+        }
+
+        .dark-mode .modal-body .form-select:focus {
+            border-color: #2DD4BF !important;
+            box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.1) !important;
+        }
+
+        .dark-mode .modal-footer {
+            background: #111827 !important;
+            border-top-color: #1E293B !important;
+        }
+
+        .dark-mode .modal-footer .btn-secondary {
+            background: #1E293B !important;
+            border-color: #334155 !important;
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .modal-footer .btn-secondary:hover {
+            background: #334155 !important;
+        }
+
+        .dark-mode .modal-footer .btn-success {
+            background: #065F46 !important;
+            border-color: #065F46 !important;
+            color: #34D399 !important;
+        }
+
+        .dark-mode .modal-footer .btn-success:hover {
+            background: #047857 !important;
+            border-color: #047857 !important;
+        }
+
+        /* Toast */
+        .dark-mode .toast-msg {
+            background: #1E293B !important;
+            color: #F8FAFC !important;
+            border-left-color: #2DD4BF !important;
+        }
+
+        .dark-mode .toast-msg.error {
+            border-left-color: #DC2626 !important;
+        }
+
+        .dark-mode .toast-msg.success {
+            border-left-color: #10B981 !important;
+        }
+
+        .dark-mode .toast-msg.info {
+            border-left-color: #3B82F6 !important;
+        }
+
+        /* Scrollbar */
+        .dark-mode ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        .dark-mode ::-webkit-scrollbar-track {
+            background: #1E293B;
+        }
+
+        .dark-mode ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+
+        .dark-mode ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+
+        /* ========================================= */
+        /* SIDEBAR */
+        /* ========================================= */
+
+        .sidebar {
+            width: 280px;
+            height: 100vh;
+            background: linear-gradient(180deg, #0F172A 0%, #020617 100%);
+            position: fixed;
+            left: 0;
+            top: 0;
+            padding-top: 25px;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        
+        .sidebar.collapsed .nav-item span,
+        .sidebar.collapsed .logo-area .qa-tagline {
+            display: none;
+        }
+
+        .logo-area { 
+            text-align: center; 
+            margin-bottom: 35px;
+            padding: 0 20px;
+        }
+
+        .logo-area h2 { 
+            color: white; 
+            font-weight: 800; 
+            font-size: 1.7rem;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .logo-area h2 i { 
+            color: #2DD4BF; 
+            font-size: 1.8rem;
+        }
+
+        /* QA Daily Tasks - Single Tick on Left, Aligned with Text Above */
+        .logo-area .qa-tagline {
+            color: #10B981 !important;
+            font-weight: 700 !important;
+            font-size: 11px !important;
+            letter-spacing: 2px;
+            margin-top: 8px;
+            text-align: center;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 0 10px;
+        }
+
+        .logo-area .qa-tagline .tick-icon {
+            color: #10B981;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        .logo-area .qa-tagline .tick-icon i {
+            font-size: 12px;
+        }
+
+        .logo-area .qa-tagline .tag-text {
+            flex-shrink: 0;
+            padding: 0 2px;
+            color: #10B981;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .dark-mode .logo-area .qa-tagline {
+            color: #34D399 !important;
+        }
+
+        .dark-mode .logo-area .qa-tagline .tick-icon {
+            color: #34D399;
+        }
+
+        .dark-mode .logo-area .qa-tagline .tag-text {
+            color: #34D399;
+        }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: #94A3B8;
+            margin: 4px 12px;
+            padding: 12px 18px;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        
+        .nav-item:hover { background: rgba(45,212,191,0.12); color: white; transform: translateX(6px); }
+        .nav-item.active { background: linear-gradient(95deg, #0D9488, #0F766E); color: white; }
+        .nav-item i { width: 24px; font-size: 18px; }
+        
+        .main-content { margin-left: 280px; padding: 30px; min-height: 100vh; }
+        
+        .top-nav {
+            background: white;
+            padding: 20px 25px;
+            border-radius: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border: 1px solid #E2E8F0;
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+        
+        .top-nav h3 { margin: 0; font-weight: 800; transition: color 0.3s ease; }
+        .top-nav p { margin: 5px 0 0; color: #64748B; font-size: 14px; transition: color 0.3s ease; }
+        
+        .top-right { display: flex; align-items: center; gap: 15px; flex-wrap: wrap; }
+        .user-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #F1F5F9;
+            padding: 8px 18px;
+            border-radius: 50px;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+        .user-badge i { color: #2DD4BF; }
+        
+        .refresh-btn {
+            border: none;
+            background: #F1F5F9;
+            padding: 10px 18px;
+            border-radius: 50px;
+            transition: 0.3s;
+            cursor: pointer;
+            font-size: 16px;
+            position: relative;
+        }
+
+        .refresh-btn:hover { 
+            background: #E2E8F0; 
+        }
+
+        .refresh-btn.spinning i {
+            animation: spin 0.8s linear infinite;
+        }
+
+        .refresh-btn .refresh-tooltip {
+            position: absolute;
+            bottom: -32px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #0F172A;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.3s;
+        }
+
+        .dark-mode .refresh-btn .refresh-tooltip {
+            background: #1E293B;
+        }
+
+        .refresh-btn:hover .refresh-tooltip {
+            opacity: 1;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 26px;
+            padding: 25px;
+            border: 1px solid #E2E8F0;
+            position: relative;
+            overflow: hidden;
+            transition: 0.3s;
+        }
+        .stat-card:hover { transform: translateY(-5px); box-shadow: 0 20px 30px -12px rgba(0,0,0,0.12); }
+        .stat-icon { position: absolute; right: 20px; top: 20px; font-size: 50px; opacity: 0.1; }
+        .stat-label { font-size: 12px; color: #64748B; text-transform: uppercase; font-weight: 700; margin-bottom: 12px; transition: color 0.3s ease; }
+        .stat-value { font-size: 40px; font-weight: 800; transition: color 0.3s ease; }
+        
+        .table-card {
+            background: white;
+            border-radius: 26px;
+            padding: 28px;
+            border: 1px solid #E2E8F0;
+            margin-top: 25px;
+            overflow-x: auto;
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+        
+        .dataTables_wrapper { font-family: 'Inter', sans-serif; }
+        .dataTables_filter input, .dataTables_length select {
+            border-radius: 40px;
+            border: 1px solid #E2E8F0;
+            padding: 6px 12px;
+            transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+        
+        table { width: 100% !important; }
+        th {
+            padding: 16px 10px;
+            background: #F8FAFC;
+            font-size: 12px;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: #475569;
+            white-space: nowrap;
+            transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+        td { padding: 14px 10px; vertical-align: middle; font-size: 13px; transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease; }
+        tr:hover { background: #F8FAFC; }
+        .dark-mode tr:hover td { background: #1E293B !important; }
+        
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            display: inline-block;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+        .status-200 { background: #D1FAE5; color: #059669; }
+        .status-401 { background: #FEF3C7; color: #D97706; }
+        .status-403 { background: #FEE2E2; color: #DC2626; }
+        .status-500 { background: #FEE2E2; color: #DC2626; }
+        .status-error { background: #FEE2E2; color: #DC2626; }
+        .status-default { background: #E2E8F0; color: #475569; }
+        
+        .url-link {
+            color: #0D9488;
+            text-decoration: none;
+            font-size: 12px;
+            word-break: break-all;
+            transition: color 0.3s ease;
+        }
+        .url-link:hover { text-decoration: underline; }
+        .copy-btn {
+            background: none;
+            border: none;
+            color: #94A3B8;
+            cursor: pointer;
+            margin-left: 5px;
+            font-size: 11px;
+            transition: color 0.3s ease;
+        }
+        .copy-btn:hover { color: #0D9488; }
+        
+        .toast-msg {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #1E293B;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            border-left: 4px solid #2DD4BF;
+            z-index: 9999;
+            display: none;
+            animation: slideInRight 0.3s ease;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+        .toast-msg.error { border-left-color: #DC2626; }
+        .toast-msg.success { border-left-color: #10B981; }
+        .toast-msg.info { border-left-color: #3B82F6; }
+        
+        @media (max-width: 992px) {
+            .sidebar { width: 80px; }
+            .sidebar .nav-item span, .sidebar .logo-area .qa-tagline { display: none; }
+            .sidebar .nav-item { justify-content: center; padding: 12px; }
+            .main-content { margin-left: 80px; padding: 20px; }
+        }
+
+        @media (max-width: 768px) {
+            .main-content { margin-left: 0; padding: 15px; }
+            .sidebar { transform: translateX(-100%); }
+            .top-nav { flex-direction: column; align-items: stretch; gap: 12px; }
+            .top-right { flex-wrap: wrap; justify-content: center; }
+            .stat-value { font-size: 28px; }
+        }
+        
+        .btn-sm {
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+        .btn-primary {
+            background-color: #0D9488;
+            border-color: #0D9488;
+            transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #0F766E;
+            border-color: #0F766E;
+        }
+        .btn-danger {
+            transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+        }
+        .me-2 {
+            margin-right: 8px;
+        }
+        .modal-header-gradient {
+            background: linear-gradient(95deg, #0F172A 0%, #020617 100%);
+            color: white;
+            border-radius: 24px 24px 0 0;
+            transition: background 0.3s ease;
+        }
+        .form-label {
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-bottom: 6px;
+            color: #334155;
+            transition: color 0.3s ease;
+        }
+        .form-control, .form-select {
+            transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+        
+        /* Loading state */
+        .loading-shimmer {
+            animation: shimmer 1.5s infinite;
+        }
+        @keyframes shimmer {
+            0% { opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { opacity: 0.5; }
+        }
+
+        /* DataTable dark mode overrides */
+        .dark-mode .dataTables_wrapper .dataTables_paginate .paginate_button.disabled {
+            color: #64748B !important;
+        }
+        .dark-mode .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+            background: #1E293B !important;
+            color: #F8FAFC !important;
+            border-color: #334155 !important;
+        }
+        .dark-mode .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+            background: #1E293B !important;
+            color: #F8FAFC !important;
+            border-color: #334155 !important;
+        }
+
+        /* DataTable search box styling */
+        .dataTables_filter {
+            margin-bottom: 15px;
+        }
+        .dataTables_filter input {
+            border-radius: 40px !important;
+            border: 1px solid #E2E8F0 !important;
+            padding: 8px 16px !important;
+            width: 300px !important;
+            font-size: 14px !important;
+            transition: all 0.3s ease !important;
+        }
+        .dataTables_filter input:focus {
+            border-color: #0D9488 !important;
+            box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15) !important;
+            outline: none !important;
+        }
+        .dark-mode .dataTables_filter input {
+            background: #1E293B !important;
+            color: #F8FAFC !important;
+            border-color: #334155 !important;
+        }
+        .dark-mode .dataTables_filter input:focus {
+            border-color: #2DD4BF !important;
+            box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.1) !important;
+        }
+
+        /* Search hint */
+        .search-hint {
+            font-size: 12px;
+            color: #64748B;
+            margin-top: 5px;
+        }
+        .dark-mode .search-hint {
+            color: #94A3B8;
+        }
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <div class="logo-area">
+        <h2>
+            <i class="fas fa-microphone-alt"></i>
+            VoiceOC
+        </h2>
+
+        <!-- QA Daily Tasks - Single Tick on Left -->
+        <div class="qa-tagline">
+            <span class="tick-icon"><i class="fas fa-check-circle"></i></span>
+            <span class="tag-text">QA DAILY TASKS</span>
+        </div>
+    </div>
+
+    <div class="nav-item" onclick="goPage('dashboard.html')">
+        <i class="fas fa-chart-line"></i>
+        <span>Dashboard</span>
+    </div>
+    <div class="nav-item" onclick="goPage('tasks.html')">
+        <i class="fas fa-tasks"></i>
+        <span>Tasks</span>
+    </div>
+    <div class="nav-item active" onclick="goPage('clientdetails.html')">
+        <i class="fas fa-building"></i>
+        <span>Clients Detail</span>
+    </div>
+    <div class="nav-item" onclick="goPage('bugtracker.html')">
+        <i class="fas fa-bug"></i>
+        <span>Bug Tracker</span>
+    </div>
+    
+    <div class="nav-item" onclick="location.href='json-sheet.html'">
+        <i class="fas fa-code"></i>
+        <span>JSON Sheets</span>
+    </div>
+    
+    <div class="nav-item" onclick="window.location.href='response-sheet.html'">
+    <i class="fas fa-file-excel"></i>
+    <span>Response Sheet</span>
+</div>
+    
+    <div class="nav-item" onclick="goPage('journey-map.html')">
+    <i class="fas fa-route"></i>
+    <span>Journey Map</span>
+</div>
+    
+    <div class="nav-item" onclick="location.href='api-doc.html'">
+        <i class="fas fa-book"></i>
+        <span>API Doc</span>
+    </div>
+    
+    <div class="nav-item" onclick="location.href='dashboard-monitor.html'">
+        <i class="fas fa-heartbeat"></i>
+        <span>Monitor</span>
+    </div>
+    
+    <div class="nav-item" onclick="window.location.href='json-diff.html'">
+	    <i class="fas fa-code-branch"></i>
+	    <span>JSON Diff</span>
+	</div>
+
+    <div class="nav-item" onclick="goPage('reports.html')">
+        <i class="fas fa-chart-pie"></i>
+        <span>Reports</span>
+    </div>
+    <div class="nav-item" onclick="goPage('settings.html')">
+        <i class="fas fa-gear"></i>
+        <span>Settings</span>
+    </div>
+    <div class="nav-item" id="logoutBtn">
+        <i class="fas fa-sign-out-alt"></i>
+        <span>Logout</span>
+    </div>
+</div>
+
+<div class="main-content">
+    <div class="top-nav">
+        <div>
+            <h3><i class="fas fa-building" style="color:#0D9488;"></i> Clients Management</h3>
+            <p>Enterprise client dashboards, UAT/PROD URLs & monitoring</p>
+        </div>
+        <div class="top-right">
+            <div id="liveClock" class="fw-bold me-3"></div>
+            <div class="user-badge">
+                <i class="fas fa-user-check"></i>
+                <span id="userNameDisplay">Loading...</span>
+            </div>
+            <button class="refresh-btn" id="btnRefresh" title="Refresh data">
+                <i class="fas fa-sync-alt"></i>
+                <span class="refresh-tooltip">Refresh</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row g-4">
+        <div class="col-md-3 col-sm-6">
+            <div class="stat-card"><div class="stat-icon"><i class="fas fa-building"></i></div>
+            <div class="stat-label">Total Clients</div><div class="stat-value" id="totalClients">0</div></div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="stat-card"><div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+            <div class="stat-label">Active (200)</div><div class="stat-value" id="activeCount">0</div></div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="stat-card"><div class="stat-icon"><i class="fas fa-exclamation-triangle"></i></div>
+            <div class="stat-label">Warning (401/403)</div><div class="stat-value" id="warningCount">0</div></div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+            <div class="stat-card"><div class="stat-icon"><i class="fas fa-times-circle"></i></div>
+            <div class="stat-label">Error/500</div><div class="stat-value" id="errorCount">0</div></div>
+        </div>
+    </div>
+
+    <!-- Clients Table -->
+    <div class="table-card">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div class="d-flex justify-content-between align-items-center w-100">
+                <div>
+                    <h5><i class="fas fa-table-list"></i> Client Details</h5>
+                    <div class="search-hint">
+                        <i class="fas fa-info-circle"></i> Search by Client Name only
+                    </div>
+                </div>
+                <button class="btn btn-success" onclick="openAddModal()">
+                    <i class="fas fa-plus"></i> Add Client
+                </button>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table id="clientsTable" class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Client Name</th>
+                        <th>Dashboard URL</th>
+                        <th>UAT Wtsp No.</th>
+                        <th>Prod. Wtsp No</th>
+                        <th>Client No.</th>
+                        <th>Last Updated</th>
+                        <th>Status Code</th>
+                        <th>UAT Dashboard</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="clientTableBody">
+                    <!-- Rows will be populated by DataTables -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div id="toastMsg" class="toast-msg"><span id="toastText"></span></div>
+
+<!-- CLIENT MODAL -->
+<div class="modal fade" id="clientModal" tabindex="-1" data-bs-backdrop="static">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="border-radius:24px;">
+            <div class="modal-header modal-header-gradient">
+                <h5 class="modal-title"><i class="fas fa-building me-2"></i>Client Management</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="clientId">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Client Name *</label>
+                        <input type="text" class="form-control" id="clientName" placeholder="Enter client name">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Dashboard URL</label>
+                        <input type="text" class="form-control" id="clientDashboard" placeholder="https://...">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">UAT Wtsp No.</label>
+                        <input type="text" class="form-control" id="clientUat" placeholder="UAT WhatsApp number">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Prod. Wtsp No</label>
+                        <input type="text" class="form-control" id="clientProd" placeholder="PROD WhatsApp number">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Client No.</label>
+                        <input type="text" class="form-control" id="clientNumber" placeholder="Contact person or number">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Status Code</label>
+                        <select class="form-select" id="clientStatus">
+                            <option value="200">Active (200)</option>
+                            <option value="401">Warning - 401</option>
+                            <option value="403">Warning - 403</option>
+                            <option value="500">Error - 500</option>
+                            <option value="Error">Error</option>
+                            <option value="">Unknown</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">UAT Dashboard</label>
+                        <input type="text" class="form-control" id="clientUatDashboard" placeholder="http://...">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button class="btn btn-success" onclick="saveClient()"><i class="fas fa-save"></i> Save Client</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // =====================================
+    // API URL - MySQL Backend
+    // =====================================
+    const API_URL = "http://localhost:8080/api/clients";
+    
+    // =====================================
+    // Global Variables
+    // =====================================
+    let clientsData = [];
+    let dataTable = null;
+    let isLoading = false;
+    let isDataTableInitialized = false;
+    let isRefreshing = false;
+
+    // =====================================
+    // LIVE CLOCK
+    // =====================================
+
+    function updateClock() {
+        const liveClock = document.getElementById('liveClock');
+        if (liveClock) {
+            liveClock.innerText = new Date().toLocaleTimeString();
+        }
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // =====================================
+    // APPLY DARK MODE
+    // =====================================
+
+    function applyDarkMode() {
+        const settings = JSON.parse(localStorage.getItem('voiceoc_settings') || '{}');
+        if (settings.darkMode) {
+            document.body.classList.add('dark-mode');
+        } else {
+            document.body.classList.remove('dark-mode');
+        }
+    }
+
+    // =====================================
+    // DISPLAY USERNAME FROM LOCALSTORAGE
+    // =====================================
+
+    function displayUserName() {
+        try {
+            const userDataStr = localStorage.getItem('voiceoc_user');
+            const userNameDisplay = document.getElementById('userNameDisplay');
+            
+            if (userDataStr && userNameDisplay) {
+                try {
+                    const userData = JSON.parse(userDataStr);
+                    const displayName = userData.fullName || userData.username || 'User';
+                    userNameDisplay.innerText = displayName;
+                } catch (parseError) {
+                    userNameDisplay.innerText = userDataStr;
+                }
+            } else if (userNameDisplay) {
+                userNameDisplay.innerText = 'User';
+            }
+        } catch (error) {
+            console.error('Error displaying username:', error);
+        }
+    }
+
+    // =====================================
+    // TOAST FUNCTION
+    // =====================================
+    function showToast(message, isError = false, type = 'success') {
+        // Use the session manager's toast if available
+        if (typeof window.showToastMessage === 'function') {
+            window.showToastMessage(message, isError ? 'error' : 'success');
+            return;
+        }
+        
+        // Fallback toast
+        const toastText = document.getElementById('toastText');
+        const toast = document.getElementById('toastMsg');
+        if(toastText) toastText.innerText = message;
+        if(toast) {
+            toast.className = 'toast-msg';
+            if(isError) {
+                toast.classList.add('error');
+            } else if(type === 'info') {
+                toast.classList.add('info');
+            } else {
+                toast.classList.add('success');
+            }
+            toast.style.display = 'block';
+            clearTimeout(toast._timeout);
+            toast._timeout = setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+    }
+
+    // =====================================
+    // COPY TO CLIPBOARD
+    // =====================================
+    window.copyToClipboard = function(text) {
+        navigator.clipboard.writeText(text).then(() => {
+            showToast('URL Copied!');
+        }).catch(() => {
+            showToast('Failed to copy', true);
+        });
+    };
+
+    // =====================================
+    // AUTH CHECK
+    // =====================================
+    function checkAuth() {
+        if (localStorage.getItem('voiceoc_logged_in') !== 'true') {
+            window.location.href = 'index.html';
+            return false;
+        }
+        return true;
+    }
+
+    // =====================================
+    // LOGOUT
+    // =====================================
+    function logout() {
+        localStorage.removeItem('voiceoc_logged_in');
+        localStorage.removeItem('voiceoc_user');
+        showToast('Logged out successfully');
+        setTimeout(() => {
+            window.location.href = 'index.html';
+        }, 1000);
+    }
+
+    // =====================================
+    // NAVIGATION
+    // =====================================
+    window.goPage = function(page) {
+        if (page && page !== 'clientdetails.html') {
+            window.location.href = page;
+        }
+    };
+
+    // =====================================
+    // GET STATUS CLASS
+    // =====================================
+    function getStatusClass(status) {
+        if (status === '200') return 'status-200';
+        if (status === '401') return 'status-401';
+        if (status === '403') return 'status-403';
+        if (status === '500') return 'status-500';
+        if (status === 'Error') return 'status-error';
+        return 'status-default';
+    }
+
+    // =====================================
+    // ESCAPE HTML
+    // =====================================
+    function escapeHtml(str) {
+        if(!str) return '';
+        return String(str).replace(/[&<>"']/g, function(m) {
+            if(m === '&') return '&amp;';
+            if(m === '<') return '&lt;';
+            if(m === '>') return '&gt;';
+            if(m === '"') return '&quot;';
+            if(m === "'") return '&#039;';
+            return m;
+        });
+    }
+
+    // =====================================
+    // RENDER URL COLUMN
+    // =====================================
+    window.renderURLColumn = function(url, label) {
+        if (!url || url === '') return '<span class="text-muted">—</span>';
+        const shortUrl = url.length > 40 ? url.substring(0, 40) + '...' : url;
+        return `<div style="display: flex; align-items: center; gap: 5px; flex-wrap: wrap;">
+                    <a href="${url.startsWith('http') ? url : 'http://' + url}" target="_blank" class="url-link" title="${escapeHtml(url)}">
+                        <i class="fas fa-external-link-alt"></i> ${escapeHtml(shortUrl)}
+                    </a>
+                    <button class="copy-btn" onclick="copyToClipboard('${escapeHtml(url).replace(/'/g, "\\'")}')" title="Copy URL">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                </div>`;
+    };
+
+    // =====================================
+    // UPDATE STATS
+    // =====================================
+    function updateStats() {
+        const total = clientsData.length;
+        const active = clientsData.filter(c => c.status === '200').length;
+        const warning = clientsData.filter(c => c.status === '401' || c.status === '403').length;
+        const error = clientsData.filter(c => c.status === 'Error' || c.status === '500').length;
+        
+        document.getElementById('totalClients').innerText = total;
+        document.getElementById('activeCount').innerText = active;
+        document.getElementById('warningCount').innerText = warning;
+        document.getElementById('errorCount').innerText = error;
+    }
+
+    // =====================================
+    // INITIALIZE DATATABLE WITH PROFESSIONAL SEARCH
+    // =====================================
+    function initializeDataTable() {
+        if (dataTable) {
+            dataTable.destroy();
+            dataTable = null;
+            isDataTableInitialized = false;
+        }
+
+        dataTable = $('#clientsTable').DataTable({
+            data: clientsData,
+            pageLength: 15,
+            order: [[0, 'asc']],
+            scrollX: true,
+            language: { 
+                emptyTable: "No clients found",
+                search: "Search by Client Name:",
+                lengthMenu: "Show _MENU_ entries",
+                info: "Showing _START_ to _END_ of _TOTAL_ entries",
+                infoFiltered: "(filtered from _MAX_ total entries)"
+            },
+            columnDefs: [
+                { targets: 1, searchable: true },
+                { targets: '_all', searchable: false }
+            ],
+            columns: [
+                { 
+                    data: 'id',
+                    searchable: false
+                },
+                { 
+                    data: 'name',
+                    searchable: true,
+                    render: function(data) {
+                        return `<strong>${escapeHtml(data)}</strong>`;
+                    }
+                },
+                { 
+                    data: 'dashboard',
+                    searchable: false,
+                    render: function(data) {
+                        return window.renderURLColumn(data, 'Dashboard');
+                    }
+                },
+                { 
+                    data: 'uatWp',
+                    searchable: false,
+                    render: function(data) {
+                        return data || '-';
+                    }
+                },
+                { 
+                    data: 'prodWp',
+                    searchable: false,
+                    render: function(data) {
+                        return data || '-';
+                    }
+                },
+                { 
+                    data: 'clientNo',
+                    searchable: false,
+                    render: function(data) {
+                        return data || '-';
+                    }
+                },
+                { 
+                    data: 'lastUpdated',
+                    searchable: false,
+                    render: function(data) {
+                        return data ? new Date(data).toLocaleString() : '-';
+                    }
+                },
+                { 
+                    data: 'status',
+                    searchable: false,
+                    render: function(data) {
+                        return `<span class="status-badge ${getStatusClass(data)}">${data || '-'}</span>`;
+                    }
+                },
+                { 
+                    data: 'uatDashboard',
+                    searchable: false,
+                    render: function(data) {
+                        return window.renderURLColumn(data, 'UAT Dashboard');
+                    }
+                },
+                { 
+                    data: 'id',
+                    searchable: false,
+                    render: function(data) {
+                        return `
+                            <button class="btn btn-sm btn-primary me-2" onclick="editClient(${data})">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteClient(${data})">
+                                <i class="fas fa-trash"></i> Del
+                            </button>
+                        `;
+                    }
+                }
+            ]
+        });
+
+        // Custom search - only Client Name column
+        const searchInput = $('#clientsTable_filter input');
+        searchInput.off('keyup').on('keyup', function() {
+            const value = this.value.toLowerCase().trim();
+            if (value === '') {
+                dataTable.search('', false, false).draw();
+            } else {
+                dataTable.column(1).search(value, false, false).draw();
+            }
+        });
+
+        searchInput.on('search', function() {
+            const value = this.value.toLowerCase().trim();
+            if (value === '') {
+                dataTable.search('', false, false).draw();
+            }
+        });
+
+        isDataTableInitialized = true;
+        updateStats();
+        searchInput.attr('placeholder', 'Type client name...');
+    }
+
+    // =====================================
+    // LOAD CLIENTS - NEWEST FIRST
+    // =====================================
+    async function loadClients(showNotification = false) {
+        if (isLoading) return;
+        isLoading = true;
+        
+        // Show loading state on refresh button
+        const refreshBtn = document.getElementById('btnRefresh');
+        if (refreshBtn && showNotification) {
+            refreshBtn.classList.add('spinning');
+            refreshBtn.disabled = true;
+        }
+        
+        try {
+            console.log('🔄 Loading clients from MySQL...');
+            const response = await fetch(API_URL);
+            
+            if (!response.ok) {
+                throw new Error('Failed to load clients from MySQL');
+            }
+
+            const data = await response.json();
+            console.log('✅ Clients loaded from MySQL:', data.length);
+
+            // Sort by ID descending (newest first)
+            data.sort((a, b) => b.id - a.id);
+
+            clientsData = data.map(c => ({
+                id: c.id,
+                name: c.clientName,
+                dashboard: c.dashboardUrl,
+                uatWp: c.uatWhatsapp,
+                prodWp: c.prodWhatsapp,
+                clientNo: c.clientNumber,
+                status: c.status,
+                uatDashboard: c.uatDashboardUrl,
+                lastUpdated: c.lastUpdated
+            }));
+
+            // Initialize or refresh DataTable
+            if (!isDataTableInitialized) {
+                initializeDataTable();
+            } else {
+                dataTable.clear();
+                dataTable.rows.add(clientsData);
+                dataTable.draw();
+                updateStats();
+            }
+
+            if (showNotification) {
+                showToast('🔄 Data refreshed successfully!', false, 'info');
+            }
+
+        } catch (error) {
+            console.error('❌ Error loading clients:', error);
+            if (showNotification) {
+                showToast('❌ Failed to refresh data', true);
+            } else {
+                showToast('Unable to load clients from MySQL', true);
+            }
+        } finally {
+            isLoading = false;
+            const refreshBtn = document.getElementById('btnRefresh');
+            if (refreshBtn) {
+                refreshBtn.classList.remove('spinning');
+                refreshBtn.disabled = false;
+            }
+        }
+    }
+
+    // =====================================
+    // REFRESH FUNCTION
+    // =====================================
+    function refreshData() {
+        const refreshBtn = document.getElementById('btnRefresh');
+        if (isRefreshing) return;
+        
+        isRefreshing = true;
+        
+        if (refreshBtn) {
+            refreshBtn.classList.add('spinning');
+        }
+        
+        showToast('🔄 Refreshing data...', false, 'info');
+        
+        loadClients(true).finally(() => {
+            isRefreshing = false;
+            if (refreshBtn) {
+                refreshBtn.classList.remove('spinning');
+            }
+        });
+    }
+
+    // =====================================
+    // OPEN ADD MODAL
+    // =====================================
+    window.openAddModal = function() {
+        document.getElementById('clientId').value = '';
+        document.getElementById('clientName').value = '';
+        document.getElementById('clientDashboard').value = '';
+        document.getElementById('clientUat').value = '';
+        document.getElementById('clientProd').value = '';
+        document.getElementById('clientNumber').value = '';
+        document.getElementById('clientStatus').value = '200';
+        document.getElementById('clientUatDashboard').value = '';
+        
+        const modalEl = document.getElementById('clientModal');
+        const modal = new bootstrap.Modal(modalEl);
+        modal.show();
+    };
+
+    // =====================================
+    // EDIT CLIENT
+    // =====================================
+    window.editClient = function(id) {
+        const client = clientsData.find(c => c.id === id);
+        if (!client) {
+            showToast('Client not found', true);
+            return;
+        }
+        
+        document.getElementById('clientId').value = client.id;
+        document.getElementById('clientName').value = client.name || '';
+        document.getElementById('clientDashboard').value = client.dashboard || '';
+        document.getElementById('clientUat').value = client.uatWp || '';
+        document.getElementById('clientProd').value = client.prodWp || '';
+        document.getElementById('clientNumber').value = client.clientNo || '';
+        document.getElementById('clientStatus').value = client.status || '200';
+        document.getElementById('clientUatDashboard').value = client.uatDashboard || '';
+        
+        const modalEl = document.getElementById('clientModal');
+        const modal = new bootstrap.Modal(modalEl);
+        modal.show();
+    };
+
+    // =====================================
+    // SAVE CLIENT
+    // =====================================
+    window.saveClient = function() {
+        const id = document.getElementById('clientId').value;
+        const name = document.getElementById('clientName').value.trim();
+        const dashboard = document.getElementById('clientDashboard').value.trim();
+        const uatWp = document.getElementById('clientUat').value.trim();
+        const prodWp = document.getElementById('clientProd').value.trim();
+        const clientNo = document.getElementById('clientNumber').value.trim();
+        const status = document.getElementById('clientStatus').value;
+        const uatDashboard = document.getElementById('clientUatDashboard').value.trim();
+        
+        if (!name) {
+            showToast('Client name is required', true);
+            return;
+        }
+        
+        const clientData = {
+            clientName: name,
+            dashboardUrl: dashboard || null,
+            uatWhatsapp: uatWp || null,
+            prodWhatsapp: prodWp || null,
+            clientNumber: clientNo || null,
+            status: status || '200',
+            uatDashboardUrl: uatDashboard || null,
+            lastUpdated: new Date().toLocaleString()
+        };
+        
+        console.log('📤 Sending data to backend:', clientData);
+        
+        const method = id ? 'PUT' : 'POST';
+        const url = id ? `${API_URL}/${id}` : API_URL;
+        
+        fetch(url, {
+            method: method,
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(clientData)
+        })
+        .then(response => {
+            console.log('📥 Response status:', response.status);
+            if (!response.ok) {
+                return response.text().then(text => {
+                    console.error('❌ Error response:', text);
+                    throw new Error(text || 'Failed to save client');
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('✅ Success response:', data);
+            showToast(id ? '✅ Client updated successfully' : '✅ New client added successfully');
+            const modalEl = document.getElementById('clientModal');
+            const modal = bootstrap.Modal.getInstance(modalEl);
+            if (modal) modal.hide();
+            
+            setTimeout(() => {
+                loadClients(false);
+            }, 500);
+        })
+        .catch(error => {
+            console.error('❌ Error saving client:', error);
+            showToast('Failed to save client: ' + error.message, true);
+        });
+    };
+
+    // =====================================
+    // DELETE CLIENT
+    // =====================================
+    window.deleteClient = function(id) {
+        const client = clientsData.find(c => c.id === id);
+        if (!client) {
+            showToast('Client not found', true);
+            return;
+        }
+        
+        if (confirm(`Are you sure you want to delete "${client.name}"? This action cannot be undone.`)) {
+            fetch(`${API_URL}/${id}`, {
+                method: 'DELETE'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.text().then(text => {
+                        throw new Error(text || 'Failed to delete client');
+                    });
+                }
+                return response.text();
+            })
+            .then(() => {
+                showToast('✅ Client deleted successfully');
+                loadClients(false);
+            })
+            .catch(error => {
+                console.error('Error deleting client:', error);
+                showToast('Failed to delete client: ' + error.message, true);
+            });
+        }
+    };
+
+    // =====================================
+    // CHECK SESSION MANAGER STATUS
+    // =====================================
+
+    function checkSessionManager() {
+        console.log('🔍 Session Manager Status:');
+        console.log('📋 typeof initAutoLogout:', typeof initAutoLogout);
+        console.log('📋 typeof showToastMessage:', typeof showToastMessage);
+        
+        if (typeof initAutoLogout === 'function') {
+            console.log('✅ Session manager loaded successfully!');
+        } else {
+            console.error('❌ Session manager NOT loaded! Check if js/session-manager.js exists.');
+        }
+    }
+
+    // =====================================
+    // INITIALIZATION
+    // =====================================
+    document.addEventListener('DOMContentLoaded', function() {
+        if (!checkAuth()) return;
+
+        // Apply dark mode
+        applyDarkMode();
+
+        displayUserName();
+
+        const logoutBtn = document.getElementById('logoutBtn');
+        if(logoutBtn) {
+            logoutBtn.addEventListener('click', logout);
+        }
+
+        // Setup refresh button
+        document.getElementById('btnRefresh').addEventListener('click', refreshData);
+
+        // Keyboard shortcut: F5 or Ctrl+R to refresh
+        document.addEventListener('keydown', function(e) {
+            if ((e.key === 'F5') || (e.ctrlKey && e.key === 'r')) {
+                e.preventDefault();
+                refreshData();
+            }
+        });
+
+        // Check session manager
+        checkSessionManager();
+
+        // Load clients and initialize DataTable
+        loadClients(false);
+    });
+
+    // Make functions globally available
+    window.refreshData = refreshData;
+    window.showToast = showToast;
+</script>
+</body>
+</html>

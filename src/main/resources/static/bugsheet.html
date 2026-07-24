@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VoiceOC · Bug Sheets</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    
+    <!-- SESSION MANAGER - Auto Logout for ALL Pages -->
+    <script src="js/session-manager.js"></script>
+    
+    <style>
+        /* Pulse Animation for Countdown */
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #F1F5F9; transition: background 0.3s ease, color 0.3s ease; }
+
+        /* ========================================= */
+        /* DARK MODE */
+        /* ========================================= */
+
+        .dark-mode {
+            background: #020617 !important;
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .top-nav {
+            background: #111827 !important;
+            color: white !important;
+            border-color: #1E293B !important;
+        }
+
+        .dark-mode .top-nav .user-badge {
+            background: #1E293B !important;
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .sheet-card {
+            background: #111827 !important;
+            border-color: #1E293B !important;
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .sheet-card .text-muted {
+            color: #94A3B8 !important;
+        }
+
+        .dark-mode .sheet-card h5 {
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .badge.bg-info {
+            background: #1E3A5F !important;
+            color: #60A5FA !important;
+        }
+
+        .dark-mode .modal-content {
+            background: #111827 !important;
+            border-color: #1E293B !important;
+        }
+
+        .dark-mode .modal-header {
+            background: linear-gradient(95deg, #0F172A 0%, #020617 100%) !important;
+        }
+
+        .dark-mode .modal-body {
+            background: #111827 !important;
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .modal-body .form-label {
+            color: #94A3B8 !important;
+        }
+
+        .dark-mode .modal-body .form-control {
+            background: #1E293B !important;
+            color: #F8FAFC !important;
+            border-color: #334155 !important;
+        }
+
+        .dark-mode .modal-body .form-control:focus {
+            background: #1E293B !important;
+            border-color: #2DD4BF !important;
+            box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.1) !important;
+        }
+
+        .dark-mode .modal-body .form-control::placeholder {
+            color: #64748B !important;
+        }
+
+        .dark-mode .modal-footer {
+            background: #111827 !important;
+            border-top-color: #1E293B !important;
+        }
+
+        .dark-mode .modal-footer .btn-secondary {
+            background: #1E293B !important;
+            border-color: #334155 !important;
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .modal-footer .btn-secondary:hover {
+            background: #334155 !important;
+        }
+
+        .dark-mode .toast-msg {
+            background: #1E293B !important;
+            color: #F8FAFC !important;
+            border-left-color: #2DD4BF !important;
+        }
+
+        .dark-mode .toast-msg.error {
+            border-left-color: #DC2626 !important;
+        }
+
+        .dark-mode .btn-secondary {
+            background: #1E293B !important;
+            border-color: #334155 !important;
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .btn-secondary:hover {
+            background: #334155 !important;
+        }
+
+        .dark-mode ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        .dark-mode ::-webkit-scrollbar-track {
+            background: #1E293B;
+        }
+
+        .dark-mode ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+
+        .dark-mode ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+
+        /* ========================================= */
+        /* SIDEBAR */
+        /* ========================================= */
+
+        .sidebar {
+            width: 280px;
+            height: 100vh;
+            background: linear-gradient(180deg, #0F172A 0%, #020617 100%);
+            position: fixed;
+            left: 0;
+            top: 0;
+            padding-top: 25px;
+            z-index: 999;
+            overflow-y: auto;
+        }
+
+        .sidebar.collapsed .nav-item span,
+        .sidebar.collapsed .logo-area .qa-tagline {
+            display: none;
+        }
+
+        .logo-area { 
+            text-align: center; 
+            margin-bottom: 35px;
+            padding: 0 20px;
+        }
+
+        .logo-area h2 { 
+            color: white; 
+            font-weight: 800; 
+            font-size: 1.7rem;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .logo-area h2 i { 
+            color: #2DD4BF; 
+            font-size: 1.8rem;
+        }
+
+        /* QA Daily Tasks - Single Tick on Left, Aligned with Text Above */
+        .logo-area .qa-tagline {
+            color: #10B981 !important;
+            font-weight: 700 !important;
+            font-size: 11px !important;
+            letter-spacing: 2px;
+            margin-top: 8px;
+            text-align: center;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 0 10px;
+        }
+
+        .logo-area .qa-tagline .tick-icon {
+            color: #10B981;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        .logo-area .qa-tagline .tick-icon i {
+            font-size: 12px;
+        }
+
+        .logo-area .qa-tagline .tag-text {
+            flex-shrink: 0;
+            padding: 0 2px;
+            color: #10B981;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .dark-mode .logo-area .qa-tagline {
+            color: #34D399 !important;
+        }
+
+        .dark-mode .logo-area .qa-tagline .tick-icon {
+            color: #34D399;
+        }
+
+        .dark-mode .logo-area .qa-tagline .tag-text {
+            color: #34D399;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: #94A3B8;
+            margin: 4px 12px;
+            padding: 12px 18px;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .nav-item:hover { 
+            background: rgba(45,212,191,0.12); 
+            color: white; 
+            transform: translateX(6px); 
+        }
+
+        .nav-item.active { 
+            background: linear-gradient(95deg, #0D9488, #0F766E); 
+            color: white; 
+        }
+
+        .nav-item i { 
+            width: 24px; 
+            font-size: 18px; 
+        }
+
+        /* ========================================= */
+        /* MAIN CONTENT */
+        /* ========================================= */
+
+        .main-content { 
+            margin-left: 280px; 
+            padding: 30px; 
+            transition: 0.3s; 
+        }
+
+        .top-nav {
+            background: white;
+            padding: 18px 25px;
+            border-radius: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border: 1px solid #E2E8F0;
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .top-nav h3 {
+            margin: 0;
+            font-weight: 800;
+            transition: color 0.3s ease;
+        }
+
+        .top-nav p {
+            margin: 0;
+            color: #64748B;
+            transition: color 0.3s ease;
+        }
+
+        .user-badge { 
+            background: #F1F5F9; 
+            padding: 10px 18px; 
+            border-radius: 50px; 
+            font-weight: 700; 
+            transition: background 0.3s ease, color 0.3s ease; 
+        }
+
+        .btn-primary-custom {
+            background: linear-gradient(95deg, #0D9488, #0F766E);
+            border: none;
+            color: white;
+            padding: 10px 24px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .btn-primary-custom:hover { 
+            transform: scale(1.02); 
+            opacity: 0.9; 
+            color: white;
+        }
+
+        .sheet-card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid #E2E8F0;
+            transition: 0.3s;
+            margin-bottom: 16px;
+            height: 100%;
+        }
+
+        .sheet-card:hover { 
+            transform: translateY(-3px); 
+            box-shadow: 0 8px 20px -5px rgba(0,0,0,0.08); 
+        }
+
+        .toast-msg {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #1E293B;
+            color: white;
+            padding: 14px 24px;
+            border-radius: 50px;
+            z-index: 9999;
+            display: none;
+            border-left: 4px solid #2DD4BF;
+            animation: slideInRight 0.3s ease;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            max-width: 90%;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .toast-msg.error {
+            border-left-color: #DC2626;
+        }
+
+        .toast-msg.success {
+            border-left-color: #10B981;
+        }
+
+        /* ========================================= */
+        /* RESPONSIVE */
+        /* ========================================= */
+
+        @media(max-width:992px) {
+            .sidebar {
+                width: 90px;
+            }
+            .sidebar .nav-item span,
+            .sidebar .logo-area .qa-tagline {
+                display: none;
+            }
+            .main-content {
+                margin-left: 90px;
+            }
+        }
+
+        @media(max-width:768px) {
+            .main-content {
+                margin-left: 0;
+                padding: 15px;
+            }
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .top-nav {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<div class="sidebar">
+    <div class="logo-area">
+        <h2>
+            <i class="fas fa-microphone-alt"></i>
+            VoiceOC
+        </h2>
+
+        <!-- QA Daily Tasks - Single Tick on Left -->
+        <div class="qa-tagline">
+            <span class="tick-icon"><i class="fas fa-check-circle"></i></span>
+            <span class="tag-text">QA DAILY TASKS</span>
+        </div>
+    </div>
+
+    <div class="nav-item" onclick="goPage('dashboard.html')">
+        <i class="fas fa-chart-line"></i><span>Dashboard</span>
+    </div>
+    <div class="nav-item" onclick="goPage('tasks.html')">
+        <i class="fas fa-tasks"></i><span>Tasks</span>
+    </div>
+    <div class="nav-item" onclick="goPage('clientdetails.html')">
+        <i class="fas fa-building"></i><span>Clients Detail</span>
+    </div>
+    <div class="nav-item active" onclick="goPage('bugtracker.html')">
+        <i class="fas fa-bug"></i><span>Bug Tracker</span>
+    </div>
+    <div class="nav-item" onclick="location.href='json-sheet.html'">
+        <i class="fas fa-code"></i><span>JSON Sheets</span>
+    </div>
+    
+    <div class="nav-item" onclick="window.location.href='response-sheet.html'">
+    <i class="fas fa-file-excel"></i>
+    <span>Response Sheet</span>
+</div>
+    
+    <div class="nav-item" onclick="goPage('journey-map.html')">
+    <i class="fas fa-route"></i>
+    <span>Journey Map</span>
+</div>
+    
+    <div class="nav-item" onclick="location.href='api-doc.html'">
+        <i class="fas fa-book"></i><span>API Doc</span>
+    </div>
+    <div class="nav-item" onclick="location.href='dashboard-monitor.html'">
+        <i class="fas fa-heartbeat"></i><span>Monitor</span>
+    </div>
+    <div class="nav-item" onclick="window.location.href='json-diff.html'">
+	    <i class="fas fa-code-branch"></i>
+	    <span>JSON Diff</span>
+	</div>
+    <div class="nav-item" onclick="goPage('reports.html')">
+        <i class="fas fa-chart-pie"></i><span>Reports</span>
+    </div>
+    <div class="nav-item" onclick="goPage('settings.html')">
+        <i class="fas fa-gear"></i><span>Settings</span>
+    </div>
+    <div class="nav-item" id="logoutBtn">
+        <i class="fas fa-sign-out-alt"></i><span>Logout</span>
+    </div>
+</div>
+
+<!-- Main Content -->
+<div class="main-content">
+    <div class="top-nav">
+        <div>
+            <h3><i class="fas fa-file-excel" style="color:#2DD4BF;"></i> Bug Sheets</h3>
+            <p id="hospitalNameDisplay">Loading...</p>
+        </div>
+        <div class="d-flex align-items-center gap-3">
+            <div id="liveClock" class="fw-bold"></div>
+            <div class="user-badge">
+                <i class="fas fa-user-check"></i>
+                <span id="userNameDisplay">Admin</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="mb-4 d-flex gap-3 flex-wrap">
+        <button class="btn btn-primary-custom" onclick="openUploadModal()">
+            <i class="fas fa-upload me-2"></i> Upload New Sheet
+        </button>
+        <button class="btn btn-secondary" onclick="goPage('bugtracker.html')">
+            <i class="fas fa-arrow-left me-1"></i> Back
+        </button>
+    </div>
+
+    <!-- Sheets List -->
+    <div id="sheetsContainer">
+        <div class="text-center py-5">
+            <i class="fas fa-file-excel fa-3x text-muted mb-3"></i>
+            <h5 class="text-muted">No Sheets Found</h5>
+            <p>Upload your first Excel sheet for this hospital</p>
+        </div>
+    </div>
+</div>
+
+<!-- Upload Modal -->
+<div class="modal fade" id="uploadModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content" style="border-radius: 20px;">
+            <div class="modal-header" style="background: linear-gradient(95deg, #0F172A, #020617); color: white; border-radius: 20px 20px 0 0;">
+                <h5 class="modal-title"><i class="fas fa-file-excel me-2"></i> Upload Excel Sheet</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="uploadForm">
+                    <div class="mb-3">
+                        <label class="form-label">Sheet Name</label>
+                        <input type="text" class="form-control" id="uploadSheetName" placeholder="e.g., UAT Regression">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Uploaded By</label>
+                        <input type="text" class="form-control" id="uploadedBy" placeholder="Your name">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Excel File <span class="text-danger">*</span></label>
+                        <input type="file" class="form-control" id="uploadFile" accept=".xlsx,.xls" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button class="btn btn-success" onclick="uploadExcel()">
+                    <i class="fas fa-upload me-1"></i> Upload
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Toast -->
+<div class="toast-msg" id="toastMsg">
+    <span id="toastText"></span>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    const API_BASE = 'http://localhost:8080/api';
+    let hospitalId = null;
+    let hospitalName = '';
+    let uploadModal;
+
+    // =====================================
+    // DISPLAY USERNAME
+    // =====================================
+
+    function displayUserName() {
+        try {
+            const userDataStr = localStorage.getItem('voiceoc_user');
+            const userNameDisplay = document.getElementById('userNameDisplay');
+            if (userDataStr && userNameDisplay) {
+                try {
+                    const userData = JSON.parse(userDataStr);
+                    userNameDisplay.innerText = userData.fullName || userData.username || 'User';
+                } catch (e) {
+                    userNameDisplay.innerText = userDataStr;
+                }
+            }
+        } catch (error) {
+            console.error('Error displaying username:', error);
+        }
+    }
+
+    // =====================================
+    // LIVE CLOCK
+    // =====================================
+
+    function updateClock() {
+        const liveClock = document.getElementById('liveClock');
+        if (liveClock) {
+            liveClock.innerText = new Date().toLocaleTimeString();
+        }
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // =====================================
+    // TOAST FUNCTION
+    // =====================================
+
+    function showToast(message, isError = false) {
+        const toastText = document.getElementById('toastText');
+        const toast = document.getElementById('toastMsg');
+
+        if (toastText) toastText.innerText = message;
+        if (toast) {
+            toast.className = 'toast-msg';
+            if (isError) {
+                toast.classList.add('error');
+            } else {
+                toast.classList.add('success');
+            }
+            toast.style.display = 'block';
+            clearTimeout(toast._timeout);
+            toast._timeout = setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+    }
+
+    // =====================================
+    // NAVIGATION
+    // =====================================
+
+    function goPage(page) { window.location.href = page; }
+
+    // =====================================
+    // AUTH CHECK
+    // =====================================
+
+    function checkAuth() {
+        if (localStorage.getItem('voiceoc_logged_in') !== 'true') {
+            window.location.href = 'index.html';
+            return false;
+        }
+        return true;
+    }
+
+    // =====================================
+    // LOGOUT
+    // =====================================
+
+    document.getElementById('logoutBtn')?.addEventListener('click', () => {
+        localStorage.removeItem('voiceoc_logged_in');
+        localStorage.removeItem('voiceoc_user');
+        showToast('Logged out successfully');
+        setTimeout(() => { window.location.href = 'index.html'; }, 1000);
+    });
+
+    // =====================================
+    // DARK MODE
+    // =====================================
+
+    function applyDarkMode() {
+        const settings = JSON.parse(localStorage.getItem('voiceoc_settings') || '{}');
+        if (settings.darkMode) {
+            document.body.classList.add('dark-mode');
+        } else {
+            document.body.classList.remove('dark-mode');
+        }
+    }
+
+    // =====================================
+    // UPLOAD MODAL
+    // =====================================
+
+    function openUploadModal() {
+        if (!uploadModal) {
+            uploadModal = new bootstrap.Modal(document.getElementById('uploadModal'));
+        }
+        uploadModal.show();
+    }
+
+    // =====================================
+    // UPLOAD EXCEL
+    // =====================================
+
+    async function uploadExcel() {
+        const sheetName = document.getElementById('uploadSheetName').value;
+        const uploadedBy = document.getElementById('uploadedBy').value || 'Anonymous';
+        const fileInput = document.getElementById('uploadFile');
+
+        if (!fileInput.files || fileInput.files.length === 0) {
+            showToast('Please select a file', true);
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('file', fileInput.files[0]);
+        formData.append('hospitalId', hospitalId);
+        formData.append('sheetName', sheetName);
+        formData.append('uploadedBy', uploadedBy);
+
+        try {
+            const response = await fetch(`${API_BASE}/bugsheets/upload`, {
+                method: 'POST',
+                body: formData
+            });
+
+            if (!response.ok) {
+                const error = await response.text();
+                throw new Error(error);
+            }
+
+            showToast('Excel uploaded successfully!');
+            if (uploadModal) uploadModal.hide();
+            
+            document.getElementById('uploadSheetName').value = '';
+            document.getElementById('uploadedBy').value = '';
+            document.getElementById('uploadFile').value = '';
+            
+            loadSheets();
+        } catch (error) {
+            showToast('Upload failed: ' + error.message, true);
+        }
+    }
+
+    // =====================================
+    // LOAD SHEETS
+    // =====================================
+
+    async function loadSheets() {
+        try {
+            const response = await fetch(`${API_BASE}/bugsheets/hospital/${hospitalId}`);
+            if (!response.ok) throw new Error('Failed to load sheets');
+            const sheets = await response.json();
+
+            document.getElementById('hospitalNameDisplay').innerText = `Hospital: ${hospitalName}`;
+
+            if (sheets.length === 0) {
+                document.getElementById('sheetsContainer').innerHTML = `
+                    <div class="text-center py-5">
+                        <i class="fas fa-file-excel fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No Sheets Found</h5>
+                        <p>Upload your first Excel sheet for this hospital</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '<div class="row">';
+            sheets.forEach(sheet => {
+                const date = sheet.uploadDate ? new Date(sheet.uploadDate).toLocaleDateString() : 'Unknown';
+                html += `
+                    <div class="col-md-6 col-lg-4">
+                        <div class="sheet-card">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h5><i class="fas fa-file-excel text-success"></i> ${sheet.sheetName || sheet.fileName}</h5>
+                                    <small class="text-muted">
+                                        <i class="fas fa-calendar-alt"></i> ${date}
+                                    </small>
+                                    <span class="badge bg-info ms-2">${sheet.totalBugs || 0} Bugs</span>
+                                </div>
+                                <button class="btn btn-sm btn-danger" onclick="deleteSheet(${sheet.id})">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                            <div class="mt-2">
+                                <button class="btn btn-sm btn-outline-primary" onclick="viewBugs(${sheet.id})">
+                                    <i class="fas fa-eye"></i> View Bugs
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            document.getElementById('sheetsContainer').innerHTML = html;
+        } catch (error) {
+            console.error('Error loading sheets:', error);
+            showToast('Failed to load sheets', true);
+        }
+    }
+
+    // =====================================
+    // DELETE SHEET
+    // =====================================
+
+    async function deleteSheet(id) {
+        if (!confirm('Delete this sheet and all its bugs?')) return;
+        try {
+            const response = await fetch(`${API_BASE}/bugsheets/${id}`, { method: 'DELETE' });
+            if (!response.ok) throw new Error('Failed to delete');
+            showToast('Sheet deleted successfully');
+            loadSheets();
+        } catch (error) {
+            console.error('Error deleting sheet:', error);
+            showToast('Failed to delete sheet', true);
+        }
+    }
+
+    // =====================================
+    // VIEW BUGS
+    // =====================================
+
+    function viewBugs(sheetId) {
+        window.location.href = `viewbugs.html?sheetId=${sheetId}`;
+    }
+
+    // =====================================
+    // CHECK SESSION MANAGER STATUS
+    // =====================================
+
+    function checkSessionManager() {
+        console.log('🔍 Session Manager Status:');
+        console.log('📋 typeof initAutoLogout:', typeof initAutoLogout);
+        console.log('📋 typeof showToastMessage:', typeof showToastMessage);
+        
+        if (typeof initAutoLogout === 'function') {
+            console.log('✅ Session manager loaded successfully!');
+        } else {
+            console.error('❌ Session manager NOT loaded! Check if js/session-manager.js exists.');
+        }
+    }
+
+    // =====================================
+    // INITIALIZATION
+    // =====================================
+
+    document.addEventListener('DOMContentLoaded', () => {
+        if (!checkAuth()) return;
+
+        displayUserName();
+        applyDarkMode();
+
+        // Get hospital ID from URL
+        const params = new URLSearchParams(window.location.search);
+        hospitalId = params.get('hospitalId');
+        hospitalName = params.get('hospitalName') || 'Hospital';
+
+        if (!hospitalId) {
+            showToast('No hospital selected', true);
+            setTimeout(() => { window.location.href = 'bugtracker.html'; }, 1500);
+            return;
+        }
+
+        loadSheets();
+        checkSessionManager();
+    });
+
+    // Make functions globally available
+    window.goPage = goPage;
+    window.openUploadModal = openUploadModal;
+    window.uploadExcel = uploadExcel;
+    window.deleteSheet = deleteSheet;
+    window.viewBugs = viewBugs;
+    window.showToast = showToast;
+</script>
+</body>
+</html>

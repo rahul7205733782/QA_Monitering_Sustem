@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VoiceOC · Manage Hospitals</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    
+    <!-- SESSION MANAGER - Auto Logout for ALL Pages -->
+    <script src="js/session-manager.js"></script>
+    
+    <style>
+        /* Pulse Animation for Countdown */
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #F1F5F9; transition: background 0.3s ease, color 0.3s ease; }
+
+        /* ========================================= */
+        /* DARK MODE */
+        /* ========================================= */
+
+        .dark-mode {
+            background: #020617 !important;
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .top-nav {
+            background: #111827 !important;
+            color: white !important;
+            border-color: #1E293B !important;
+        }
+
+        .dark-mode .top-nav .user-badge {
+            background: #1E293B !important;
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .card {
+            background: #111827 !important;
+            border-color: #1E293B !important;
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .card .text-muted {
+            color: #94A3B8 !important;
+        }
+
+        .dark-mode .card h5 {
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .form-control {
+            background: #1E293B !important;
+            color: #F8FAFC !important;
+            border-color: #334155 !important;
+        }
+
+        .dark-mode .form-control::placeholder {
+            color: #64748B !important;
+        }
+
+        .dark-mode .form-control:focus {
+            background: #1E293B !important;
+            border-color: #2DD4BF !important;
+            box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.1) !important;
+        }
+
+        .dark-mode .toast-msg {
+            background: #1E293B !important;
+            color: #F8FAFC !important;
+            border-left-color: #2DD4BF !important;
+        }
+
+        .dark-mode .toast-msg.error {
+            border-left-color: #DC2626 !important;
+        }
+
+        .dark-mode .toast-msg.success {
+            border-left-color: #10B981 !important;
+        }
+
+        .dark-mode .btn-secondary {
+            background: #1E293B !important;
+            border-color: #334155 !important;
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .btn-secondary:hover {
+            background: #334155 !important;
+        }
+
+        .dark-mode .btn-danger {
+            background: #7F1D1D !important;
+            border-color: #7F1D1D !important;
+            color: #F87171 !important;
+        }
+
+        .dark-mode .btn-danger:hover {
+            background: #991B1B !important;
+            border-color: #991B1B !important;
+            color: #FCA5A5 !important;
+        }
+
+        .dark-mode .btn-primary-custom {
+            background: #0D9488 !important;
+            border-color: #0D9488 !important;
+            color: white !important;
+        }
+
+        .dark-mode .btn-primary-custom:hover {
+            background: #0F766E !important;
+            border-color: #0F766E !important;
+        }
+
+        .dark-mode ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        .dark-mode ::-webkit-scrollbar-track {
+            background: #1E293B;
+        }
+
+        .dark-mode ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+
+        .dark-mode ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+
+        .sidebar {
+            width: 280px;
+            height: 100vh;
+            background: linear-gradient(180deg, #0F172A 0%, #020617 100%);
+            position: fixed;
+            left: 0;
+            top: 0;
+            padding-top: 25px;
+            z-index: 999;
+            overflow-y: auto;
+        }
+        .logo-area { text-align: center; margin-bottom: 40px; }
+        .logo-area h2 { color: white; font-weight: 800; font-size: 1.7rem; }
+        .logo-area h2 i { color: #2DD4BF; margin-right: 10px; }
+        .logo-area p { color: #64748B; font-size: 11px; margin-top: 10px; }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: #94A3B8;
+            margin: 6px 12px;
+            padding: 14px 18px;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .nav-item:hover { background: rgba(45,212,191,0.12); color: white; transform: translateX(6px); }
+        .nav-item.active { background: linear-gradient(95deg, #0D9488, #0F766E); color: white; }
+        .nav-item i { width: 24px; font-size: 18px; }
+
+        .main-content { margin-left: 280px; padding: 30px; transition: 0.3s; }
+        .top-nav {
+            background: white;
+            padding: 18px 25px;
+            border-radius: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border: 1px solid #E2E8F0;
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+        .user-badge { background: #F1F5F9; padding: 10px 18px; border-radius: 50px; font-weight: 700; transition: background 0.3s ease, color 0.3s ease; }
+        .btn-primary-custom {
+            background: linear-gradient(95deg, #0D9488, #0F766E);
+            border: none;
+            color: white;
+            padding: 10px 24px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+        .btn-primary-custom:hover { transform: scale(1.02); opacity: 0.9; }
+
+        .toast-msg {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #1E293B;
+            color: white;
+            padding: 14px 24px;
+            border-radius: 50px;
+            z-index: 9999;
+            display: none;
+            border-left: 4px solid #2DD4BF;
+            animation: slideInRight 0.3s ease;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            max-width: 90%;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .toast-msg.error {
+            border-left-color: #DC2626;
+        }
+
+        .toast-msg.success {
+            border-left-color: #10B981;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .card {
+            transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+        }
+
+        @media(max-width:992px) {
+            .sidebar {
+                width: 90px;
+            }
+            .sidebar .nav-item span,
+            .sidebar .logo-area p,
+            .sidebar .logo-text {
+                display: none;
+            }
+            .main-content {
+                margin-left: 90px;
+            }
+        }
+
+        @media(max-width:768px) {
+            .main-content {
+                margin-left: 0;
+                padding: 15px;
+            }
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .top-nav {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+            }
+            .top-right {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<div class="sidebar">
+    <div class="logo-area">
+        <h2><i class="fas fa-microphone-alt"></i><span class="logo-text">VoiceOC</span></h2>
+        <p>ENTERPRISE QA SUITE</p>
+    </div>
+    <div class="nav-item" onclick="goPage('dashboard.html')">
+        <i class="fas fa-chart-line"></i><span>Dashboard</span>
+    </div>
+    <div class="nav-item" onclick="goPage('tasks.html')">
+        <i class="fas fa-tasks"></i><span>Tasks</span>
+    </div>
+    <div class="nav-item" onclick="goPage('clientdetails.html')">
+        <i class="fas fa-building"></i><span>Clients Detail</span>
+    </div>
+    <div class="nav-item active" onclick="goPage('bugtracker.html')">
+        <i class="fas fa-bug"></i><span>Bug Tracker</span>
+    </div>
+    
+    <div class="nav-item" onclick="location.href='json-sheet.html'">
+        <i class="fas fa-code"></i>
+        <span>JSON Sheets</span>
+    </div>
+
+    <div class="nav-item" onclick="location.href='api-doc.html'">
+        <i class="fas fa-book"></i>
+        <span>API Doc</span>
+    </div>
+    
+    <div class="nav-item" onclick="location.href='dashboard-monitor.html'">
+        <i class="fas fa-heartbeat"></i>
+        <span>Monitor</span>
+    </div>
+    
+    <div class="nav-item" onclick="goPage('reports.html')">
+        <i class="fas fa-chart-pie"></i><span>Reports</span>
+    </div>
+    <div class="nav-item" onclick="goPage('settings.html')">
+        <i class="fas fa-gear"></i><span>Settings</span>
+    </div>
+    <div class="nav-item" id="logoutBtn">
+        <i class="fas fa-sign-out-alt"></i><span>Logout</span>
+    </div>
+</div>
+
+<!-- Main Content -->
+<div class="main-content">
+    <div class="top-nav">
+        <div>
+            <h3><i class="fas fa-hospital" style="color:#2DD4BF;"></i> Manage Hospitals</h3>
+            <p style="color:#64748B; margin:0;">Add, view, and delete hospitals</p>
+        </div>
+        <div class="d-flex align-items-center gap-3">
+            <div id="liveClock" class="fw-bold"></div>
+            <div class="user-badge">
+                <i class="fas fa-user-check"></i>
+                <span id="userNameDisplay">Admin</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Hospital Form -->
+    <div class="card mb-4" style="border-radius: 20px; border: 1px solid #E2E8F0;">
+        <div class="card-body">
+            <h5><i class="fas fa-plus-circle text-success"></i> Add New Hospital</h5>
+            <div class="row g-3 mt-2">
+                <div class="col-md-4">
+                    <input type="text" class="form-control" id="hospitalName" placeholder="Hospital Name *">
+                </div>
+                <div class="col-md-3">
+                    <input type="text" class="form-control" id="hospitalAddress" placeholder="Address">
+                </div>
+                <div class="col-md-2">
+                    <input type="text" class="form-control" id="hospitalPhone" placeholder="Phone">
+                </div>
+                <div class="col-md-2">
+                    <input type="email" class="form-control" id="hospitalEmail" placeholder="Email">
+                </div>
+                <div class="col-md-1">
+                    <button class="btn btn-primary-custom w-100" onclick="addHospital()">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hospitals List -->
+    <div id="hospitalsList">
+        <div class="text-center py-5">
+            <i class="fas fa-hospital fa-3x text-muted mb-3"></i>
+            <h5 class="text-muted">No Hospitals Found</h5>
+            <p>Add your first hospital using the form above</p>
+        </div>
+    </div>
+
+    <button class="btn btn-secondary mt-3" onclick="goPage('bugtracker.html')">
+        <i class="fas fa-arrow-left me-1"></i> Back to Bug Tracker
+    </button>
+</div>
+
+<!-- Toast -->
+<div class="toast-msg" id="toastMsg">
+    <span id="toastText"></span>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    const API_BASE = 'http://localhost:8080/api';
+
+    // =====================================
+    // DISPLAY USERNAME
+    // =====================================
+
+    function displayUserName() {
+        try {
+            const userDataStr = localStorage.getItem('voiceoc_user');
+            const userNameDisplay = document.getElementById('userNameDisplay');
+            if (userDataStr && userNameDisplay) {
+                try {
+                    const userData = JSON.parse(userDataStr);
+                    userNameDisplay.innerText = userData.fullName || userData.username || 'User';
+                } catch (e) {
+                    userNameDisplay.innerText = userDataStr;
+                }
+            }
+        } catch (error) {
+            console.error('Error displaying username:', error);
+        }
+    }
+
+    // =====================================
+    // LIVE CLOCK
+    // =====================================
+
+    function updateClock() {
+        const liveClock = document.getElementById('liveClock');
+        if (liveClock) {
+            liveClock.innerText = new Date().toLocaleTimeString();
+        }
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // =====================================
+    // APPLY DARK MODE
+    // =====================================
+
+    function applyDarkMode() {
+        const settings = JSON.parse(localStorage.getItem('voiceoc_settings') || '{}');
+        if (settings.darkMode) {
+            document.body.classList.add('dark-mode');
+        } else {
+            document.body.classList.remove('dark-mode');
+        }
+    }
+
+    // =====================================
+    // TOAST FUNCTION - Using session manager's toast
+    // =====================================
+
+    function showToast(message, isError = false) {
+        // Use the session manager's toast if available
+        if (typeof window.showToastMessage === 'function') {
+            window.showToastMessage(message, isError ? 'error' : 'success');
+            return;
+        }
+        
+        // Fallback toast
+        const toastText = document.getElementById('toastText');
+        const toast = document.getElementById('toastMsg');
+        if (toastText) toastText.innerText = message;
+        if (toast) {
+            toast.className = 'toast-msg';
+            if (isError) {
+                toast.classList.add('error');
+            } else {
+                toast.classList.add('success');
+            }
+            toast.style.display = 'block';
+            clearTimeout(toast._timeout);
+            toast._timeout = setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+    }
+
+    // =====================================
+    // NAVIGATION
+    // =====================================
+
+    function goPage(page) { window.location.href = page; }
+
+    // =====================================
+    // AUTH CHECK
+    // =====================================
+
+    function checkAuth() {
+        if (localStorage.getItem('voiceoc_logged_in') !== 'true') {
+            window.location.href = 'index.html';
+            return false;
+        }
+        return true;
+    }
+
+    // =====================================
+    // LOGOUT
+    // =====================================
+
+    document.getElementById('logoutBtn')?.addEventListener('click', () => {
+        localStorage.removeItem('voiceoc_logged_in');
+        localStorage.removeItem('voiceoc_user');
+        showToast('Logged out successfully');
+        setTimeout(() => { window.location.href = 'index.html'; }, 1000);
+    });
+
+    // =====================================
+    // CHECK SESSION MANAGER STATUS
+    // =====================================
+
+    function checkSessionManager() {
+        console.log('🔍 Session Manager Status:');
+        console.log('📋 typeof initAutoLogout:', typeof initAutoLogout);
+        console.log('📋 typeof showToastMessage:', typeof showToastMessage);
+        
+        if (typeof initAutoLogout === 'function') {
+            console.log('✅ Session manager loaded successfully!');
+        } else {
+            console.error('❌ Session manager NOT loaded! Check if js/session-manager.js exists.');
+        }
+    }
+
+    // =====================================
+    // LOAD HOSPITALS
+    // =====================================
+
+    async function loadHospitals() {
+        try {
+            const response = await fetch(`${API_BASE}/hospitals`);
+            if (!response.ok) throw new Error('Failed to load hospitals');
+            const hospitals = await response.json();
+
+            if (hospitals.length === 0) {
+                document.getElementById('hospitalsList').innerHTML = `
+                    <div class="text-center py-5">
+                        <i class="fas fa-hospital fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No Hospitals Found</h5>
+                        <p>Add your first hospital using the form above</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '<div class="row">';
+            hospitals.forEach(h => {
+                html += `
+                    <div class="col-md-4 mb-3">
+                        <div class="card" style="border-radius:16px;border:1px solid #E2E8F0;">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h5><i class="fas fa-hospital" style="color:#2DD4BF;"></i> ${escapeHtml(h.name)}</h5>
+                                        ${h.address ? `<small class="text-muted"><i class="fas fa-map-marker-alt"></i> ${escapeHtml(h.address)}</small><br>` : ''}
+                                        ${h.phone ? `<small class="text-muted"><i class="fas fa-phone"></i> ${escapeHtml(h.phone)}</small>` : ''}
+                                        ${h.email ? `<small class="text-muted"><i class="fas fa-envelope"></i> ${escapeHtml(h.email)}</small>` : ''}
+                                    </div>
+                                    <button class="btn btn-sm btn-danger" onclick="deleteHospital(${h.id})">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            document.getElementById('hospitalsList').innerHTML = html;
+        } catch (error) {
+            console.error('Error loading hospitals:', error);
+            showToast('Failed to load hospitals', true);
+        }
+    }
+
+    // =====================================
+    // ADD HOSPITAL
+    // =====================================
+
+    async function addHospital() {
+        const name = document.getElementById('hospitalName').value.trim();
+        const address = document.getElementById('hospitalAddress').value.trim();
+        const phone = document.getElementById('hospitalPhone').value.trim();
+        const email = document.getElementById('hospitalEmail').value.trim();
+
+        if (!name) {
+            showToast('Please enter hospital name', true);
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_BASE}/hospitals`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, address, phone, email })
+            });
+
+            if (!response.ok) {
+                const error = await response.text();
+                throw new Error(error);
+            }
+
+            showToast('✅ Hospital added successfully!');
+            document.getElementById('hospitalName').value = '';
+            document.getElementById('hospitalAddress').value = '';
+            document.getElementById('hospitalPhone').value = '';
+            document.getElementById('hospitalEmail').value = '';
+            loadHospitals();
+        } catch (error) {
+            console.error('Error adding hospital:', error);
+            showToast('Failed to add hospital: ' + error.message, true);
+        }
+    }
+
+    // =====================================
+    // DELETE HOSPITAL
+    // =====================================
+
+    async function deleteHospital(id) {
+        if (!confirm('Delete this hospital?')) return;
+        try {
+            const response = await fetch(`${API_BASE}/hospitals/${id}`, { method: 'DELETE' });
+            if (!response.ok) throw new Error('Failed to delete');
+            showToast('✅ Hospital deleted successfully');
+            loadHospitals();
+        } catch (error) {
+            console.error('Error deleting hospital:', error);
+            showToast('Failed to delete hospital', true);
+        }
+    }
+
+    // =====================================
+    // UTILITY FUNCTIONS
+    // =====================================
+
+    function escapeHtml(text) {
+        if (!text) return '';
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    // =====================================
+    // INITIALIZATION
+    // =====================================
+
+    document.addEventListener('DOMContentLoaded', () => {
+        if (!checkAuth()) return;
+
+        displayUserName();
+        applyDarkMode();
+        loadHospitals();
+        checkSessionManager();
+    });
+
+    // Make functions globally available
+    window.goPage = goPage;
+    window.addHospital = addHospital;
+    window.deleteHospital = deleteHospital;
+    window.showToast = showToast;
+</script>
+</body>
+</html>

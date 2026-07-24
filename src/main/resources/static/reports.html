@@ -1,0 +1,2030 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>VoiceOC Enterprise Reports</title>
+
+    <!-- Bootstrap -->
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <!-- Font Awesome -->
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Google Font -->
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+          rel="stylesheet">
+
+    <!-- Chart JS -->
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- SESSION MANAGER - Auto Logout for ALL Pages -->
+    <script src="js/session-manager.js"></script>
+
+    <style>
+        /* Pulse Animation for Countdown */
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+
+        body{
+            background:#F1F5F9;
+            font-family:'Inter',sans-serif;
+            overflow-x:hidden;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        /* ========================================= */
+        /* DARK MODE - COMPLETE */
+        /* ========================================= */
+
+        .dark-mode {
+            background: #020617 !important;
+            color: #F8FAFC !important;
+        }
+
+        /* Topbar */
+        .dark-mode .topbar {
+            background: #111827 !important;
+            color: #F8FAFC !important;
+            border-color: #1E293B !important;
+        }
+
+        .dark-mode .topbar h3 {
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .topbar p {
+            color: #94A3B8 !important;
+        }
+
+        /* Buttons */
+        .dark-mode .btn-success {
+            background: #065F46 !important;
+            border-color: #065F46 !important;
+            color: #34D399 !important;
+        }
+
+        .dark-mode .btn-success:hover {
+            background: #047857 !important;
+            border-color: #047857 !important;
+        }
+
+        .dark-mode .btn-primary {
+            background: #1E3A5F !important;
+            border-color: #1E3A5F !important;
+            color: #60A5FA !important;
+        }
+
+        .dark-mode .btn-primary:hover {
+            background: #2D4A7A !important;
+            border-color: #2D4A7A !important;
+        }
+
+        .dark-mode .btn-dark {
+            background: #1E293B !important;
+            border-color: #334155 !important;
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .btn-dark:hover {
+            background: #334155 !important;
+        }
+
+        .dark-mode .btn-dark.spinning i {
+            animation: spin 0.8s linear infinite;
+        }
+
+        /* Stat Cards */
+        .dark-mode .stat-card {
+            background: #111827 !important;
+            border-color: #1E293B !important;
+        }
+
+        .dark-mode .stat-card .stat-label {
+            color: #94A3B8 !important;
+        }
+
+        .dark-mode .stat-card .stat-value {
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .stat-card .stat-icon {
+            opacity: 0.05 !important;
+        }
+
+        .dark-mode .stat-card:hover {
+            box-shadow: 0 20px 30px -12px rgba(45, 212, 191, 0.05) !important;
+        }
+
+        /* Chart Cards */
+        .dark-mode .chart-card {
+            background: #111827 !important;
+            border-color: #1E293B !important;
+        }
+
+        .dark-mode .chart-card h5 {
+            color: #F8FAFC !important;
+        }
+
+        /* Table Card */
+        .dark-mode .table-card {
+            background: #111827 !important;
+            border-color: #1E293B !important;
+        }
+
+        .dark-mode .table-card h5 {
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .table-card .form-control {
+            background: #1E293B !important;
+            color: #F8FAFC !important;
+            border-color: #334155 !important;
+        }
+
+        .dark-mode .table-card .form-control::placeholder {
+            color: #64748B !important;
+        }
+
+        .dark-mode .table-card .form-control:focus {
+            background: #1E293B !important;
+            border-color: #2DD4BF !important;
+            box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.1) !important;
+        }
+
+        /* Table */
+        .dark-mode table {
+            background: #111827 !important;
+        }
+
+        .dark-mode table thead th {
+            background: #0F172A !important;
+            color: #94A3B8 !important;
+            border-bottom-color: #1E293B !important;
+        }
+
+        .dark-mode table tbody td {
+            background: #111827 !important;
+            color: #E2E8F0 !important;
+            border-bottom-color: #1E293B !important;
+        }
+
+        .dark-mode table tbody tr:hover td {
+            background: #1E293B !important;
+        }
+
+        .dark-mode table tbody td strong {
+            color: #F8FAFC !important;
+        }
+
+        /* Status Badges */
+        .dark-mode .status-completed {
+            background: #065F46 !important;
+            color: #34D399 !important;
+        }
+
+        .dark-mode .status-progress {
+            background: #4C1D95 !important;
+            color: #A78BFA !important;
+        }
+
+        .dark-mode .status-pending {
+            background: #7F1D1D !important;
+            color: #F87171 !important;
+        }
+
+        /* Toast */
+        .dark-mode .toast-msg {
+            background: #1E293B !important;
+            color: #F8FAFC !important;
+            border-left-color: #2DD4BF !important;
+        }
+
+        .dark-mode .toast-msg.error {
+            border-left-color: #DC2626 !important;
+        }
+
+        .dark-mode .toast-msg.success {
+            border-left-color: #10B981 !important;
+        }
+
+        .dark-mode .toast-msg.info {
+            border-left-color: #3B82F6 !important;
+        }
+
+        /* Scrollbar */
+        .dark-mode ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        .dark-mode ::-webkit-scrollbar-track {
+            background: #1E293B;
+        }
+
+        .dark-mode ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+
+        .dark-mode ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+
+        /* ========================================= */
+        /* SIDEBAR */
+        /* ========================================= */
+
+        .sidebar{
+
+            width:280px;
+            height:100vh;
+
+            background:
+                linear-gradient(
+                    180deg,
+                    #0F172A 0%,
+                    #020617 100%
+                );
+
+            position:fixed;
+
+            left:0;
+            top:0;
+
+            padding-top:25px;
+
+            z-index:999;
+            overflow-y: auto;
+        }
+
+        .logo-area{
+
+            text-align:center;
+
+            margin-bottom:35px;
+            padding: 0 20px;
+        }
+
+        .logo-area h2{
+
+            color:white;
+
+            font-weight:800;
+            font-size: 1.7rem;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .logo-area h2 i{
+
+            color:#2DD4BF;
+            font-size: 1.8rem;
+        }
+
+        /* QA Daily Tasks - Single Tick on Left, Aligned with Text Above */
+        .logo-area .qa-tagline {
+            color: #10B981 !important;
+            font-weight: 700 !important;
+            font-size: 11px !important;
+            letter-spacing: 2px;
+            margin-top: 8px;
+            text-align: center;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 0 10px;
+        }
+
+        .logo-area .qa-tagline .tick-icon {
+            color: #10B981;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        .logo-area .qa-tagline .tick-icon i {
+            font-size: 12px;
+        }
+
+        .logo-area .qa-tagline .tag-text {
+            flex-shrink: 0;
+            padding: 0 2px;
+            color: #10B981;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .dark-mode .logo-area .qa-tagline {
+            color: #34D399 !important;
+        }
+
+        .dark-mode .logo-area .qa-tagline .tick-icon {
+            color: #34D399;
+        }
+
+        .dark-mode .logo-area .qa-tagline .tag-text {
+            color: #34D399;
+        }
+
+        .nav-item{
+
+            display:flex;
+
+            align-items:center;
+
+            gap:15px;
+
+            color:#94A3B8;
+
+            margin:4px 12px;
+
+            padding:12px 18px;
+
+            border-radius:14px;
+
+            cursor:pointer;
+
+            transition:0.3s;
+        }
+
+        .nav-item:hover{
+
+            background:
+                rgba(45,212,191,0.12);
+
+            color:white;
+
+            transform:translateX(6px);
+        }
+
+        .nav-item.active{
+
+            background:
+                linear-gradient(
+                    95deg,
+                    #0D9488,
+                    #0F766E
+                );
+
+            color:white;
+        }
+
+        /* ========================================= */
+        /* MAIN */
+        /* ========================================= */
+
+        .main-content{
+
+            margin-left:280px;
+
+            padding:30px;
+        }
+
+        /* ========================================= */
+        /* TOPBAR */
+        /* ========================================= */
+
+        .topbar{
+
+            background:white;
+
+            padding:20px 25px;
+
+            border-radius:24px;
+
+            margin-bottom:30px;
+
+            display:flex;
+
+            justify-content:space-between;
+
+            align-items:center;
+
+            border:1px solid #E2E8F0;
+
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .topbar h3{
+
+            margin:0;
+
+            font-weight:800;
+
+            transition: color 0.3s ease;
+        }
+
+        .topbar p{
+
+            margin:5px 0 0;
+
+            color:#64748B;
+
+            font-size:14px;
+
+            transition: color 0.3s ease;
+        }
+
+        .top-actions{
+
+            display:flex;
+
+            gap:10px;
+        }
+
+        .top-actions .btn {
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 14px;
+            padding: 10px 20px;
+        }
+
+        .top-actions .btn-dark {
+            padding: 10px 18px;
+        }
+
+        /* ========================================= */
+        /* CARDS */
+        /* ========================================= */
+
+        .stat-card{
+
+            background:white;
+
+            border-radius:26px;
+
+            padding:25px;
+
+            border:1px solid #E2E8F0;
+
+            position:relative;
+
+            overflow:hidden;
+
+            transition: 0.3s;
+
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .stat-card:hover{
+
+            transform:translateY(-5px);
+
+            box-shadow:
+                0 20px 30px -12px
+                rgba(0,0,0,0.12);
+        }
+
+        .dark-mode .stat-card:hover {
+            box-shadow: 0 20px 30px -12px rgba(45, 212, 191, 0.05);
+        }
+
+        .stat-icon{
+
+            position:absolute;
+
+            right:20px;
+            top:20px;
+
+            font-size:55px;
+
+            opacity:0.08;
+        }
+
+        .stat-label{
+
+            font-size:12px;
+
+            text-transform:uppercase;
+
+            color:#64748B;
+
+            font-weight:700;
+
+            margin-bottom:12px;
+
+            transition: color 0.3s ease;
+        }
+
+        .stat-value{
+
+            font-size:42px;
+
+            font-weight:800;
+
+            transition: color 0.3s ease;
+        }
+
+        /* ========================================= */
+        /* CHART CARD */
+        /* ========================================= */
+
+        .chart-card{
+
+            background:white;
+
+            border-radius:26px;
+
+            padding:30px;
+
+            border:1px solid #E2E8F0;
+
+            margin-top:25px;
+
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .chart-card h5 {
+            transition: color 0.3s ease;
+        }
+
+        /* ========================================= */
+        /* TABLE */
+        /* ========================================= */
+
+        .table-card{
+
+            background:white;
+
+            border-radius:26px;
+
+            padding:28px;
+
+            border:1px solid #E2E8F0;
+
+            margin-top:25px;
+
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .table-card h5 {
+            transition: color 0.3s ease;
+        }
+
+        .table-card .form-control {
+            border-radius: 50px;
+            padding: 8px 16px;
+            border: 1px solid #E2E8F0;
+            transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        table{
+            width:100%;
+        }
+
+        th{
+
+            padding:16px 10px;
+
+            font-size:12px;
+
+            text-transform:uppercase;
+
+            color:#64748B;
+
+            border-bottom:2px solid #E2E8F0;
+
+            transition: color 0.3s ease, border-color 0.3s ease;
+        }
+
+        td{
+
+            padding:16px 10px;
+
+            border-bottom:1px solid #F1F5F9;
+
+            transition: color 0.3s ease, border-color 0.3s ease;
+        }
+
+        /* ========================================= */
+        /* STATUS BADGE - 3 COLORS */
+        /* ========================================= */
+
+        .status{
+
+            padding:6px 12px;
+
+            border-radius:30px;
+
+            font-size:12px;
+
+            font-weight:700;
+
+            display:inline-block;
+
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .status-completed{
+
+            background:#D1FAE5;
+
+            color:#059669;
+        }
+
+        .status-progress{
+
+            background:#EDE9FE;
+
+            color:#7C3AED;
+        }
+
+        .status-pending{
+
+            background:#FEE2E2;
+
+            color:#DC2626;
+        }
+
+        /* ========================================= */
+        /* PAGINATION */
+        /* ========================================= */
+
+        .pagination-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .pagination-wrapper .pagination-info {
+            font-size: 14px;
+            color: #64748B;
+        }
+
+        .dark-mode .pagination-wrapper .pagination-info {
+            color: #94A3B8;
+        }
+
+        .pagination-wrapper .pagination {
+            gap: 4px;
+            margin: 0;
+        }
+
+        .pagination-wrapper .page-item .page-link {
+            border-radius: 10px;
+            padding: 8px 14px;
+            color: #0F172A;
+            border: 1px solid #E2E8F0;
+            background: white;
+            font-weight: 500;
+            font-size: 13px;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+
+        .pagination-wrapper .page-item.active .page-link {
+            background: #0D9488;
+            border-color: #0D9488;
+            color: white;
+        }
+
+        .pagination-wrapper .page-item .page-link:hover {
+            background: #F1F5F9;
+            border-color: #CBD5E1;
+        }
+
+        .pagination-wrapper .page-item.active .page-link:hover {
+            background: #0F766E;
+            border-color: #0F766E;
+        }
+
+        .pagination-wrapper .page-item.disabled .page-link {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .dark-mode .pagination-wrapper .page-item .page-link {
+            background: #1E293B;
+            border-color: #334155;
+            color: #F8FAFC;
+        }
+
+        .dark-mode .pagination-wrapper .page-item.active .page-link {
+            background: #0D9488;
+            border-color: #0D9488;
+            color: white;
+        }
+
+        .dark-mode .pagination-wrapper .page-item .page-link:hover {
+            background: #334155;
+        }
+
+        .dark-mode .pagination-wrapper .page-item.active .page-link:hover {
+            background: #0F766E;
+        }
+
+        /* ========================================= */
+        /* TOAST MESSAGE */
+        /* ========================================= */
+
+        .toast-msg{
+
+            position:fixed;
+
+            bottom:30px;
+            right:30px;
+
+            background:#1E293B;
+
+            color:white;
+
+            padding:12px 24px;
+
+            border-radius:50px;
+
+            border-left:4px solid #2DD4BF;
+
+            z-index:9999;
+
+            display:none;
+
+            animation:slideInRight 0.3s ease;
+
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .toast-msg.error {
+            border-left-color: #DC2626 !important;
+        }
+
+        .toast-msg.success {
+            border-left-color: #10B981 !important;
+        }
+
+        .toast-msg.info {
+            border-left-color: #3B82F6 !important;
+        }
+
+        /* ========================================= */
+        /* RESPONSIVE */
+        /* ========================================= */
+
+        @media(max-width:992px){
+
+            .sidebar{
+                width:90px;
+            }
+
+            .sidebar span,
+            .sidebar .logo-area .qa-tagline{
+                display:none;
+            }
+
+            .main-content{
+                margin-left:90px;
+            }
+        }
+
+        @media(max-width:768px){
+
+            .sidebar{
+                display:none;
+            }
+
+            .main-content{
+                margin-left:0;
+                padding:15px;
+            }
+
+            .topbar {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .top-actions {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .pagination-wrapper {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        /* Refresh button tooltip */
+        .btn-dark {
+            position: relative;
+        }
+
+        .btn-dark .refresh-tooltip {
+            position: absolute;
+            bottom: -32px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #0F172A;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.3s;
+        }
+
+        .dark-mode .btn-dark .refresh-tooltip {
+            background: #1E293B;
+        }
+
+        .btn-dark:hover .refresh-tooltip {
+            opacity: 1;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<!-- ========================================= -->
+<!-- SIDEBAR -->
+<!-- ========================================= -->
+
+<div class="sidebar">
+
+    <div class="logo-area">
+
+        <h2>
+
+            <i class="fas fa-microphone-alt"></i>
+
+            VoiceOC
+
+        </h2>
+
+        <!-- QA Daily Tasks - Single Tick on Left -->
+        <div class="qa-tagline">
+            <span class="tick-icon"><i class="fas fa-check-circle"></i></span>
+            <span class="tag-text">QA DAILY TASKS</span>
+        </div>
+
+    </div>
+
+    <div class="nav-item"
+         onclick="goPage('dashboard.html')">
+
+        <i class="fas fa-chart-line"></i>
+
+        <span>Dashboard</span>
+
+    </div>
+
+    <div class="nav-item"
+         onclick="goPage('tasks.html')">
+
+        <i class="fas fa-tasks"></i>
+
+        <span>Tasks</span>
+
+    </div>
+
+    <div class="nav-item"
+         onclick="goPage('clientdetails.html')">
+
+        <i class="fas fa-building"></i>
+
+        <span>Clients Detail</span>
+
+    </div>
+
+    <div class="nav-item"
+         onclick="goPage('bugtracker.html')">
+
+        <i class="fas fa-bug"></i>
+
+        <span>Bug Tracker</span>
+
+    </div>
+    
+    <div class="nav-item" onclick="location.href='json-sheet.html'">
+        <i class="fas fa-code"></i>
+        <span>JSON Sheets</span>
+    </div>
+    
+    <div class="nav-item" onclick="window.location.href='response-sheet.html'">
+    <i class="fas fa-file-excel"></i>
+    <span>Response Sheet</span>
+</div>
+    
+    <div class="nav-item" onclick="goPage('journey-map.html')">
+    <i class="fas fa-route"></i>
+    <span>Journey Map</span>
+</div>
+
+    <div class="nav-item" onclick="location.href='api-doc.html'">
+        <i class="fas fa-book"></i>
+        <span>API Doc</span>
+    </div>
+    
+    <div class="nav-item" onclick="location.href='dashboard-monitor.html'">
+        <i class="fas fa-heartbeat"></i>
+        <span>Monitor</span>
+    </div>
+    
+    <div class="nav-item" onclick="window.location.href='json-diff.html'">
+	    <i class="fas fa-code-branch"></i>
+	    <span>JSON Diff</span>
+	</div>
+
+    <div class="nav-item active">
+
+        <i class="fas fa-chart-pie"></i>
+
+        <span>Reports</span>
+
+    </div>
+
+    <div class="nav-item"
+         onclick="goPage('settings.html')">
+
+        <i class="fas fa-gear"></i>
+
+        <span>Settings</span>
+
+    </div>
+
+    <div class="nav-item"
+         id="logoutBtn">
+
+        <i class="fas fa-sign-out-alt"></i>
+
+        <span>Logout</span>
+
+    </div>
+
+</div>
+
+<!-- ========================================= -->
+<!-- MAIN CONTENT -->
+<!-- ========================================= -->
+
+<div class="main-content">
+
+    <!-- TOPBAR -->
+
+    <div class="topbar">
+
+        <div>
+
+            <h3>
+
+                <i class="fas fa-chart-pie text-primary"></i>
+
+                Reports & Analytics
+
+            </h3>
+
+            <p>
+
+                Real-time PROD status analytics
+
+            </p>
+
+        </div>
+
+        <div class="top-actions">
+
+            <button class="btn btn-success"
+                    onclick="exportExcel()">
+
+                <i class="fas fa-file-excel"></i>
+
+                Excel
+
+            </button>
+
+            <button class="btn btn-primary"
+                    onclick="exportCSV()">
+
+                <i class="fas fa-file-csv"></i>
+
+                CSV
+
+            </button>
+
+            <button class="btn btn-dark"
+                    id="btnRefresh"
+                    title="Refresh data">
+
+                <i class="fas fa-sync-alt"></i>
+                <span class="refresh-tooltip">Refresh</span>
+
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- STATISTICS -->
+
+    <div class="row g-4">
+
+        <div class="col-md-3 col-6">
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+
+                    <i class="fas fa-list-check"></i>
+
+                </div>
+
+                <div class="stat-label">
+
+                    Total Tasks
+
+                </div>
+
+                <div class="stat-value"
+                     id="totalTasks">
+
+                    0
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3 col-6">
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+
+                    <i class="fas fa-check-circle"></i>
+
+                </div>
+
+                <div class="stat-label">
+
+                    PROD Completed
+
+                </div>
+
+                <div class="stat-value"
+                     id="completedTasks">
+
+                    0
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3 col-6">
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+
+                    <i class="fas fa-spinner"></i>
+
+                </div>
+
+                <div class="stat-label">
+
+                    PROD In Progress
+
+                </div>
+
+                <div class="stat-value"
+                     id="inProgressTasks">
+
+                    0
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3 col-6">
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+
+                    <i class="fas fa-clock"></i>
+
+                </div>
+
+                <div class="stat-label">
+
+                    PROD Pending
+
+                </div>
+
+                <div class="stat-value"
+                     id="pendingTasks">
+
+                    0
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- CHARTS -->
+
+    <div class="row">
+
+        <div class="col-lg-6">
+
+            <div class="chart-card">
+
+                <h5 class="mb-4">
+
+                    PROD Status Distribution
+
+                </h5>
+
+                <canvas id="reportChart"></canvas>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-6">
+
+            <div class="chart-card">
+
+                <h5 class="mb-4">
+
+                    PROD Status Breakdown
+
+                </h5>
+
+                <canvas id="percentageChart"></canvas>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- TABLE -->
+
+    <div class="table-card">
+
+        <div class="d-flex
+                    justify-content-between
+                    align-items-center
+                    mb-4
+                    flex-wrap
+                    gap-2">
+
+            <h5>
+
+                Task Reports
+
+            </h5>
+
+            <input type="text"
+                   class="form-control"
+                   placeholder="Search..."
+                   style="width:250px;"
+                   onkeyup="searchTable(this.value)">
+
+        </div>
+
+        <div class="table-responsive">
+
+            <table class="table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Client</th>
+                        <th>Project</th>
+                        <th>Scenario</th>
+                        <th>UAT Status</th>
+                        <th>PROD Status</th>
+                        <th>Date</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="reportTableBody">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <!-- PAGINATION -->
+
+        <div class="pagination-wrapper">
+
+            <div class="pagination-info" id="paginationInfo">
+                Showing 0 to 0 of 0 entries
+            </div>
+
+            <nav>
+                <ul class="pagination" id="paginationControls">
+                    <!-- Rendered by JavaScript -->
+                </ul>
+            </nav>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ========================================= -->
+<!-- TOAST MESSAGE -->
+<!-- ========================================= -->
+
+<div id="toastMsg" class="toast-msg">
+    <span id="toastText"></span>
+</div>
+
+<script>
+
+    let tasksData = [];
+    let filteredData = [];
+    let currentPage = 1;
+    const pageSize = 10;
+
+    let reportChart;
+    let percentageChart;
+    let isRefreshing = false;
+
+    // =====================================
+    // DISPLAY USERNAME
+    // =====================================
+
+    function displayUserName() {
+        try {
+            const userDataStr = localStorage.getItem('voiceoc_user');
+            // You can display username in topbar if needed
+        } catch (error) {
+            console.error('Error displaying username:', error);
+        }
+    }
+
+    // =====================================
+    // CHECK SESSION MANAGER STATUS
+    // =====================================
+
+    function checkSessionManager() {
+        console.log('🔍 Session Manager Status:');
+        console.log('📋 typeof initAutoLogout:', typeof initAutoLogout);
+        console.log('📋 typeof showToastMessage:', typeof showToastMessage);
+        
+        if (typeof initAutoLogout === 'function') {
+            console.log('✅ Session manager loaded successfully!');
+        } else {
+            console.error('❌ Session manager NOT loaded! Check if js/session-manager.js exists.');
+        }
+    }
+
+    // =====================================
+    // TOAST FUNCTION
+    // =====================================
+
+    function showToast(message, isError, type) {
+        if (isError === undefined) isError = false;
+        if (type === undefined) type = 'success';
+        
+        // Use the session manager's toast if available
+        if (typeof window.showToastMessage === 'function') {
+            window.showToastMessage(message, isError ? 'error' : 'success');
+            return;
+        }
+        
+        // Fallback toast
+        const toastText = document.getElementById('toastText');
+        const toast = document.getElementById('toastMsg');
+        
+        if(toastText) toastText.innerText = message;
+        if(toast) {
+            toast.className = 'toast-msg';
+            if(isError) {
+                toast.classList.add('error');
+            } else if(type === 'info') {
+                toast.classList.add('info');
+            } else {
+                toast.classList.add('success');
+            }
+            toast.style.display = 'block';
+            clearTimeout(toast._timeout);
+            toast._timeout = setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+    }
+
+    // =====================================
+    // AUTH CHECK
+    // =====================================
+
+    function checkAuth() {
+        if (localStorage.getItem('voiceoc_logged_in') !== 'true') {
+            window.location.href = 'index.html';
+            return false;
+        }
+        return true;
+    }
+
+    // =====================================
+    // LOGOUT
+    // =====================================
+
+    function logout() {
+        localStorage.clear();
+        sessionStorage.clear();
+        
+        showToast('Logged out successfully');
+        
+        setTimeout(() => {
+            window.location.href = 'index.html';
+        }, 500);
+    }
+
+    // =====================================
+    // PAGE NAVIGATION
+    // =====================================
+
+    function goPage(page) {
+        window.location.href = page;
+    }
+
+    // =====================================
+    // APPLY DARK MODE
+    // =====================================
+
+    function applyDarkMode() {
+        const settings = JSON.parse(localStorage.getItem('voiceoc_settings') || '{}');
+        if (settings.darkMode) {
+            document.body.classList.add('dark-mode');
+        } else {
+            document.body.classList.remove('dark-mode');
+        }
+    }
+
+    // =====================================
+    // GET STATUS CLASS - 3 COLORS
+    // =====================================
+
+    function getStatusClass(status) {
+        if(!status) return 'status-pending';
+        const s = status.toLowerCase();
+        if(s === 'completed') return 'status-completed';
+        if(s === 'in progress') return 'status-progress';
+        if(s === 'pending') return 'status-pending';
+        return 'status-pending';
+    }
+
+    // =====================================
+    // IS COMPLETED
+    // =====================================
+
+    function isCompleted(status) {
+        if(!status) return false;
+        return status.toLowerCase() === 'completed';
+    }
+
+    // =====================================
+    // IS IN PROGRESS
+    // =====================================
+
+    function isInProgress(status) {
+        if(!status) return false;
+        return status.toLowerCase() === 'in progress';
+    }
+
+    // =====================================
+    // IS PENDING
+    // =====================================
+
+    function isPending(status) {
+        if(!status) return false;
+        return status.toLowerCase() === 'pending';
+    }
+
+    // =====================================
+    // REFRESH REPORTS
+    // =====================================
+
+    function refreshReports() {
+        const btn = document.getElementById('btnRefresh');
+        if (isRefreshing) return;
+        
+        isRefreshing = true;
+        
+        if (btn) {
+            btn.classList.add('spinning');
+            btn.disabled = true;
+        }
+        
+        showToast('🔄 Refreshing reports...', false, 'info');
+        
+        loadReports().finally(() => {
+            isRefreshing = false;
+            if (btn) {
+                btn.classList.remove('spinning');
+                btn.disabled = false;
+            }
+        });
+    }
+
+    // =====================================
+    // LOAD REPORTS - NEWEST FIRST
+    // =====================================
+
+    async function loadReports() {
+
+        try {
+
+            const response =
+                await fetch(
+                    "http://localhost:8080/api/tasks"
+                );
+
+            if (!response.ok) throw new Error('Failed to load tasks');
+            tasksData =
+                await response.json();
+
+            // Sort by ID descending (newest first)
+            tasksData.sort((a, b) => b.id - a.id);
+
+            console.log('📊 Tasks loaded:', tasksData.length);
+            filteredData = [...tasksData];
+            currentPage = 1;
+            renderReports();
+            showToast('✅ Reports refreshed successfully!');
+
+        } catch(error){
+
+            console.log('Error loading tasks:', error);
+            showToast("Unable to load reports from server", true);
+            loadDemoData();
+        }
+    }
+
+    // =====================================
+    // LOAD DEMO DATA
+    // =====================================
+
+    function loadDemoData() {
+        const demoData = [
+            {
+                id: 13,
+                clientName: "WoodLand Hospital",
+                projectName: "JSON Update",
+                scenario: "Updated the Json from : 03340337000 to 9915333333",
+                uatStatus: "Completed",
+                prodStatus: "Completed",
+                priority: "Medium",
+                testDate: "2026-06-30"
+            },
+            {
+                id: 12,
+                clientName: "Al Abeer Medical Company",
+                projectName: "Client Meeting",
+                scenario: "After the meeting with the Abeer client, I will co...",
+                uatStatus: "Pending",
+                prodStatus: "Pending",
+                priority: "High",
+                testDate: "2026-07-03"
+            },
+            {
+                id: 11,
+                clientName: "Sancheti Hospital",
+                projectName: "JSON Changes",
+                scenario: "Have to do changes in json the points is 1. Added...",
+                uatStatus: "Pending",
+                prodStatus: "Pending",
+                priority: "High",
+                testDate: "2026-07-03"
+            },
+            {
+                id: 10,
+                clientName: "Sparsh Web Bot",
+                projectName: "Web Bot Testing",
+                scenario: "Have to test web bot Sparsh Hospital - Webbot...",
+                uatStatus: "Completed",
+                prodStatus: "Pending",
+                priority: "High",
+                testDate: "2026-07-06"
+            },
+            {
+                id: 9,
+                clientName: "Abeer Medical",
+                projectName: "Response Verification",
+                scenario: "Verified the Response sheet created by trivedi",
+                uatStatus: "Completed",
+                prodStatus: "Completed",
+                priority: "Medium",
+                testDate: "2026-07-06"
+            },
+            {
+                id: 8,
+                clientName: "Care Hospital",
+                projectName: "Chat Bot Testing",
+                scenario: "Have to test all flows of chat bot after new api i...",
+                uatStatus: "In Progress",
+                prodStatus: "Pending",
+                priority: "High",
+                testDate: "2026-07-07"
+            },
+            {
+                id: 7,
+                clientName: "Abeer Medical Group",
+                projectName: "Client Complaint Testing",
+                scenario: "Have to test the clients complain points that all ...",
+                uatStatus: "Pending",
+                prodStatus: "Pending",
+                priority: "Critical",
+                testDate: "2026-07-08"
+            },
+            {
+                id: 6,
+                clientName: "New Care Hospital",
+                projectName: "JSON Update",
+                scenario: "Have to update the json to remove download report ...",
+                uatStatus: "Completed",
+                prodStatus: "Completed",
+                priority: "Medium",
+                testDate: "2026-07-14"
+            },
+            {
+                id: 5,
+                clientName: "Paras Hospital",
+                projectName: "Lead Creation Testing",
+                scenario: "Have to test the Lead creation should not be appli...",
+                uatStatus: "Completed",
+                prodStatus: "Completed",
+                priority: "High",
+                testDate: "2026-07-14"
+            },
+            {
+                id: 4,
+                clientName: "Al Kindi",
+                projectName: "JSON Changes",
+                scenario: "Have to do json changes the changes are 1. Ara...",
+                uatStatus: "Pending",
+                prodStatus: "Pending",
+                priority: "High",
+                testDate: "2026-07-14"
+            },
+            {
+                id: 3,
+                clientName: "Vijaya Hospital",
+                projectName: "Chat Bot Testing",
+                scenario: "Have to test full flow of chat bot and Dashboard ...",
+                uatStatus: "In Progress",
+                prodStatus: "Pending",
+                priority: "Critical",
+                testDate: "2026-07-14"
+            },
+            {
+                id: 2,
+                clientName: "Abeer Medical Group",
+                projectName: "Delayed Points Testing",
+                scenario: "Have to test 9th july points which are 1. Delay...",
+                uatStatus: "In Progress",
+                prodStatus: "Pending",
+                priority: "High",
+                testDate: "2026-07-15"
+            },
+            {
+                id: 1,
+                clientName: "Sparsh Web Bot",
+                projectName: "Chatbot Workflow",
+                scenario: "Sparsh Hospital - Webbot (Chatbot workflow) 1. T...",
+                uatStatus: "Completed",
+                prodStatus: "Pending",
+                priority: "High",
+                testDate: "2026-07-17"
+            }
+        ];
+        
+        tasksData = demoData;
+        filteredData = [...demoData];
+        currentPage = 1;
+        renderReports();
+        showToast("Using demo data (Backend not available)", true, 'info');
+    }
+
+    // =====================================
+    // RENDER REPORTS - WITH PAGINATION
+    // =====================================
+
+    function renderReports() {
+
+        const totalItems = filteredData.length;
+        const totalPages = Math.ceil(totalItems / pageSize) || 1;
+
+        // Ensure current page is valid
+        if (currentPage > totalPages) currentPage = totalPages;
+        if (currentPage < 1) currentPage = 1;
+
+        const start = (currentPage - 1) * pageSize;
+        const end = Math.min(start + pageSize, totalItems);
+        const pageItems = filteredData.slice(start, end);
+
+        const tbody = document.getElementById('reportTableBody');
+
+        if (totalItems === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="6" class="text-center py-4 text-muted">
+                        <i class="fas fa-inbox fa-2x d-block mb-2"></i>
+                        No tasks available
+                    </td>
+                </tr>
+            `;
+            updateStats(0, 0, 0, 0);
+            renderCharts(0, 0, 0);
+            renderPagination(totalPages, totalItems);
+            return;
+        }
+
+        let rows = "";
+        let completedProd = 0;
+        let pendingProd = 0;
+        let inProgressProd = 0;
+
+        // Count all filtered items for stats
+        filteredData.forEach(task => {
+            if(isCompleted(task.prodStatus)) {
+                completedProd++;
+            } else if(isInProgress(task.prodStatus)) {
+                inProgressProd++;
+            } else {
+                pendingProd++;
+            }
+        });
+
+        // Build rows for current page
+        pageItems.forEach(task => {
+            const uatClass = getStatusClass(task.uatStatus);
+            const prodClass = getStatusClass(task.prodStatus);
+
+            rows += `
+                <tr>
+                    <td><strong>${task.clientName || '-'}</strong></td>
+                    <td>${task.projectName || task.moduleName || '-'}</td>
+                    <td>${task.scenario ? (task.scenario.substring(0, 50) + (task.scenario.length > 50 ? '...' : '')) : '-'}</td>
+                    <td><span class="status ${uatClass}">${task.uatStatus || '-'}</span></td>
+                    <td><span class="status ${prodClass}">${task.prodStatus || '-'}</span></td>
+                    <td>${task.testDate || task.createdDate || '-'}</td>
+                </tr>
+            `;
+        });
+
+        tbody.innerHTML = rows;
+
+        // Update stats
+        updateStats(totalItems, completedProd, inProgressProd, pendingProd);
+
+        // Render charts
+        renderCharts(completedProd, inProgressProd, pendingProd);
+
+        // Render pagination
+        renderPagination(totalPages, totalItems);
+    }
+
+    // =====================================
+    // RENDER PAGINATION
+    // =====================================
+
+    function renderPagination(totalPages, totalItems) {
+        const controls = document.getElementById('paginationControls');
+        const info = document.getElementById('paginationInfo');
+
+        const start = (currentPage - 1) * pageSize + 1;
+        const end = Math.min(currentPage * pageSize, totalItems);
+        info.textContent = `Showing ${totalItems > 0 ? start : 0} to ${end} of ${totalItems} entries`;
+
+        if (totalPages <= 1) {
+            controls.innerHTML = '';
+            return;
+        }
+
+        let html = '';
+
+        // Previous button
+        html += `
+            <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+                <span class="page-link" onclick="changePage(${currentPage - 1})">&laquo;</span>
+            </li>
+        `;
+
+        // Page numbers
+        const maxVisible = 5;
+        let startPage = Math.max(1, currentPage - Math.floor(maxVisible / 2));
+        let endPage = Math.min(totalPages, startPage + maxVisible - 1);
+
+        if (endPage - startPage < maxVisible - 1) {
+            startPage = Math.max(1, endPage - maxVisible + 1);
+        }
+
+        if (startPage > 1) {
+            html += `
+                <li class="page-item"><span class="page-link" onclick="changePage(1)">1</span></li>
+                ${startPage > 2 ? '<li class="page-item disabled"><span class="page-link">...</span></li>' : ''}
+            `;
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            html += `
+                <li class="page-item ${i === currentPage ? 'active' : ''}">
+                    <span class="page-link" onclick="changePage(${i})">${i}</span>
+                </li>
+            `;
+        }
+
+        if (endPage < totalPages) {
+            html += `
+                ${endPage < totalPages - 1 ? '<li class="page-item disabled"><span class="page-link">...</span></li>' : ''}
+                <li class="page-item"><span class="page-link" onclick="changePage(${totalPages})">${totalPages}</span></li>
+            `;
+        }
+
+        // Next button
+        html += `
+            <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+                <span class="page-link" onclick="changePage(${currentPage + 1})">&raquo;</span>
+            </li>
+        `;
+
+        controls.innerHTML = html;
+    }
+
+    // =====================================
+    // CHANGE PAGE
+    // =====================================
+
+    function changePage(page) {
+        const totalPages = Math.ceil(filteredData.length / pageSize) || 1;
+        if (page < 1 || page > totalPages) return;
+        currentPage = page;
+        renderReports();
+        // Scroll to table
+        document.querySelector('.table-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // =====================================
+    // UPDATE STATS
+    // =====================================
+
+    function updateStats(total, completed, inProgress, pending) {
+        document.getElementById('totalTasks').innerText = total;
+        document.getElementById('completedTasks').innerText = completed;
+        document.getElementById('inProgressTasks').innerText = inProgress;
+        document.getElementById('pendingTasks').innerText = pending;
+    }
+
+    // =====================================
+    // RENDER CHARTS
+    // =====================================
+
+    function renderCharts(completed, inProgress, pending) {
+
+        // Destroy existing charts if they exist
+        if(reportChart) {
+            reportChart.destroy();
+        }
+        if(percentageChart) {
+            percentageChart.destroy();
+        }
+
+        const ctx1 = document.getElementById('reportChart');
+        const ctx2 = document.getElementById('percentageChart');
+
+        if(ctx1) {
+            reportChart = new Chart(ctx1, {
+                type: 'doughnut',
+                data: {
+                    labels: ['✅ Completed', '🔄 In Progress', '⏳ Pending'],
+                    datasets: [{
+                        data: [completed, inProgress, pending],
+                        backgroundColor: ['#10B981', '#8B5CF6', '#F59E0B'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        }
+
+        if(ctx2) {
+            const remaining = pending + inProgress;
+            
+            percentageChart = new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: ['✅ Completed', '🔄 In Progress', '⏳ Pending'],
+                    datasets: [{
+                        data: [completed, inProgress, pending],
+                        backgroundColor: ['#2DD4BF', '#8B5CF6', '#F59E0B'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const total = completed + inProgress + pending;
+                                    const percentage = total > 0 ? ((context.raw / total) * 100).toFixed(1) : 0;
+                                    return context.raw + ' tasks (' + percentage + '%)';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    // =====================================
+    // SEARCH TABLE
+    // =====================================
+
+    function searchTable(searchText) {
+        const text = searchText.toLowerCase().trim();
+        
+        if (text === '') {
+            filteredData = [...tasksData];
+        } else {
+            filteredData = tasksData.filter(task => {
+                return (task.clientName && task.clientName.toLowerCase().includes(text)) ||
+                       (task.projectName && task.projectName.toLowerCase().includes(text)) ||
+                       (task.moduleName && task.moduleName.toLowerCase().includes(text)) ||
+                       (task.scenario && task.scenario.toLowerCase().includes(text));
+            });
+        }
+        
+        currentPage = 1;
+        renderReports();
+    }
+
+    // =====================================
+    // EXPORT FUNCTIONS
+    // =====================================
+
+    function exportExcel() {
+        exportData('xlsx');
+    }
+
+    function exportCSV() {
+        exportData('csv');
+    }
+
+    function exportData(format) {
+        // Export all filtered data, not just current page
+        if (filteredData.length === 0) {
+            showToast('No data to export', true);
+            return;
+        }
+
+        let csv = [];
+        // Header
+        csv.push('"Client","Project","Scenario","UAT Status","PROD Status","Date"');
+        
+        // Data rows
+        filteredData.forEach(task => {
+            const row = [
+                '"' + (task.clientName || '-') + '"',
+                '"' + (task.projectName || task.moduleName || '-') + '"',
+                '"' + (task.scenario ? task.scenario.replace(/"/g, '""') : '-') + '"',
+                '"' + (task.uatStatus || '-') + '"',
+                '"' + (task.prodStatus || '-') + '"',
+                '"' + (task.testDate || task.createdDate || '-') + '"'
+            ];
+            csv.push(row.join(','));
+        });
+        
+        const blob = new Blob([csv.join('\n')], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `reports_${new Date().toISOString().split('T')[0]}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+        
+        showToast(`Report exported as ${format.toUpperCase()}`);
+    }
+
+    // =====================================
+    // INITIALIZATION
+    // =====================================
+
+    document.addEventListener('DOMContentLoaded', () => {
+
+        // Check authentication first
+        if (!checkAuth()) return;
+
+        // Apply dark mode
+        applyDarkMode();
+
+        // Display username
+        displayUserName();
+
+        // Check session manager
+        checkSessionManager();
+
+        // Load reports
+        loadReports();
+
+        // Setup refresh button
+        document.getElementById('btnRefresh').addEventListener('click', refreshReports);
+
+        // Setup logout button
+        const logoutBtn = document.getElementById('logoutBtn');
+        if(logoutBtn) {
+            logoutBtn.addEventListener('click', logout);
+        }
+
+        // Keyboard shortcut: F5 or Ctrl+R to refresh
+        document.addEventListener('keydown', (e) => {
+            if ((e.key === 'F5') || (e.ctrlKey && e.key === 'r')) {
+                e.preventDefault();
+                refreshReports();
+            }
+        });
+    });
+
+    // Make functions globally available
+    window.goPage = goPage;
+    window.logout = logout;
+    window.showToast = showToast;
+    window.exportExcel = exportExcel;
+    window.exportCSV = exportCSV;
+    window.refreshReports = refreshReports;
+    window.searchTable = searchTable;
+    window.changePage = changePage;
+
+</script>
+
+</body>
+
+</html>

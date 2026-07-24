@@ -1,0 +1,1724 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VoiceOC · Settings</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- SESSION MANAGER - Auto Logout for ALL Pages (15 minutes) -->
+    <script src="js/session-manager.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #F1F5F9;
+            overflow-x: hidden;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        /* Pulse Animation for Countdown */
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .dark-mode {
+            background: #020617 !important;
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .top-nav,
+        .dark-mode .settings-card {
+            background: #111827 !important;
+            color: white !important;
+            border-color: #1E293B !important;
+        }
+
+        .dark-mode .top-nav .page-title h3,
+        .dark-mode .top-nav .page-title p {
+            color: white !important;
+        }
+
+        .dark-mode .top-nav .user-badge {
+            background: #1E293B !important;
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .settings-card .card-header h5 {
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .settings-card .setting-item {
+            border-bottom-color: #1E293B !important;
+        }
+
+        .dark-mode .settings-card .setting-item .setting-label {
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .settings-card .setting-item .setting-description {
+            color: #94A3B8 !important;
+        }
+
+        .dark-mode .settings-card .form-control {
+            background: #1E293B !important;
+            color: #F8FAFC !important;
+            border-color: #334155 !important;
+        }
+
+        .dark-mode .settings-card .form-control:focus {
+            background: #1E293B !important;
+            border-color: #2DD4BF !important;
+        }
+
+        .dark-mode .settings-card .form-label {
+            color: #94A3B8 !important;
+        }
+
+        .dark-mode .settings-card .text-muted {
+            color: #94A3B8 !important;
+        }
+
+        .dark-mode .settings-card .btn-primary {
+            background: #0D9488 !important;
+            border-color: #0D9488 !important;
+        }
+
+        .dark-mode .settings-card .btn-outline-primary {
+            color: #60A5FA !important;
+            border-color: #1E3A5F !important;
+        }
+
+        .dark-mode .settings-card .btn-outline-primary:hover {
+            background: #1E3A5F !important;
+            color: #60A5FA !important;
+        }
+
+        .dark-mode .settings-card .btn-danger {
+            background: #7F1D1D !important;
+            border-color: #7F1D1D !important;
+        }
+
+        .dark-mode .settings-card .btn-danger:hover {
+            background: #991B1B !important;
+        }
+
+        .dark-mode .settings-card .btn-outline-secondary {
+            color: #94A3B8 !important;
+            border-color: #334155 !important;
+        }
+
+        .dark-mode .settings-card .btn-outline-secondary:hover {
+            background: #334155 !important;
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .toast-msg {
+            background: #1E293B !important;
+            color: #F8FAFC !important;
+            border-left-color: #2DD4BF !important;
+        }
+
+        .dark-mode .toast-msg.error {
+            border-left-color: #DC2626 !important;
+        }
+
+        .dark-mode .toast-msg.success {
+            border-left-color: #10B981 !important;
+        }
+
+        .dark-mode .weather-widget {
+            background: #1E293B !important;
+            color: #F8FAFC !important;
+            border-color: #334155 !important;
+        }
+
+        .dark-mode .weather-widget .weather-info .temp {
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .weather-widget .weather-info .condition {
+            color: #94A3B8 !important;
+        }
+
+        .dark-mode .weather-widget .weather-info .location {
+            color: #64748B !important;
+        }
+
+        .dark-mode .quick-search {
+            background: #1E293B !important;
+            color: #F8FAFC !important;
+            border-color: #334155 !important;
+        }
+
+        .dark-mode .quick-search::placeholder {
+            color: #64748B !important;
+        }
+
+        .dark-mode .search-section {
+            background: #1E293B !important;
+            border-color: #334155 !important;
+        }
+
+        .dark-mode .search-section .form-control {
+            background: #1E293B !important;
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        .dark-mode ::-webkit-scrollbar-track {
+            background: #1E293B;
+        }
+
+        .dark-mode ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+
+        .dark-mode ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 280px;
+            height: 100vh;
+            background: linear-gradient(180deg, #0F172A 0%, #020617 100%);
+            position: fixed;
+            left: 0;
+            top: 0;
+            padding-top: 25px;
+            transition: 0.3s;
+            z-index: 999;
+            overflow-y: auto;
+        }
+
+        .sidebar .logo-area {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .sidebar .logo-area h2 {
+            color: white;
+            font-weight: 800;
+            font-size: 1.7rem;
+        }
+
+        .sidebar .logo-area h2 i {
+            color: #2DD4BF;
+            margin-right: 10px;
+        }
+
+        /* QA Daily Tasks - Single Tick on Left */
+        .sidebar .logo-area .qa-tagline {
+            color: #10B981 !important;
+            font-weight: 700 !important;
+            font-size: 11px !important;
+            letter-spacing: 2px;
+            margin-top: 8px;
+            text-align: center;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 0 10px;
+        }
+
+        .sidebar .logo-area .qa-tagline .tick-icon {
+            color: #10B981;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        .sidebar .logo-area .qa-tagline .tick-icon i {
+            font-size: 12px;
+        }
+
+        .sidebar .logo-area .qa-tagline .tag-text {
+            flex-shrink: 0;
+            padding: 0 2px;
+            color: #10B981;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .dark-mode .sidebar .logo-area .qa-tagline {
+            color: #34D399 !important;
+        }
+
+        .dark-mode .sidebar .logo-area .qa-tagline .tick-icon {
+            color: #34D399;
+        }
+
+        .dark-mode .sidebar .logo-area .qa-tagline .tag-text {
+            color: #34D399;
+        }
+
+        .sidebar .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: #94A3B8;
+            margin: 6px 12px;
+            padding: 14px 18px;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .sidebar .nav-item:hover {
+            background: rgba(45, 212, 191, 0.12);
+            color: white;
+            transform: translateX(6px);
+        }
+
+        .sidebar .nav-item.active {
+            background: linear-gradient(95deg, #0D9488, #0F766E);
+            color: white;
+        }
+
+        .sidebar .nav-item i {
+            width: 24px;
+            font-size: 18px;
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            margin-left: 280px;
+            padding: 30px;
+            transition: 0.3s;
+        }
+
+        /* TOP NAV */
+        .top-nav {
+            background: white;
+            padding: 18px 25px;
+            border-radius: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border: 1px solid #E2E8F0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            flex-wrap: wrap;
+            gap: 10px;
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .top-nav .page-title h3 {
+            margin: 0;
+            font-weight: 800;
+            color: #0F172A;
+            transition: color 0.3s ease;
+        }
+
+        .top-nav .page-title p {
+            margin: 5px 0 0;
+            color: #64748B;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+        .top-nav .top-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .top-nav .user-badge {
+            background: #F1F5F9;
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 14px;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .top-nav .user-badge i {
+            margin-right: 8px;
+            color: #0D9488;
+        }
+
+        /* SETTINGS CARDS */
+        .settings-card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            border: 1px solid #E2E8F0;
+            margin-bottom: 25px;
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .settings-card:hover {
+            box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.12);
+        }
+
+        .settings-card .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #F1F5F9;
+            transition: border-color 0.3s ease;
+        }
+
+        .settings-card .card-header i {
+            color: #0D9488;
+            font-size: 20px;
+            width: 24px;
+        }
+
+        .settings-card .card-header h5 {
+            margin: 0;
+            font-weight: 700;
+            color: #0F172A;
+            transition: color 0.3s ease;
+        }
+
+        .settings-card .setting-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 0;
+            border-bottom: 1px solid #F1F5F9;
+            transition: border-color 0.3s ease;
+        }
+
+        .settings-card .setting-item:last-child {
+            border-bottom: none;
+        }
+
+        .settings-card .setting-item .setting-info {
+            flex: 1;
+        }
+
+        .settings-card .setting-item .setting-info .setting-label {
+            font-weight: 600;
+            color: #0F172A;
+            transition: color 0.3s ease;
+        }
+
+        .settings-card .setting-item .setting-info .setting-description {
+            color: #64748B;
+            font-size: 13px;
+            margin-top: 2px;
+            transition: color 0.3s ease;
+        }
+
+        /* Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 28px;
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #CBD5E1;
+            transition: 0.4s;
+            border-radius: 34px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 4px;
+            bottom: 4px;
+            background: white;
+            transition: 0.4s;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+        }
+
+        .toggle-switch input:checked+.toggle-slider {
+            background: #0D9488;
+        }
+
+        .toggle-switch input:checked+.toggle-slider:before {
+            transform: translateX(22px);
+        }
+
+        /* Form Controls */
+        .form-label {
+            font-weight: 600;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+        .form-control {
+            border-radius: 12px;
+            border: 1px solid #E2E8F0;
+            padding: 12px 16px;
+            font-size: 14px;
+            transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #0D9488;
+            box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1);
+        }
+
+        .form-control:disabled {
+            background: #F1F5F9;
+            cursor: not-allowed;
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background: #0D9488;
+            border-color: #0D9488;
+            border-radius: 50px;
+            padding: 10px 24px;
+            font-weight: 600;
+        }
+
+        .btn-primary:hover {
+            background: #0F766E;
+            border-color: #0F766E;
+        }
+
+        .btn-outline-primary {
+            border-radius: 50px;
+            padding: 10px 24px;
+            font-weight: 600;
+        }
+
+        .btn-danger {
+            border-radius: 50px;
+            padding: 10px 24px;
+            font-weight: 600;
+        }
+
+        .btn-outline-secondary {
+            border-radius: 50px;
+            padding: 10px 24px;
+            font-weight: 600;
+        }
+
+        /* WEATHER WIDGET */
+        .weather-widget {
+            background: white;
+            border-radius: 20px;
+            padding: 20px 25px;
+            border: 1px solid #E2E8F0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background 0.3s ease, border-color 0.3s ease;
+            min-width: 200px;
+        }
+
+        .weather-widget .weather-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            width: 100%;
+        }
+
+        .weather-widget .weather-info i {
+            font-size: 32px;
+            color: #F59E0B;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .weather-widget .weather-info .weather-details {
+            flex: 1;
+        }
+
+        .weather-widget .weather-info .temp {
+            font-size: 28px;
+            font-weight: 700;
+            color: #0F172A;
+            transition: color 0.3s ease;
+        }
+
+        .weather-widget .weather-info .condition {
+            color: #64748B;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+        .weather-widget .weather-info .location {
+            color: #94A3B8;
+            font-size: 11px;
+            transition: color 0.3s ease;
+        }
+
+        /* SEARCH SECTION */
+        .search-section {
+            background: white;
+            border-radius: 20px;
+            padding: 15px 20px;
+            border: 1px solid #E2E8F0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .search-section .form-control {
+            border: none;
+            padding: 8px 0;
+            font-size: 14px;
+            background: transparent;
+        }
+
+        .search-section .form-control:focus {
+            box-shadow: none;
+        }
+
+        .search-section .search-icon {
+            color: #94A3B8;
+        }
+
+        /* TOAST */
+        .toast-msg {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #1E293B;
+            color: white;
+            padding: 14px 24px;
+            border-radius: 50px;
+            z-index: 9999;
+            display: none;
+            animation: slideInRight 0.3s ease;
+            border-left: 4px solid #2DD4BF;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            max-width: 90%;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .toast-msg.error {
+            border-left-color: #DC2626;
+        }
+
+        .toast-msg.success {
+            border-left-color: #10B981;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* PASSWORD MODAL - DARK MODE SUPPORT */
+        .modal-content {
+            border-radius: 20px !important;
+            border: 1px solid var(--border-color) !important;
+            background: var(--bg-card) !important;
+        }
+
+        .dark-mode .modal-content {
+            background: #111827 !important;
+            border-color: #1E293B !important;
+        }
+
+        .dark-mode .modal-header {
+            border-bottom-color: #1E293B !important;
+        }
+
+        .dark-mode .modal-header .modal-title {
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .modal-footer {
+            border-top-color: #1E293B !important;
+        }
+
+        .dark-mode .modal-body .form-label {
+            color: #94A3B8 !important;
+        }
+
+        .dark-mode .modal-body .form-control {
+            background: #0F172A !important;
+            color: #F8FAFC !important;
+            border-color: #1E293B !important;
+        }
+
+        .dark-mode .modal-body .form-control:focus {
+            border-color: #2DD4BF !important;
+            box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.1) !important;
+        }
+
+        .dark-mode .modal-body p {
+            color: #94A3B8 !important;
+        }
+
+        .dark-mode .btn-secondary {
+            background: #1E293B !important;
+            color: #94A3B8 !important;
+            border-color: #334155 !important;
+        }
+
+        .dark-mode .btn-secondary:hover {
+            background: #334155 !important;
+            color: #F8FAFC !important;
+        }
+
+        /* RESPONSIVE */
+        @media(max-width:992px) {
+            .sidebar {
+                width: 90px;
+            }
+            .sidebar .nav-item span,
+            .sidebar .logo-area .qa-tagline {
+                display: none;
+            }
+            .main-content {
+                margin-left: 90px;
+            }
+        }
+
+        @media(max-width:768px) {
+            .main-content {
+                margin-left: 0;
+                padding: 15px;
+            }
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .top-nav {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .top-nav .top-right {
+                justify-content: center;
+            }
+            .settings-card .setting-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+            .weather-widget {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+            .weather-widget .weather-info {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <!-- ========================================= -->
+    <!-- SIDEBAR -->
+    <!-- ========================================= -->
+
+    <div class="sidebar">
+        <div class="logo-area">
+            <h2>
+                <i class="fas fa-microphone-alt"></i>
+                VoiceOC
+            </h2>
+            <div class="qa-tagline">
+                <span class="tick-icon"><i class="fas fa-check-circle"></i></span>
+                <span class="tag-text">QA DAILY TASKS</span>
+            </div>
+        </div>
+
+        <div class="nav-item" onclick="goPage('dashboard.html')">
+            <i class="fas fa-chart-line"></i>
+            <span>Dashboard</span>
+        </div>
+
+        <div class="nav-item" onclick="goPage('tasks.html')">
+            <i class="fas fa-tasks"></i>
+            <span>Tasks</span>
+        </div>
+
+        <div class="nav-item" onclick="goPage('clientdetails.html')">
+            <i class="fas fa-building"></i>
+            <span>Clients Detail</span>
+        </div>
+
+        <div class="nav-item" onclick="goPage('bugtracker.html')">
+            <i class="fas fa-bug"></i>
+            <span>Bug Tracker</span>
+        </div>
+
+        <div class="nav-item" onclick="location.href='json-sheet.html'">
+            <i class="fas fa-code"></i>
+            <span>JSON Sheets</span>
+        </div>
+
+        <div class="nav-item" onclick="window.location.href='response-sheet.html'">
+            <i class="fas fa-file-excel"></i>
+            <span>Response Sheet</span>
+        </div>
+
+        <div class="nav-item" onclick="window.location.href='journey-map.html'">
+            <i class="fas fa-route"></i>
+            <span>Journey Map</span>
+        </div>
+
+        <div class="nav-item" onclick="location.href='api-doc.html'">
+            <i class="fas fa-book"></i>
+            <span>API Doc</span>
+        </div>
+
+        <div class="nav-item" onclick="location.href='dashboard-monitor.html'">
+            <i class="fas fa-heartbeat"></i>
+            <span>Monitor</span>
+        </div>
+
+        <div class="nav-item" onclick="window.location.href='json-diff.html'">
+            <i class="fas fa-code-branch"></i>
+            <span>JSON Diff</span>
+        </div>
+
+        <div class="nav-item" onclick="goPage('reports.html')">
+            <i class="fas fa-chart-pie"></i>
+            <span>Reports</span>
+        </div>
+
+        <div class="nav-item active">
+            <i class="fas fa-gear"></i>
+            <span>Settings</span>
+        </div>
+
+        <div class="nav-item" id="logoutBtn" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Logout</span>
+        </div>
+    </div>
+
+    <!-- ========================================= -->
+    <!-- MAIN CONTENT -->
+    <!-- ========================================= -->
+
+    <div class="main-content">
+
+        <!-- TOP NAV -->
+        <div class="top-nav">
+            <div class="page-title">
+                <h3><i class="fas fa-gear" style="color:#0D9488;"></i> System Settings</h3>
+                <p>Configure application preferences and security</p>
+            </div>
+
+            <div class="top-right">
+                <span id="liveClock" class="fw-bold"></span>
+                <span class="user-badge">
+                    <i class="fas fa-user-check"></i>
+                    <span id="userNameDisplay">User</span>
+                </span>
+            </div>
+        </div>
+
+        <!-- SETTINGS CONTENT -->
+        <div class="row">
+            <div class="col-lg-8">
+                <!-- Notification Preferences -->
+                <div class="settings-card">
+                    <div class="card-header">
+                        <i class="fas fa-bell"></i>
+                        <h5>Notification Preferences</h5>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">Email Notifications</div>
+                            <div class="setting-description">Receive email alerts for task assignments and bugs</div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="emailToggle" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">Desktop Notifications</div>
+                            <div class="setting-description">Show browser notifications</div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="desktopToggle" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Appearance -->
+                <div class="settings-card">
+                    <div class="card-header">
+                        <i class="fas fa-palette"></i>
+                        <h5>Appearance</h5>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">Dark Mode</div>
+                            <div class="setting-description">Switch between light and dark theme</div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="darkModeToggle" onchange="toggleDarkMode()">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Data Management -->
+                <div class="settings-card">
+                    <div class="card-header">
+                        <i class="fas fa-database"></i>
+                        <h5>Data Management</h5>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">Auto Backup</div>
+                            <div class="setting-description">Automatically backup data every 24 hours</div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="backupToggle" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">Sync Data</div>
+                            <div class="setting-description">Sync data across all devices</div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="syncToggle" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="mt-3">
+                        <button class="btn btn-outline-secondary" onclick="exportData()">
+                            <i class="fas fa-download me-1"></i> Export Data
+                        </button>
+                        <!-- ✅ UPDATED: Clear Data button triggers password modal -->
+                        <button class="btn btn-outline-danger ms-2" onclick="clearData()">
+                            <i class="fas fa-trash me-1"></i> Clear Data
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <!-- Weather Widget -->
+                <div class="weather-widget" id="weatherWidget">
+                    <div class="weather-info" id="weatherInfo">
+                        <i class="fas fa-spinner fa-spin" id="weatherIcon"></i>
+                        <div class="weather-details">
+                            <div class="temp" id="weatherTemp">--°C</div>
+                            <div class="condition" id="weatherCondition">Loading...</div>
+                            <div class="location" id="weatherLocation">Fetching location...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Security -->
+                <div class="settings-card mt-3">
+                    <div class="card-header">
+                        <i class="fas fa-shield-alt"></i>
+                        <h5>Security</h5>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">Two-Factor Auth</div>
+                            <div class="setting-description">Add extra security layer</div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="twoFactorToggle">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">Session Timeout</div>
+                            <div class="setting-description">Auto logout after inactivity (15 minutes)</div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="sessionToggle" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="mt-3">
+                        <button class="btn btn-outline-secondary w-100" onclick="changePassword()">
+                            <i class="fas fa-key me-1"></i> Change Password
+                        </button>
+                    </div>
+                </div>
+
+                <!-- About -->
+                <div class="settings-card">
+                    <div class="card-header">
+                        <i class="fas fa-info-circle"></i>
+                        <h5>About</h5>
+                    </div>
+                    <div class="text-center py-2">
+                        <i class="fas fa-microphone-alt" style="font-size: 40px; color: #0D9488;"></i>
+                        <h6 class="mt-2">VoiceOC</h6>
+                        <p class="text-muted small">QA Daily Tasks v1.0.0</p>
+                    </div>
+                </div>
+
+                <!-- Search -->
+                <div class="search-section">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="form-control" placeholder="Search" id="settingsSearch">
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ========================================= -->
+    <!-- PASSWORD CONFIRMATION MODAL -->
+    <!-- ========================================= -->
+
+    <div class="modal fade" id="passwordModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-sm modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header" style="border-bottom: 1px solid var(--border-color, #E2E8F0);">
+                    <h5 class="modal-title" style="color: var(--text-primary, #0F172A);">
+                        <i class="fas fa-shield-alt" style="color: #ef4444;"></i> Verify Password
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" style="filter: var(--btn-close-filter, none);"></button>
+                </div>
+                <div class="modal-body">
+                    <p style="color: var(--text-secondary, #64748B); font-size: 14px; margin-bottom: 16px;">
+                        <i class="fas fa-exclamation-triangle" style="color: #f59e0b;"></i>
+                        This action will permanently delete all your data. Please enter your password to confirm.
+                    </p>
+                    <div class="mb-3">
+                        <label class="form-label" style="color: var(--text-secondary, #64748B);">Enter Password</label>
+                        <input type="password" class="form-control" id="confirmPasswordInput" 
+                               placeholder="Enter your password" 
+                               style="background: var(--bg-secondary, #F1F5F9); color: var(--text-primary, #0F172A); border-color: var(--border-color, #E2E8F0);">
+                        <small class="text-muted" id="passwordError" style="display: none; color: #ef4444 !important;">
+                            <i class="fas fa-times-circle"></i> Incorrect password. Please try again.
+                        </small>
+                    </div>
+                    <div id="passwordAttempts" style="color: var(--text-muted, #94A3B8); font-size: 12px;">
+                        Attempts remaining: <span id="attemptsCount">3</span>
+                    </div>
+                </div>
+                <div class="modal-footer" style="border-top: 1px solid var(--border-color, #E2E8F0);">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal" style="background: var(--bg-secondary, #F1F5F9); color: var(--text-secondary, #64748B); border-color: var(--border-color, #E2E8F0);">
+                        Cancel
+                    </button>
+                    <button class="btn btn-danger" id="confirmClearBtn" style="background: #dc2626; border-color: #dc2626;">
+                        <i class="fas fa-trash me-1"></i> Clear All Data
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================= -->
+    <!-- TOAST -->
+    <!-- ========================================= -->
+
+    <div class="toast-msg" id="toastMsg">
+        <span id="toastText"></span>
+    </div>
+
+    <!-- ========================================= -->
+    <!-- SCRIPTS -->
+    <!-- ========================================= -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+    </script>
+
+    <script>
+        // =====================================
+        // NAVIGATION
+        // =====================================
+
+        function goPage(page) {
+            window.location.href = page;
+        }
+
+        // =====================================
+        // DISPLAY USERNAME
+        // =====================================
+
+        function displayUserName() {
+            try {
+                const userDataStr = localStorage.getItem('voiceoc_user');
+                const userNameDisplay = document.getElementById('userNameDisplay');
+                if (userDataStr && userNameDisplay) {
+                    try {
+                        const userData = JSON.parse(userDataStr);
+                        userNameDisplay.innerText = userData.fullName || userData.username || 'User';
+                    } catch (e) {
+                        userNameDisplay.innerText = userDataStr;
+                    }
+                }
+            } catch (error) {
+                console.error('Error displaying username:', error);
+            }
+        }
+
+        // =====================================
+        // AUTH CHECK
+        // =====================================
+
+        function checkAuth() {
+            if (localStorage.getItem('voiceoc_logged_in') !== 'true') {
+                window.location.href = 'index.html';
+                return false;
+            }
+            return true;
+        }
+
+        // =====================================
+        // LOGOUT
+        // =====================================
+
+        function logout() {
+            localStorage.removeItem('voiceoc_logged_in');
+            localStorage.removeItem('voiceoc_user');
+            showToast('Logged out successfully', 'success');
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 1000);
+        }
+
+        // =====================================
+        // LIVE CLOCK
+        // =====================================
+
+        function updateClock() {
+            const liveClock = document.getElementById('liveClock');
+            if (liveClock) {
+                liveClock.innerText = new Date().toLocaleTimeString();
+            }
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // =====================================
+        // DARK MODE
+        // =====================================
+
+        function applyDarkMode() {
+            const settings = JSON.parse(localStorage.getItem('voiceoc_settings') || '{}');
+            const isDarkMode = settings.darkMode || false;
+
+            if (isDarkMode) {
+                document.body.classList.add('dark-mode');
+                // Update modal close button filter for dark mode
+                document.querySelector('#passwordModal .btn-close').style.filter = 'invert(1)';
+                document.getElementById('darkModeToggle').checked = true;
+            } else {
+                document.body.classList.remove('dark-mode');
+                document.querySelector('#passwordModal .btn-close').style.filter = 'none';
+                document.getElementById('darkModeToggle').checked = false;
+            }
+        }
+
+        function toggleDarkMode() {
+            const isChecked = document.getElementById('darkModeToggle').checked;
+            const settings = JSON.parse(localStorage.getItem('voiceoc_settings') || '{}');
+            settings.darkMode = isChecked;
+            localStorage.setItem('voiceoc_settings', JSON.stringify(settings));
+            applyDarkMode();
+            showToast(isChecked ? 'Dark mode enabled' : 'Light mode enabled', 'success');
+        }
+
+        // =====================================
+        // SAVE SETTINGS
+        // =====================================
+
+        function saveSetting(key, value) {
+            const settings = JSON.parse(localStorage.getItem('voiceoc_settings') || '{}');
+            settings[key] = value;
+            localStorage.setItem('voiceoc_settings', JSON.stringify(settings));
+        }
+
+        // =====================================
+        // CHANGE PASSWORD
+        // =====================================
+
+        function changePassword() {
+            showToast('Password change functionality coming soon', 'info');
+        }
+
+        // =====================================
+        // EXPORT DATA
+        // =====================================
+
+        function exportData() {
+            showToast('Exporting data...', 'info');
+            setTimeout(() => {
+                showToast('Data exported successfully!', 'success');
+            }, 1500);
+        }
+
+        // =====================================
+        // CLEAR DATA - WITH PASSWORD CONFIRMATION
+        // =====================================
+
+        let clearDataAttempts = 3;
+        let pendingClearData = false;
+
+        function clearData() {
+            // Reset attempts
+            clearDataAttempts = 3;
+            document.getElementById('attemptsCount').textContent = clearDataAttempts;
+            document.getElementById('passwordError').style.display = 'none';
+            document.getElementById('confirmPasswordInput').value = '';
+            document.getElementById('confirmPasswordInput').style.borderColor = '';
+            document.getElementById('confirmClearBtn').disabled = false;
+            
+            // Show the password modal
+            const modal = new bootstrap.Modal(document.getElementById('passwordModal'));
+            modal.show();
+        }
+
+        // =====================================
+        // VERIFY PASSWORD AND CLEAR DATA
+        // =====================================
+
+        document.getElementById('confirmClearBtn').addEventListener('click', function() {
+            const enteredPassword = document.getElementById('confirmPasswordInput').value.trim();
+            const errorEl = document.getElementById('passwordError');
+            const attemptsEl = document.getElementById('attemptsCount');
+            
+            if (!enteredPassword) {
+                errorEl.textContent = '⚠️ Please enter your password.';
+                errorEl.style.display = 'block';
+                document.getElementById('confirmPasswordInput').style.borderColor = '#ef4444';
+                return;
+            }
+
+            // Get the logged-in user's password from localStorage
+            const userDataStr = localStorage.getItem('voiceoc_user');
+            if (!userDataStr) {
+                showToast('❌ User session not found. Please login again.', true);
+                bootstrap.Modal.getInstance(document.getElementById('passwordModal')).hide();
+                return;
+            }
+
+            try {
+                const userData = JSON.parse(userDataStr);
+                const actualPassword = userData.password || '';
+                
+                // Check if password matches
+                if (enteredPassword === actualPassword) {
+                    // Password correct - proceed with clearing data
+                    errorEl.style.display = 'none';
+                    document.getElementById('confirmPasswordInput').style.borderColor = '';
+                    bootstrap.Modal.getInstance(document.getElementById('passwordModal')).hide();
+                    
+                    // Perform the actual clear operation
+                    performClearData();
+                    
+                } else {
+                    // Password incorrect
+                    clearDataAttempts--;
+                    document.getElementById('attemptsCount').textContent = clearDataAttempts;
+                    document.getElementById('confirmPasswordInput').style.borderColor = '#ef4444';
+                    
+                    if (clearDataAttempts <= 0) {
+                        errorEl.textContent = '❌ Too many failed attempts. Please try again later.';
+                        errorEl.style.display = 'block';
+                        document.getElementById('confirmClearBtn').disabled = true;
+                        setTimeout(() => {
+                            document.getElementById('confirmClearBtn').disabled = false;
+                            clearDataAttempts = 3;
+                            document.getElementById('attemptsCount').textContent = clearDataAttempts;
+                            bootstrap.Modal.getInstance(document.getElementById('passwordModal')).hide();
+                        }, 30000); // Lock for 30 seconds
+                    } else {
+                        errorEl.textContent = `❌ Incorrect password. ${clearDataAttempts} attempt(s) remaining.`;
+                        errorEl.style.display = 'block';
+                        document.getElementById('confirmPasswordInput').value = '';
+                        document.getElementById('confirmPasswordInput').focus();
+                    }
+                }
+            } catch (e) {
+                console.error('Error verifying password:', e);
+                showToast('❌ Error verifying password. Please try again.', true);
+                bootstrap.Modal.getInstance(document.getElementById('passwordModal')).hide();
+            }
+        });
+
+        // =====================================
+        // ENTER KEY SUPPORT FOR PASSWORD INPUT
+        // =====================================
+
+        document.getElementById('confirmPasswordInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                document.getElementById('confirmClearBtn').click();
+            }
+        });
+
+        // =====================================
+        // RESET PASSWORD FIELD WHEN MODAL CLOSES
+        // =====================================
+
+        document.getElementById('passwordModal').addEventListener('hidden.bs.modal', function() {
+            document.getElementById('confirmPasswordInput').value = '';
+            document.getElementById('confirmPasswordInput').style.borderColor = '';
+            document.getElementById('passwordError').style.display = 'none';
+            // Reset attempts if modal is closed
+            if (clearDataAttempts < 3 && clearDataAttempts > 0) {
+                clearDataAttempts = 3;
+                document.getElementById('attemptsCount').textContent = clearDataAttempts;
+                document.getElementById('confirmClearBtn').disabled = false;
+            }
+        });
+
+        // =====================================
+        // PERFORM CLEAR DATA
+        // =====================================
+
+        function performClearData() {
+            // Confirm one more time before clearing
+            if (!confirm('⚠️ Are you absolutely sure? This will permanently delete ALL your data including tasks, clients, bugs, and settings. This action CANNOT be undone!')) {
+                showToast('Clear operation cancelled.', false, 'info');
+                return;
+            }
+
+            try {
+                // Clear all application data from localStorage
+                const keysToKeep = ['voiceoc_settings', 'voiceoc_weather']; // Keep these for UX
+                const allKeys = Object.keys(localStorage);
+                
+                let clearedCount = 0;
+                allKeys.forEach(key => {
+                    if (!keysToKeep.includes(key)) {
+                        localStorage.removeItem(key);
+                        clearedCount++;
+                    }
+                });
+                
+                // Clear session data
+                sessionStorage.clear();
+                
+                // Show success message
+                showToast(`✅ Data cleared successfully! ${clearedCount} items removed.`, false, 'success');
+                
+                // Reset the page after 2 seconds
+                setTimeout(() => {
+                    window.location.reload();
+                }, 2000);
+                
+            } catch (e) {
+                console.error('Error clearing data:', e);
+                showToast('❌ Error clearing data: ' + e.message, true);
+            }
+        }
+
+        // =====================================
+        // SETTINGS SEARCH
+        // =====================================
+
+        document.getElementById('settingsSearch')?.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const searchTerm = this.value.trim();
+                if (searchTerm) {
+                    showToast('Searching for: ' + searchTerm, 'info');
+                }
+            }
+        });
+
+        // =====================================
+        // WEATHER FUNCTIONS - Open-Meteo API with English City Names
+        // =====================================
+
+        function getWeatherCondition(code) {
+            switch (code) {
+                case 0: return "Clear Sky";
+                case 1:
+                case 2:
+                case 3: return "Partly Cloudy";
+                case 45:
+                case 48: return "Fog";
+                case 51:
+                case 53:
+                case 55: return "Drizzle";
+                case 56:
+                case 57: return "Freezing Drizzle";
+                case 61:
+                case 63:
+                case 65: return "Rain";
+                case 66:
+                case 67: return "Freezing Rain";
+                case 71:
+                case 73:
+                case 75: return "Snow";
+                case 77: return "Snow Grains";
+                case 80:
+                case 81:
+                case 82: return "Rain Showers";
+                case 85:
+                case 86: return "Snow Showers";
+                case 95: return "Thunderstorm";
+                case 96:
+                case 99: return "Thunderstorm with Hail";
+                default: return "Cloudy";
+            }
+        }
+
+        function getWeatherIcon(code) {
+            switch (code) {
+                case 0: return 'fa-sun';
+                case 1:
+                case 2:
+                case 3: return 'fa-cloud-sun';
+                case 45:
+                case 48: return 'fa-smog';
+                case 51:
+                case 53:
+                case 55: return 'fa-cloud-rain';
+                case 56:
+                case 57: return 'fa-cloud-rain';
+                case 61:
+                case 63:
+                case 65: return 'fa-cloud-showers-heavy';
+                case 66:
+                case 67: return 'fa-cloud-rain';
+                case 71:
+                case 73:
+                case 75: return 'fa-snowflake';
+                case 77: return 'fa-snowflake';
+                case 80:
+                case 81:
+                case 82: return 'fa-cloud-sun-rain';
+                case 85:
+                case 86: return 'fa-snowflake';
+                case 95: return 'fa-bolt';
+                case 96:
+                case 99: return 'fa-bolt';
+                default: return 'fa-cloud';
+            }
+        }
+
+        // Get city name in English using Open-Meteo Reverse Geocoding API
+        async function getCityNameInEnglish(lat, lon) {
+            try {
+                const geoUrl = `https://geocoding-api.open-meteo.com/v1/reverse?latitude=${lat}&longitude=${lon}&language=en&count=1`;
+                const geoResponse = await fetch(geoUrl);
+                
+                if (!geoResponse.ok) {
+                    throw new Error('Geocoding API error');
+                }
+                
+                const geoData = await geoResponse.json();
+                
+                if (geoData.results && geoData.results.length > 0) {
+                    return geoData.results[0].name;
+                }
+                return null;
+            } catch (error) {
+                console.error('Geocoding error:', error);
+                return null;
+            }
+        }
+
+        // Get weather data from Open-Meteo
+        async function getWeatherData(lat, lon) {
+            try {
+                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code&timezone=auto`;
+                const response = await fetch(url);
+                
+                if (!response.ok) {
+                    throw new Error('Weather API error');
+                }
+                
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error('Weather fetch error:', error);
+                return null;
+            }
+        }
+
+        // Main weather update function
+        function updateWeatherWithOpenMeteo() {
+            const tempEl = document.getElementById('weatherTemp');
+            const conditionEl = document.getElementById('weatherCondition');
+            const iconEl = document.getElementById('weatherIcon');
+            const locationEl = document.getElementById('weatherLocation');
+
+            tempEl.textContent = '--°C';
+            conditionEl.textContent = 'Loading...';
+            iconEl.className = 'fas fa-spinner fa-spin';
+            locationEl.textContent = 'Fetching location...';
+
+            if (!navigator.geolocation) {
+                tempEl.textContent = '--°C';
+                conditionEl.textContent = 'Geolocation not supported';
+                iconEl.className = 'fas fa-exclamation-triangle';
+                locationEl.textContent = 'Please allow location access';
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(
+                async (position) => {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+
+                    try {
+                        const cityName = await getCityNameInEnglish(lat, lon);
+                        const weatherData = await getWeatherData(lat, lon);
+                        
+                        if (weatherData && weatherData.current) {
+                            const temp = Math.round(weatherData.current.temperature_2m);
+                            const weatherCode = weatherData.current.weather_code;
+                            const condition = getWeatherCondition(weatherCode);
+                            const icon = getWeatherIcon(weatherCode);
+                            const displayCity = cityName || 'Current Location';
+
+                            tempEl.textContent = temp + '°C';
+                            conditionEl.textContent = condition;
+                            iconEl.className = 'fas ' + icon;
+                            locationEl.textContent = '📍 ' + displayCity;
+
+                            localStorage.setItem('voiceoc_weather', JSON.stringify({
+                                temp: temp + '°C',
+                                condition: condition,
+                                icon: icon,
+                                location: '📍 ' + displayCity
+                            }));
+                        } else if (cityName) {
+                            locationEl.textContent = '📍 ' + cityName;
+                            const cached = localStorage.getItem('voiceoc_weather');
+                            if (cached) {
+                                const data = JSON.parse(cached);
+                                tempEl.textContent = data.temp;
+                                conditionEl.textContent = data.condition;
+                                iconEl.className = 'fas ' + data.icon;
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Weather/Geocoding error:', error);
+                        const cached = localStorage.getItem('voiceoc_weather');
+                        if (cached) {
+                            const data = JSON.parse(cached);
+                            tempEl.textContent = data.temp;
+                            conditionEl.textContent = data.condition;
+                            iconEl.className = 'fas ' + data.icon;
+                            locationEl.textContent = data.location;
+                        } else {
+                            tempEl.textContent = '--°C';
+                            conditionEl.textContent = 'Weather unavailable';
+                            iconEl.className = 'fas fa-cloud';
+                            locationEl.textContent = 'Please try again';
+                        }
+                    }
+                },
+                (error) => {
+                    console.warn('Geolocation error:', error.message);
+                    const cached = localStorage.getItem('voiceoc_weather');
+                    if (cached) {
+                        const data = JSON.parse(cached);
+                        document.getElementById('weatherTemp').textContent = data.temp;
+                        document.getElementById('weatherCondition').textContent = data.condition;
+                        document.getElementById('weatherIcon').className = 'fas ' + data.icon;
+                        document.getElementById('weatherLocation').textContent = data.location;
+                    } else {
+                        document.getElementById('weatherTemp').textContent = '--°C';
+                        document.getElementById('weatherCondition').textContent = 'Location Denied';
+                        document.getElementById('weatherIcon').className = 'fas fa-map-marker-alt';
+                        document.getElementById('weatherLocation').textContent = 'Enable location in browser';
+                    }
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 60000
+                }
+            );
+        }
+
+        // =====================================
+        // TOAST FUNCTION
+        // =====================================
+
+        function showToast(message, isError = false, type = 'success') {
+            const toastText = document.getElementById('toastText');
+            const toast = document.getElementById('toastMsg');
+            if (toastText) toastText.innerText = message;
+            if (toast) {
+                toast.className = 'toast-msg';
+                if (isError) toast.classList.add('error');
+                else if (type === 'info') toast.classList.add('info');
+                else toast.classList.add('success');
+                toast.style.display = 'block';
+                clearTimeout(toast._timeout);
+                toast._timeout = setTimeout(() => {
+                    toast.style.display = 'none';
+                }, 4000);
+            }
+        }
+
+        // =====================================
+        // SESSION TOGGLE
+        // =====================================
+
+        function toggleSessionTimeout(checked) {
+            saveSetting('sessionTimeout', checked);
+            
+            if (checked) {
+                if (typeof initAutoLogout === 'function') {
+                    initAutoLogout();
+                }
+                showToast('Session timeout enabled (15 minutes)', 'success');
+            } else {
+                if (typeof window.resetInactivityTimer === 'function') {
+                    clearTimeout(window.inactivityTimer);
+                    clearTimeout(window.warningTimer);
+                    clearInterval(window.countdownInterval);
+                }
+                showToast('Session timeout disabled', 'success');
+            }
+        }
+
+        // =====================================
+        // CHECK SESSION MANAGER STATUS
+        // =====================================
+
+        function checkSessionManager() {
+            console.log('🔍 Session Manager Status:');
+            console.log('📋 typeof initAutoLogout:', typeof initAutoLogout);
+            console.log('📋 typeof showToastMessage:', typeof showToastMessage);
+            
+            if (typeof initAutoLogout === 'function') {
+                console.log('✅ Session manager loaded successfully!');
+                console.log('⏱️ Timeout is set to 15 minutes');
+            } else {
+                console.error('❌ Session manager NOT loaded! Check if js/session-manager.js exists.');
+            }
+        }
+
+        // =====================================
+        // EVENT LISTENERS
+        // =====================================
+
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!checkAuth()) return;
+
+            displayUserName();
+            applyDarkMode();
+            
+            checkSessionManager();
+
+            // Toggle listeners
+            document.getElementById('emailToggle').addEventListener('change', function() {
+                saveSetting('emailNotifications', this.checked);
+                showToast(this.checked ? 'Email notifications enabled' : 'Email notifications disabled',
+                    'success');
+            });
+
+            document.getElementById('desktopToggle').addEventListener('change', function() {
+                saveSetting('desktopNotifications', this.checked);
+                showToast(this.checked ? 'Desktop notifications enabled' : 'Desktop notifications disabled',
+                    'success');
+            });
+
+            document.getElementById('backupToggle').addEventListener('change', function() {
+                saveSetting('autoBackup', this.checked);
+                showToast(this.checked ? 'Auto backup enabled' : 'Auto backup disabled', 'success');
+            });
+
+            document.getElementById('syncToggle').addEventListener('change', function() {
+                saveSetting('syncData', this.checked);
+                showToast(this.checked ? 'Sync enabled' : 'Sync disabled', 'success');
+            });
+
+            document.getElementById('twoFactorToggle').addEventListener('change', function() {
+                saveSetting('twoFactorAuth', this.checked);
+                showToast(this.checked ? 'Two-factor authentication enabled' : 'Two-factor authentication disabled',
+                    'success');
+            });
+
+            document.getElementById('sessionToggle').addEventListener('change', function() {
+                toggleSessionTimeout(this.checked);
+            });
+
+            const settings = JSON.parse(localStorage.getItem('voiceoc_settings') || '{}');
+            document.getElementById('emailToggle').checked = settings.emailNotifications !== undefined ? settings
+                .emailNotifications : true;
+            document.getElementById('desktopToggle').checked = settings.desktopNotifications !== undefined ? settings
+                .desktopNotifications : true;
+            document.getElementById('backupToggle').checked = settings.autoBackup !== undefined ? settings.autoBackup :
+                true;
+            document.getElementById('syncToggle').checked = settings.syncData !== undefined ? settings.syncData : true;
+            document.getElementById('twoFactorToggle').checked = settings.twoFactorAuth !== undefined ? settings
+                .twoFactorAuth : false;
+            document.getElementById('sessionToggle').checked = settings.sessionTimeout !== undefined ? settings
+                .sessionTimeout : true;
+
+            if (typeof initAutoLogout === 'function') {
+                initAutoLogout();
+            }
+
+            updateWeatherWithOpenMeteo();
+            setInterval(updateWeatherWithOpenMeteo, 900000);
+
+            document.getElementById('logoutBtn').addEventListener('click', logout);
+        });
+
+        // =====================================
+        // GLOBAL FUNCTIONS
+        // =====================================
+
+        window.goPage = goPage;
+        window.logout = logout;
+        window.showToast = showToast;
+        window.toggleDarkMode = toggleDarkMode;
+        window.applyDarkMode = applyDarkMode;
+        window.exportData = exportData;
+        window.clearData = clearData;
+        window.changePassword = changePassword;
+        window.toggleSessionTimeout = toggleSessionTimeout;
+        window.updateWeatherWithOpenMeteo = updateWeatherWithOpenMeteo;
+    </script>
+
+</body>
+
+</html>

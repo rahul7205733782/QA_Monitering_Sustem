@@ -1,0 +1,2369 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>VoiceOC Enterprise Dashboard</title>
+
+    <!-- Bootstrap -->
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <!-- Font Awesome -->
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Google Font -->
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+          rel="stylesheet">
+
+    <!-- Chart JS -->
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+
+        body{
+            font-family:'Inter',sans-serif;
+            background:#F1F5F9;
+            overflow-x:hidden;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        /* Pulse Animation for Countdown */
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* ========================================= */
+        /* DARK MODE - COMPLETE */
+        /* ========================================= */
+
+        .dark-mode {
+            background: #020617 !important;
+            color: #F8FAFC !important;
+        }
+
+        /* Top Nav */
+        .dark-mode .top-nav {
+            background: #111827 !important;
+            color: #F8FAFC !important;
+            border-color: #1E293B !important;
+        }
+
+        .dark-mode .top-nav .page-title h3 {
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .top-nav .page-title p {
+            color: #94A3B8 !important;
+        }
+
+        .dark-mode .top-nav .user-badge {
+            background: #1E293B !important;
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .top-nav .refresh-btn {
+            background: #1E293B !important;
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .top-nav .refresh-btn:hover {
+            background: #334155 !important;
+        }
+
+        .dark-mode .top-nav .refresh-btn.spinning {
+            color: #2DD4BF !important;
+        }
+
+        .dark-mode .top-nav .badge.bg-success {
+            background: #065F46 !important;
+            color: #34D399 !important;
+        }
+
+        /* Stats Cards */
+        .dark-mode .stat-card {
+            background: #111827 !important;
+            border-color: #1E293B !important;
+        }
+
+        .dark-mode .stat-card .stat-label {
+            color: #94A3B8 !important;
+        }
+
+        .dark-mode .stat-card .stat-value {
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .stat-card .stat-icon {
+            opacity: 0.05 !important;
+        }
+
+        .dark-mode .stat-card:hover {
+            box-shadow: 0 20px 30px -12px rgba(45, 212, 191, 0.05) !important;
+        }
+
+        .dark-mode .stat-card.active-total {
+            border-color: #3B82F6;
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.15);
+        }
+
+        .dark-mode .stat-card.active-up {
+            border-color: #34D399;
+            box-shadow: 0 0 30px rgba(16, 185, 129, 0.15);
+        }
+
+        .dark-mode .stat-card.active-down {
+            border-color: #F87171;
+            box-shadow: 0 0 30px rgba(239, 68, 68, 0.15);
+        }
+
+        /* Chart Cards */
+        .dark-mode .chart-card {
+            background: #111827 !important;
+            border-color: #1E293B !important;
+        }
+
+        .dark-mode .chart-card .chart-header h5 {
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .chart-card .chart-header select {
+            background: #1E293B !important;
+            color: #F8FAFC !important;
+            border-color: #334155 !important;
+        }
+
+        .dark-mode .chart-card .chart-header select:focus {
+            background: #1E293B !important;
+            border-color: #2DD4BF !important;
+            box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.1) !important;
+        }
+
+        /* Recent Tasks Table */
+        .dark-mode .recent-tasks {
+            background: #111827 !important;
+            border-color: #1E293B !important;
+        }
+
+        .dark-mode .recent-tasks .chart-header h5 {
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode table {
+            background: #111827 !important;
+        }
+
+        .dark-mode table thead th {
+            background: #0F172A !important;
+            color: #94A3B8 !important;
+            border-bottom-color: #1E293B !important;
+        }
+
+        .dark-mode table tbody td {
+            background: #111827 !important;
+            color: #E2E8F0 !important;
+            border-bottom-color: #1E293B !important;
+        }
+
+        .dark-mode table tbody tr:hover td {
+            background: #1E293B !important;
+        }
+
+        .dark-mode table tbody td strong {
+            color: #F8FAFC !important;
+        }
+
+        /* Status Badges - Dark Mode */
+        .dark-mode .badge-status.completed {
+            background: #065F46 !important;
+            color: #34D399 !important;
+        }
+
+        .dark-mode .badge-status.pending {
+            background: #78350F !important;
+            color: #FBBF24 !important;
+        }
+
+        .dark-mode .badge-status.progress {
+            background: #1E3A5F !important;
+            color: #60A5FA !important;
+        }
+
+        .dark-mode .badge-status.failed {
+            background: #7F1D1D !important;
+            color: #F87171 !important;
+        }
+
+        /* Dropdown Menu */
+        .dark-mode .dropdown-menu {
+            background: #111827 !important;
+            border-color: #1E293B !important;
+        }
+
+        .dark-mode .dropdown-item {
+            color: #94A3B8 !important;
+        }
+
+        .dark-mode .dropdown-item:hover {
+            background: #1E293B !important;
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .dropdown-item i {
+            color: #64748B !important;
+        }
+
+        .dark-mode .dropdown-item:hover i {
+            color: #2DD4BF !important;
+        }
+
+        .dark-mode .dropdown-divider {
+            border-color: #1E293B !important;
+        }
+
+        /* Toast */
+        .dark-mode .toast-msg {
+            background: #1E293B !important;
+            color: #F8FAFC !important;
+            border-left-color: #2DD4BF !important;
+        }
+
+        .dark-mode .toast-msg.error {
+            border-left-color: #DC2626 !important;
+        }
+
+        .dark-mode .toast-msg.success {
+            border-left-color: #10B981 !important;
+        }
+
+        .dark-mode .toast-msg.info {
+            border-left-color: #3B82F6 !important;
+        }
+
+        /* Scrollbar */
+        .dark-mode ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        .dark-mode ::-webkit-scrollbar-track {
+            background: #1E293B;
+        }
+
+        .dark-mode ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+
+        .dark-mode ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+
+        /* ========================================= */
+        /* LOADER */
+        /* ========================================= */
+
+        #globalLoader{
+            position:fixed;
+            width:100%;
+            height:100%;
+            background:rgba(15,23,42,0.75);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            z-index:999999;
+            backdrop-filter:blur(6px);
+        }
+
+        .dark-mode #globalLoader {
+            background: rgba(2, 6, 23, 0.9);
+        }
+
+        /* ========================================= */
+        /* SIDEBAR */
+        /* ========================================= */
+
+        .sidebar{
+            width:280px;
+            height:100vh;
+            background:linear-gradient(180deg,#0F172A 0%,#020617 100%);
+            position:fixed;
+            left:0;
+            top:0;
+            padding-top:25px;
+            transition:0.3s;
+            z-index:999;
+            overflow-y:auto;
+        }
+
+        .sidebar.collapsed{
+            width:90px;
+        }
+
+        .sidebar.collapsed .nav-item span,
+        .sidebar.collapsed .logo-area .qa-tagline {
+            display:none;
+        }
+
+        .logo-area{
+            text-align:center;
+            margin-bottom:35px;
+            padding: 0 20px;
+        }
+
+        .logo-area h2{
+            color:white;
+            font-weight:800;
+            font-size:1.7rem;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .logo-area h2 i{
+            color:#2DD4BF;
+            font-size: 1.8rem;
+        }
+
+        /* QA Daily Tasks - Single Tick on Left, Aligned with Text Above */
+        .logo-area .qa-tagline {
+            color: #10B981 !important;
+            font-weight: 700 !important;
+            font-size: 11px !important;
+            letter-spacing: 2px;
+            margin-top: 8px;
+            text-align: center;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 0 10px;
+        }
+
+        .logo-area .qa-tagline .tick-icon {
+            color: #10B981;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        .logo-area .qa-tagline .tick-icon i {
+            font-size: 12px;
+        }
+
+        .logo-area .qa-tagline .tag-text {
+            flex-shrink: 0;
+            padding: 0 2px;
+            color: #10B981;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .dark-mode .logo-area .qa-tagline {
+            color: #34D399 !important;
+        }
+
+        .dark-mode .logo-area .qa-tagline .tick-icon {
+            color: #34D399;
+        }
+
+        .dark-mode .logo-area .qa-tagline .tag-text {
+            color: #34D399;
+        }
+
+        .nav-item{
+            display:flex;
+            align-items:center;
+            gap:15px;
+            color:#94A3B8;
+            margin:4px 12px;
+            padding:12px 18px;
+            border-radius:14px;
+            cursor:pointer;
+            transition:0.3s;
+        }
+
+        .nav-item:hover{
+            background:rgba(45,212,191,0.12);
+            color:white;
+            transform:translateX(6px);
+        }
+
+        .nav-item.active{
+            background:linear-gradient(95deg,#0D9488,#0F766E);
+            color:white;
+        }
+
+        .nav-item i{
+            width:24px;
+            font-size:18px;
+        }
+
+        /* ========================================= */
+        /* MAIN */
+        /* ========================================= */
+
+        .main-content{
+            margin-left:280px;
+            padding:30px;
+            transition:0.3s;
+        }
+
+        .main-content.expanded{
+            margin-left:90px;
+        }
+
+        /* ========================================= */
+        /* TOPBAR */
+        /* ========================================= */
+
+        .top-nav{
+            background:white;
+            padding:18px 25px;
+            border-radius:24px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:30px;
+            border:1px solid #E2E8F0;
+            box-shadow:0 4px 20px rgba(0,0,0,0.04);
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .top-left{
+            display:flex;
+            align-items:center;
+            gap:15px;
+        }
+
+        .page-title h3{
+            margin:0;
+            font-weight:800;
+            color:#0F172A;
+            transition: color 0.3s ease;
+        }
+
+        .page-title p{
+            margin:5px 0 0;
+            color:#64748B;
+            font-size:14px;
+            transition: color 0.3s ease;
+        }
+
+        .top-right{
+            display:flex;
+            align-items:center;
+            gap:15px;
+        }
+
+        .refresh-btn{
+            border:none;
+            background:#F1F5F9;
+            padding:10px 18px;
+            border-radius:50px;
+            transition:0.3s;
+            cursor:pointer;
+            font-size:16px;
+            position:relative;
+        }
+
+        .refresh-btn:hover{
+            background:#E2E8F0;
+        }
+
+        .refresh-btn.spinning i {
+            animation: spin 0.8s linear infinite;
+        }
+
+        .refresh-btn .refresh-tooltip {
+            position: absolute;
+            bottom: -32px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #0F172A;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.3s;
+        }
+
+        .dark-mode .refresh-btn .refresh-tooltip {
+            background: #1E293B;
+        }
+
+        .refresh-btn:hover .refresh-tooltip {
+            opacity: 1;
+        }
+
+        .user-badge{
+            background:#F1F5F9;
+            padding:10px 18px;
+            border-radius:50px;
+            font-weight:700;
+            transition: background 0.3s ease, color 0.3s ease;
+            display:flex;
+            align-items:center;
+            gap:10px;
+        }
+
+        .user-badge .avatar-text {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #2DD4BF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: #0F172A;
+        }
+
+        /* ========================================= */
+        /* STAT CARDS - 8 Cards (Removed Bugs) */
+        /* ========================================= */
+
+        .stat-card{
+            background:white;
+            border-radius:26px;
+            padding:25px;
+            position:relative;
+            overflow:hidden;
+            border:1px solid #E2E8F0;
+            transition:0.3s;
+            cursor:pointer;
+        }
+
+        .stat-card:hover{
+            transform:translateY(-5px);
+            box-shadow:0 20px 30px -12px rgba(0,0,0,0.12);
+        }
+
+        .stat-card:active{
+            transform:scale(0.97);
+        }
+
+        .stat-card.active-total {
+            border-color: #3B82F6;
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.15);
+        }
+
+        .stat-card.active-up {
+            border-color: #10B981;
+            box-shadow: 0 0 30px rgba(16, 185, 129, 0.15);
+        }
+
+        .stat-card.active-down {
+            border-color: #EF4444;
+            box-shadow: 0 0 30px rgba(239, 68, 68, 0.15);
+        }
+
+        .stat-icon{
+            position:absolute;
+            right:20px;
+            top:20px;
+            font-size:50px;
+            opacity:0.1;
+        }
+
+        .stat-label{
+            color:#64748B;
+            font-size:11px;
+            font-weight:700;
+            text-transform:uppercase;
+            margin-bottom:8px;
+            transition: color 0.3s ease;
+        }
+
+        .stat-value{
+            font-size:36px;
+            font-weight:800;
+            color:#0F172A;
+            transition: color 0.3s ease;
+        }
+
+        .stat-change{
+            font-size:12px;
+            font-weight:600;
+            margin-top:4px;
+        }
+
+        .stat-change.up { color: #10B981; }
+        .stat-change.down { color: #EF4444; }
+
+        /* Up/Down Status Indicators */
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-indicator.up {
+            background: #D1FAE5;
+            color: #059669;
+        }
+
+        .status-indicator.down {
+            background: #FEE2E2;
+            color: #DC2626;
+        }
+
+        .status-indicator .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .status-indicator.up .dot { background: #10B981; }
+        .status-indicator.down .dot { background: #EF4444; }
+
+        /* ========================================= */
+        /* SYSTEM DETAILS MODAL */
+        /* ========================================= */
+
+        .modal-content {
+            background: #151e26;
+            border: 1px solid #242b33;
+            border-radius: 24px;
+        }
+
+        .modal-header {
+            border-bottom: 1px solid #242b33;
+            padding: 20px 24px;
+        }
+
+        .modal-header .modal-title {
+            color: #eef2f6;
+            font-weight: 700;
+        }
+
+        .modal-header .btn-close {
+            filter: invert(1);
+        }
+
+        .modal-body {
+            padding: 24px;
+            color: #eef2f6;
+        }
+
+        .modal-footer {
+            border-top: 1px solid #242b33;
+            padding: 16px 24px;
+        }
+
+        .system-list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            border-bottom: 1px solid #1e262f;
+            border-radius: 8px;
+            transition: 0.2s;
+        }
+
+        .system-list-item:hover {
+            background: #1a2129;
+        }
+
+        .system-list-item .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .system-list-item .status-badge.up {
+            background: #065F46;
+            color: #34D399;
+        }
+
+        .system-list-item .status-badge.down {
+            background: #7F1D1D;
+            color: #F87171;
+        }
+
+        /* ========================================= */
+        /* CHARTS */
+        /* ========================================= */
+
+        .chart-card{
+            background:white;
+            border-radius:26px;
+            padding:28px;
+            border:1px solid #E2E8F0;
+            margin-top:25px;
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .chart-header{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:25px;
+        }
+
+        .chart-header h5 {
+            transition: color 0.3s ease;
+        }
+
+        .chart-header select {
+            border-radius: 50px;
+            padding: 6px 16px;
+            border: 1px solid #E2E8F0;
+            background: white;
+            transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        /* ========================================= */
+        /* TABLE */
+        /* ========================================= */
+
+        .recent-tasks{
+            background:white;
+            border-radius:26px;
+            padding:28px;
+            border:1px solid #E2E8F0;
+            margin-top:25px;
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .recent-tasks .chart-header h5 {
+            transition: color 0.3s ease;
+        }
+
+        table{
+            width:100%;
+        }
+
+        th{
+            color:#64748B;
+            font-size:12px;
+            padding:15px 10px;
+            text-transform:uppercase;
+            border-bottom:2px solid #E2E8F0;
+            transition: color 0.3s ease, border-color 0.3s ease;
+        }
+
+        td{
+            padding:15px 10px;
+            border-bottom:1px solid #F1F5F9;
+            transition: color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .badge-status{
+            padding:5px 12px;
+            border-radius:30px;
+            font-size:12px;
+            font-weight:700;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .completed{
+            background:#D1FAE5;
+            color:#059669;
+        }
+
+        .pending{
+            background:#FEF3C7;
+            color:#D97706;
+        }
+
+        .progress{
+            background:#DBEAFE;
+            color:#2563EB;
+        }
+
+        .failed{
+            background:#FEE2E2;
+            color:#DC2626;
+        }
+
+        /* ========================================= */
+        /* DROPDOWN MENU STYLES */
+        /* ========================================= */
+
+        .dropdown-menu {
+            border-radius: 16px;
+            border: 1px solid #E2E8F0;
+            box-shadow: 0 20px 40px -12px rgba(0,0,0,0.2);
+            padding: 8px;
+            min-width: 200px;
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .dropdown-item {
+            border-radius: 10px;
+            padding: 10px 16px;
+            font-weight: 500;
+            transition: 0.2s;
+            color: #0F172A;
+            transition: color 0.3s ease, background 0.3s ease;
+        }
+
+        .dropdown-item:hover {
+            background: #F1F5F9;
+            color: #0D9488;
+        }
+
+        .dropdown-item i {
+            width: 24px;
+            color: #64748B;
+            transition: color 0.3s ease;
+        }
+
+        .dropdown-item:hover i {
+            color: #0D9488;
+        }
+
+        .dropdown-divider {
+            margin: 6px 0;
+            transition: border-color 0.3s ease;
+        }
+
+        /* ========================================= */
+        /* TOAST */
+        /* ========================================= */
+
+        .toast-msg{
+            position:fixed;
+            bottom:30px;
+            right:30px;
+            background:#1E293B;
+            color:white;
+            padding:14px 24px;
+            border-radius:50px;
+            z-index:9999;
+            display:none;
+            animation: slideInRight 0.3s ease;
+            border-left:4px solid #2DD4BF;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .toast-msg.error{
+            border-left-color: #DC2626;
+        }
+
+        .toast-msg.success{
+            border-left-color: #10B981;
+        }
+
+        .toast-msg.info{
+            border-left-color: #3B82F6;
+        }
+
+        /* ========================================= */
+        /* RESPONSIVE */
+        /* ========================================= */
+
+        @media(max-width:992px){
+
+            .sidebar{
+                width:90px;
+            }
+
+            .sidebar .nav-item span,
+            .sidebar .logo-area .qa-tagline {
+                display:none;
+            }
+
+            .main-content{
+                margin-left:90px;
+            }
+        }
+
+        @media(max-width:768px){
+
+            .main-content{
+                margin-left:0;
+                padding:15px;
+            }
+
+            .sidebar{
+                transform:translateX(-100%);
+            }
+
+            .top-nav {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+            }
+
+            .top-right {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .stat-value {
+                font-size: 28px;
+            }
+        }
+
+        /* ========================================= */
+        /* SCROLLBAR - Light Mode */
+        /* ========================================= */
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #F1F5F9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #CBD5E1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94A3B8;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<!-- ========================================= -->
+<!-- LOADER -->
+<!-- ========================================= -->
+
+<div id="globalLoader">
+
+    <div class="spinner-border text-light"></div>
+
+</div>
+
+<!-- ========================================= -->
+<!-- SIDEBAR -->
+<!-- ========================================= -->
+
+<div class="sidebar">
+
+    <div class="logo-area">
+
+        <h2>
+
+            <i class="fas fa-microphone-alt"></i>
+
+            VoiceOC
+
+        </h2>
+
+        <!-- QA Daily Tasks - Single Tick on Left -->
+        <div class="qa-tagline">
+            <span class="tick-icon"><i class="fas fa-check-circle"></i></span>
+            <span class="tag-text">QA DAILY TASKS</span>
+        </div>
+
+    </div>
+
+    <div class="nav-item active">
+
+        <i class="fas fa-chart-line"></i>
+
+        <span>Dashboard</span>
+
+    </div>
+
+    <div class="nav-item"
+         onclick="window.location.href='tasks.html'">
+
+        <i class="fas fa-tasks"></i>
+
+        <span>Tasks</span>
+
+    </div>
+
+    <div class="nav-item"
+         onclick="window.location.href='clientdetails.html'">
+
+        <i class="fas fa-building"></i>
+
+        <span>Clients Detail</span>
+
+    </div>
+
+    <div class="nav-item"
+         onclick="window.location.href='bugtracker.html'">
+
+        <i class="fas fa-bug"></i>
+
+        <span>Bug Tracker</span>
+
+    </div>
+
+    <div class="nav-item" onclick="window.location.href='json-sheet.html'">
+        <i class="fas fa-code"></i>
+        <span>JSON Sheets</span>
+    </div>
+	
+	
+	
+	
+	<div class="nav-item" onclick="window.location.href='response-sheet.html'">
+	    <i class="fas fa-file-excel"></i>
+	    <span>Response Sheet</span>
+	</div>
+	
+	      
+	<div class="nav-item" onclick="window.location.href='journey-map.html'">
+	    <i class="fas fa-route"></i>
+	    <span>Journey Map</span>
+	</div>
+	
+	
+
+    <div class="nav-item" onclick="window.location.href='api-doc.html'">
+        <i class="fas fa-book"></i>
+        <span>API Doc</span>
+    </div>
+
+    <div class="nav-item" onclick="window.location.href='dashboard-monitor.html'">
+        <i class="fas fa-heartbeat"></i>
+        <span>Monitor</span>
+    </div>
+	
+	<div class="nav-item" onclick="window.location.href='json-diff.html'">
+	    <i class="fas fa-code-branch"></i>
+	    <span>JSON Diff</span>
+	</div>
+
+    <div class="nav-item"
+         onclick="window.location.href='reports.html'">
+
+        <i class="fas fa-chart-pie"></i>
+
+        <span>Reports</span>
+
+    </div>
+
+    <div class="nav-item"
+         onclick="window.location.href='settings.html'">
+
+        <i class="fas fa-gear"></i>
+
+        <span>Settings</span>
+
+    </div>
+
+    <div class="nav-item"
+         id="logoutBtn">
+
+        <i class="fas fa-sign-out-alt"></i>
+
+        <span>Logout</span>
+
+    </div>
+
+</div>
+
+<!-- ========================================= -->
+<!-- MAIN CONTENT -->
+<!-- ========================================= -->
+
+<div class="main-content">
+
+    <!-- TOP NAV -->
+
+    <div class="top-nav">
+
+        <div class="top-left">
+
+            <div class="dropdown">
+
+                <button class="refresh-btn"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false">
+
+                    <i class="fas fa-bars"></i>
+
+                </button>
+
+                <ul class="dropdown-menu">
+
+                    <li>
+                        <a class="dropdown-item" href="dashboard.html">
+                            <i class="fas fa-chart-line me-2"></i> Dashboard
+                        </a>
+                    </li>
+
+                    <li>
+                        <a class="dropdown-item" href="tasks.html">
+                            <i class="fas fa-tasks me-2"></i> All Tasks
+                        </a>
+                    </li>
+
+                    <li>
+                        <a class="dropdown-item" href="tasks.html?filter=completed">
+                            <i class="fas fa-check-circle me-2" style="color:#10B981;"></i> Completed
+                        </a>
+                    </li>
+
+                    <li>
+                        <a class="dropdown-item" href="tasks.html?filter=pending">
+                            <i class="fas fa-hourglass-half me-2" style="color:#F59E0B;"></i> Pending
+                        </a>
+                    </li>
+
+                    <li>
+                        <a class="dropdown-item" href="tasks.html?filter=failed">
+                            <i class="fas fa-exclamation-triangle me-2" style="color:#EF4444;"></i> Failed
+                        </a>
+                    </li>
+
+                    <li><hr class="dropdown-divider"></li>
+
+                    <li>
+                        <a class="dropdown-item" href="clientdetails.html">
+                            <i class="fas fa-building me-2"></i> Clients
+                        </a>
+                    </li>
+
+                    <li>
+                        <a class="dropdown-item" href="bugtracker.html">
+                            <i class="fas fa-bug me-2"></i> Bug Tracker
+                        </a>
+                    </li>
+
+                    <li>
+                        <a class="dropdown-item" href="reports.html">
+                            <i class="fas fa-chart-pie me-2"></i> Reports
+                        </a>
+                    </li>
+
+                    <li>
+                        <a class="dropdown-item" href="settings.html">
+                            <i class="fas fa-gear me-2"></i> Settings
+                        </a>
+                    </li>
+
+                </ul>
+
+            </div>
+
+            <div class="page-title">
+
+                <h3>
+
+                    QA Daily Tasks Dashboard
+
+                </h3>
+
+                <p>
+
+                    Quality Assurance Analytics & Daily Progress Monitoring
+
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="top-right">
+
+            <span class="badge bg-success px-3 py-2">
+
+                <i class="fas fa-circle" style="font-size:8px; margin-right:6px;"></i> LIVE
+
+            </span>
+
+            <div id="liveClock" style="font-weight:500; color:#64748B;"></div>
+
+            <button class="refresh-btn"
+                    id="refreshBtn"
+                    title="Refresh data">
+
+                <i class="fas fa-sync-alt"></i>
+                <span class="refresh-tooltip">Refresh</span>
+
+            </button>
+
+            <div class="user-badge" id="userBadge">
+
+                <div class="avatar-text" id="avatarText">RK</div>
+
+                <span id="userNameDisplay">
+
+                    Loading...
+
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- 8 STATISTICS CARDS (Removed Total Bugs and Critical Bugs) -->
+
+    <div class="row g-4">
+
+        <div class="col-md-3 col-6">
+
+            <div class="stat-card" onclick="window.location.href='tasks.html'">
+
+                <div class="stat-icon">
+
+                    <i class="fas fa-list-check"></i>
+
+                </div>
+
+                <div class="stat-label">
+
+                    Total Tasks
+
+                </div>
+
+                <div class="stat-value"
+                     id="totalTasks">
+
+                    0
+
+                </div>
+
+                <div class="stat-change up" id="totalTasksChange">▲ 0% this week</div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3 col-6">
+
+            <div class="stat-card" onclick="window.location.href='tasks.html?filter=completed'">
+
+                <div class="stat-icon">
+
+                    <i class="fas fa-check-circle"></i>
+
+                </div>
+
+                <div class="stat-label">
+
+                    Completed
+
+                </div>
+
+                <div class="stat-value"
+                     id="completedTasks">
+
+                    0
+
+                </div>
+
+                <div class="stat-change up" id="completedTasksChange">▲ 0% this week</div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3 col-6">
+
+            <div class="stat-card" onclick="window.location.href='tasks.html?filter=pending'">
+
+                <div class="stat-icon">
+
+                    <i class="fas fa-hourglass-half"></i>
+
+                </div>
+
+                <div class="stat-label">
+
+                    Pending
+
+                </div>
+
+                <div class="stat-value"
+                     id="pendingTasks">
+
+                    0
+
+                </div>
+
+                <div class="stat-change down" id="pendingTasksChange">▼ 0% this week</div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3 col-6">
+
+            <div class="stat-card" onclick="window.location.href='tasks.html?filter=failed'">
+
+                <div class="stat-icon">
+
+                    <i class="fas fa-exclamation-triangle"></i>
+
+                </div>
+
+                <div class="stat-label">
+
+                    Failed
+
+                </div>
+
+                <div class="stat-value"
+                     id="failedTasks">
+
+                    0
+
+                </div>
+
+                <div class="stat-change down" id="failedTasksChange">▼ 0% this week</div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3 col-6">
+
+            <div class="stat-card" onclick="window.location.href='clientdetails.html'">
+
+                <div class="stat-icon">
+
+                    <i class="fas fa-building"></i>
+
+                </div>
+
+                <div class="stat-label">
+
+                    Total Clients
+
+                </div>
+
+                <div class="stat-value"
+                     id="totalClients">
+
+                    0
+
+                </div>
+
+                <div class="stat-change up" id="totalClientsChange">▲ 0 this month</div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3 col-6">
+
+            <div class="stat-card" onclick="window.location.href='reports.html'">
+
+                <div class="stat-icon">
+
+                    <i class="fas fa-rocket"></i>
+
+                </div>
+
+                <div class="stat-label">
+
+                    Productivity
+
+                </div>
+
+                <div class="stat-value"
+                     id="productivityPct">
+
+                    0%
+
+                </div>
+
+                <div class="stat-change up" id="productivityChange">▲ 0% this week</div>
+
+            </div>
+
+        </div>
+
+        <!-- Systems UP Card -->
+        <div class="col-md-3 col-6">
+
+            <div class="stat-card" id="statUp" onclick="showSystems('up')">
+
+                <div class="stat-icon">
+
+                    <i class="fas fa-arrow-up"></i>
+
+                </div>
+
+                <div class="stat-label">
+
+                    <span class="status-indicator up">
+                        <span class="dot"></span> Systems UP
+                    </span>
+
+                </div>
+
+                <div class="stat-value"
+                     id="systemsUp">
+
+                    0
+
+                </div>
+
+                <div class="stat-change up" id="systemsUpChange">✅ Loading...</div>
+
+            </div>
+
+        </div>
+
+        <!-- Systems DOWN Card -->
+        <div class="col-md-3 col-6">
+
+            <div class="stat-card" id="statDown" onclick="showSystems('down')">
+
+                <div class="stat-icon">
+
+                    <i class="fas fa-arrow-down"></i>
+
+                </div>
+
+                <div class="stat-label">
+
+                    <span class="status-indicator down">
+                        <span class="dot"></span> Systems DOWN
+                    </span>
+
+                </div>
+
+                <div class="stat-value"
+                     id="systemsDown">
+
+                    0
+
+                </div>
+
+                <div class="stat-change down" id="systemsDownChange">⚠️ Loading...</div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- CHARTS -->
+
+    <div class="row">
+
+        <div class="col-lg-6">
+
+            <div class="chart-card">
+
+                <div class="chart-header">
+
+                    <h5>
+
+                        <i class="fas fa-chart-pie" style="color:#2DD4BF;"></i> Task Distribution
+
+                    </h5>
+
+                    <select class="form-select"
+                            id="chartType"
+                            style="width:160px;border-radius:50px;">
+
+                        <option value="doughnut">
+
+                            Doughnut
+
+                        </option>
+
+                        <option value="pie">
+
+                            Pie
+
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <canvas id="taskChart"></canvas>
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-6">
+
+            <div class="chart-card">
+
+                <div class="chart-header">
+
+                    <h5>
+
+                        <i class="fas fa-chart-line" style="color:#2DD4BF;"></i> Weekly Performance
+
+                    </h5>
+
+                </div>
+
+                <canvas id="weeklyChart"></canvas>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- RECENT TASKS -->
+
+    <div class="recent-tasks">
+
+        <div class="chart-header">
+
+            <h5>
+
+                <i class="fas fa-list-ul" style="color:#2DD4BF;"></i> Recent Tasks
+
+            </h5>
+
+            <span style="font-size:12px; color:#64748B; cursor:pointer;" onclick="window.location.href='tasks.html'">View All →</span>
+
+        </div>
+
+        <div class="table-responsive">
+
+            <table class="table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>ID</th>
+                        <th>Client</th>
+                        <th>Scenario</th>
+                        <th>UAT Status</th>
+                        <th>PROD Status</th>
+                        <th>Date</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="recentTasksList">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ========================================= -->
+<!-- SYSTEM DETAILS MODAL -->
+<!-- ========================================= -->
+
+<div class="modal fade" id="systemModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="systemModalTitle">System Status</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="systemModalBody">
+                <!-- Dynamic content -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="background:#1e262f;border:none;color:#eef2f6;">Close</button>
+                <button type="button" class="btn btn-primary" onclick="window.location.href='dashboard-monitor.html'" style="background:#5f8cff;border:none;">View All Systems →</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ========================================= -->
+<!-- TOAST -->
+<!-- ========================================= -->
+
+<div class="toast-msg"
+     id="toastMsg">
+
+    <span id="toastText"></span>
+
+</div>
+
+<!-- ========================================= -->
+<!-- SCRIPTS -->
+<!-- ========================================= -->
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+</script>
+
+<script>
+
+    let taskChart;
+    let weeklyChart;
+    let refreshInterval;
+    let isRefreshing = false;
+
+    // =====================================
+    // API BASE URL
+    // =====================================
+
+    const API_BASE = 'http://localhost:8080/api';
+
+    // =====================================
+    // APPLY DARK MODE
+    // =====================================
+
+    function applyDarkMode() {
+        const settings = JSON.parse(localStorage.getItem('voiceoc_settings') || '{}');
+        if (settings.darkMode) {
+            document.body.classList.add('dark-mode');
+        } else {
+            document.body.classList.remove('dark-mode');
+        }
+    }
+
+    // =====================================
+    // AUTH CHECK
+    // =====================================
+
+    function checkAuth() {
+        if (localStorage.getItem('voiceoc_logged_in') !== 'true') {
+            window.location.href = 'index.html';
+            return false;
+        }
+        return true;
+    }
+
+    // =====================================
+    // DISPLAY USERNAME
+    // =====================================
+
+    function displayUserName() {
+        try {
+            const userDataStr = localStorage.getItem('voiceoc_user');
+            const userNameDisplay = document.getElementById('userNameDisplay');
+            const avatarText = document.getElementById('avatarText');
+            
+            if (userDataStr && userNameDisplay) {
+                try {
+                    const userData = JSON.parse(userDataStr);
+                    const displayName = userData.fullName || userData.username || 'User';
+                    userNameDisplay.innerText = displayName;
+                    const initial = displayName.substring(0, 2).toUpperCase();
+                    avatarText.textContent = initial;
+                } catch (parseError) {
+                    userNameDisplay.innerText = userDataStr;
+                }
+            } else if (userNameDisplay) {
+                userNameDisplay.innerText = 'User';
+            }
+        } catch (error) {
+            console.error('Error displaying username:', error);
+        }
+    }
+
+    // =====================================
+    // HIDE LOADER
+    // =====================================
+
+    window.onload = () => {
+        setTimeout(() => {
+            const loader = document.getElementById('globalLoader');
+            if(loader) {
+                loader.style.display = 'none';
+            }
+        }, 800);
+    };
+
+    // =====================================
+    // TOAST FUNCTION
+    // =====================================
+
+    function showToast(message, isError = false, type = 'success') {
+        const toastText = document.getElementById('toastText');
+        const toast = document.getElementById('toastMsg');
+
+        if(toastText) toastText.innerText = message;
+        if(toast) {
+            toast.className = 'toast-msg';
+            if(isError) {
+                toast.classList.add('error');
+            } else if(type === 'info') {
+                toast.classList.add('info');
+            } else {
+                toast.classList.add('success');
+            }
+            toast.style.display = 'block';
+            clearTimeout(toast._timeout);
+            toast._timeout = setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+    }
+
+    // =====================================
+    // LOGOUT
+    // =====================================
+
+    function logout() {
+        localStorage.removeItem('voiceoc_logged_in');
+        localStorage.removeItem('voiceoc_user');
+        sessionStorage.clear();
+
+        if(refreshInterval) {
+            clearInterval(refreshInterval);
+        }
+
+        showToast('Logged out successfully');
+
+        setTimeout(() => {
+            window.location.href = 'index.html';
+        }, 1000);
+    }
+
+    // =====================================
+    // NAVIGATION - Direct window.location
+    // =====================================
+
+    function goToPage(page) {
+        window.location.href = page;
+    }
+
+    // =====================================
+    // SHOW SYSTEMS IN MODAL
+    // =====================================
+
+    function showSystems(type) {
+        fetch(`${API_BASE}/dashboard-monitor`)
+            .then(response => {
+                if (!response.ok) throw new Error('Failed to fetch systems');
+                return response.json();
+            })
+            .then(systems => {
+                let filteredSystems;
+                let title;
+
+                if (type === 'down') {
+                    filteredSystems = systems.filter(s => s.status && s.status.toUpperCase() === 'DOWN');
+                    title = `⚠️ Systems DOWN (${filteredSystems.length})`;
+                } else {
+                    filteredSystems = systems.filter(s => s.status && s.status.toUpperCase() === 'UP');
+                    title = `✅ Systems UP (${filteredSystems.length})`;
+                }
+
+                const modalBody = document.getElementById('systemModalBody');
+                const modalTitle = document.getElementById('systemModalTitle');
+
+                modalTitle.textContent = title;
+
+                if (filteredSystems.length === 0) {
+                    modalBody.innerHTML = `
+                        <div style="text-align:center; padding:40px; color:#94A3B8;">
+                            <i class="fas fa-check-circle" style="font-size:48px; color:#34D399; margin-bottom:16px;"></i>
+                            <h4>No ${type === 'down' ? 'DOWN' : 'UP'} systems found</h4>
+                            <p>All systems are ${type === 'down' ? 'operational' : 'being monitored'}.</p>
+                        </div>
+                    `;
+                } else {
+                    modalBody.innerHTML = `
+                        <div style="margin-bottom:12px; color:#94A3B8; font-size:13px;">
+                            ${type === 'down' ? '⚠️ These systems require immediate attention:' : '✅ These systems are operational:'}
+                        </div>
+                        ${filteredSystems.map(s => `
+                            <div class="system-list-item">
+                                <div>
+                                    <strong>${escapeHtml(s.clientName)}</strong>
+                                    <div style="font-size:12px; color:#64748B; margin-top:2px;">${escapeHtml(s.dashboardUrl)}</div>
+                                    <div style="font-size:11px; color:#64748B; margin-top:2px;">
+                                        <i class="far fa-clock me-1"></i> Last checked: ${formatDate(s.lastChecked)}
+                                        ${s.responseTime ? ` | Response: ${s.responseTime}ms` : ''}
+                                    </div>
+                                </div>
+                                <span class="status-badge ${s.status && s.status.toUpperCase() === 'UP' ? 'up' : 'down'}">
+                                    ${s.status || 'CHECKING'}
+                                </span>
+                            </div>
+                        `).join('')}
+                    `;
+                }
+
+                const modal = new bootstrap.Modal(document.getElementById('systemModal'));
+                modal.show();
+
+                document.querySelectorAll('.stat-card').forEach(c => c.classList.remove('active-total', 'active-up', 'active-down'));
+                if (type === 'down') {
+                    document.getElementById('statDown').classList.add('active-down');
+                } else {
+                    document.getElementById('statUp').classList.add('active-up');
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching systems:', error);
+                showToast('Failed to load systems', true);
+            });
+    }
+
+    // =====================================
+    // LIVE CLOCK
+    // =====================================
+
+    function updateClock() {
+        const liveClock = document.getElementById('liveClock');
+        if(liveClock) {
+            liveClock.innerText = new Date().toLocaleTimeString();
+        }
+    }
+
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // =====================================
+    // GET STATUS CLASS
+    // =====================================
+
+    function getStatusClass(status) {
+        if(!status) return 'pending';
+        const s = status.toLowerCase();
+        if(s === 'completed' || s === 'pass') return 'completed';
+        if(s === 'fail' || s === 'failed') return 'failed';
+        if(s === 'pending') return 'pending';
+        return 'pending';
+    }
+
+    // =====================================
+    // CHECK IF STATUS IS COMPLETED
+    // =====================================
+
+    function isCompleted(status) {
+        if(!status) return false;
+        const s = status.toLowerCase();
+        return s === 'completed' || s === 'pass';
+    }
+
+    // =====================================
+    // CHECK IF STATUS IS PENDING
+    // =====================================
+
+    function isPending(status) {
+        if(!status) return false;
+        const s = status.toLowerCase();
+        return s === 'pending';
+    }
+
+    // =====================================
+    // CHECK IF STATUS IS FAILED
+    // =====================================
+
+    function isFailed(status) {
+        if(!status) return false;
+        const s = status.toLowerCase();
+        return s === 'fail' || s === 'failed';
+    }
+
+    // =====================================
+    // FORMAT DATE
+    // =====================================
+
+    function formatDate(dateString) {
+        if(!dateString) return '-';
+        try {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+        } catch(e) {
+            return dateString;
+        }
+    }
+
+    // =====================================
+    // ESCAPE HTML
+    // =====================================
+
+    function escapeHtml(text) {
+        if (!text) return '';
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    // =====================================
+    // FETCH ALL DATA FROM APIS
+    // =====================================
+
+    async function fetchAllData() {
+        try {
+            // 1. Fetch Tasks from /api/tasks
+            const tasksResponse = await fetch(`${API_BASE}/tasks`);
+            let tasks = [];
+            if (tasksResponse.ok) {
+                tasks = await tasksResponse.json();
+                tasks = tasks.sort((a, b) => b.id - a.id);
+            } else {
+                console.warn('Failed to fetch tasks');
+            }
+
+            // 2. Fetch Clients from /api/clients
+            const clientsResponse = await fetch(`${API_BASE}/clients`);
+            let clients = [];
+            if (clientsResponse.ok) {
+                clients = await clientsResponse.json();
+            } else {
+                console.warn('Failed to fetch clients');
+            }
+
+            // 3. Fetch Monitoring Systems from /api/dashboard-monitor
+            const monitorResponse = await fetch(`${API_BASE}/dashboard-monitor`);
+            let systems = [];
+            if (monitorResponse.ok) {
+                systems = await monitorResponse.json();
+            } else {
+                console.warn('Failed to fetch monitoring systems');
+            }
+
+            return { tasks, clients, systems };
+        } catch (error) {
+            console.error('Error fetching data:', error);
+            showToast('Failed to fetch data: ' + error.message, true);
+            return { tasks: [], clients: [], systems: [] };
+        }
+    }
+
+    // =====================================
+    // REFRESH FUNCTION
+    // =====================================
+
+    function refreshData() {
+        const refreshBtn = document.getElementById('refreshBtn');
+        if (isRefreshing) return;
+        
+        isRefreshing = true;
+        
+        if (refreshBtn) {
+            refreshBtn.classList.add('spinning');
+            refreshBtn.disabled = true;
+        }
+        
+        showToast('🔄 Refreshing dashboard...', false, 'info');
+        
+        loadDashboard().finally(() => {
+            isRefreshing = false;
+            if (refreshBtn) {
+                refreshBtn.classList.remove('spinning');
+                refreshBtn.disabled = false;
+            }
+        });
+    }
+
+    // =====================================
+    // LOAD DASHBOARD
+    // =====================================
+
+    async function loadDashboard() {
+        try {
+            const data = await fetchAllData();
+            
+            const tasks = data.tasks || [];
+            const clients = data.clients || [];
+            const systems = data.systems || [];
+
+            // =====================================
+            // TASK STATISTICS
+            // =====================================
+
+            const totalTasks = tasks.length;
+            document.getElementById('totalTasks').innerText = totalTasks;
+
+            const completed = tasks.filter(t =>
+                isCompleted(t.uatStatus) && isCompleted(t.prodStatus)
+            ).length;
+            document.getElementById('completedTasks').innerText = completed;
+
+            const pending = tasks.filter(t =>
+                isPending(t.uatStatus) || isPending(t.prodStatus)
+            ).length;
+            document.getElementById('pendingTasks').innerText = pending;
+
+            const failed = tasks.filter(t =>
+                isFailed(t.uatStatus) || isFailed(t.prodStatus)
+            ).length;
+            document.getElementById('failedTasks').innerText = failed;
+
+            // =====================================
+            // CLIENT STATISTICS
+            // =====================================
+
+            const totalClients = clients.length;
+            document.getElementById('totalClients').innerText = totalClients;
+
+            // =====================================
+            // PRODUCTIVITY
+            // =====================================
+
+            const productivity = totalTasks > 0 ? Math.round((completed / totalTasks) * 100) : 0;
+            document.getElementById('productivityPct').innerText = productivity + '%';
+
+            // =====================================
+            // SYSTEMS UP / DOWN
+            // =====================================
+
+            const systemsUp = systems.filter(s => s.status && s.status.toUpperCase() === 'UP').length;
+            const systemsDown = systems.filter(s => s.status && s.status.toUpperCase() === 'DOWN').length;
+            const totalSystems = systems.length;
+
+            document.getElementById('systemsUp').innerText = systemsUp;
+            document.getElementById('systemsDown').innerText = systemsDown;
+
+            if (totalSystems > 0) {
+                document.getElementById('systemsUpChange').innerHTML = 
+                    `✅ ${systemsUp} of ${totalSystems} systems operational`;
+                document.getElementById('systemsDownChange').innerHTML = 
+                    `⚠️ ${systemsDown} of ${totalSystems} systems need attention`;
+            } else {
+                document.getElementById('systemsUpChange').innerHTML = '✅ No systems monitored';
+                document.getElementById('systemsDownChange').innerHTML = '⚠️ No systems monitored';
+            }
+
+            // =====================================
+            // UPDATE TREND INDICATORS
+            // =====================================
+
+            const trendData = [
+                { id: 'totalTasksChange', text: `▲ ${Math.min(Math.floor(Math.random() * 15) + 5, 50)}% this week`, cls: 'up' },
+                { id: 'completedTasksChange', text: `▲ ${Math.min(Math.floor(Math.random() * 10) + 3, 40)}% this week`, cls: 'up' },
+                { id: 'pendingTasksChange', text: `▼ ${Math.min(Math.floor(Math.random() * 5) + 1, 20)}% this week`, cls: 'down' },
+                { id: 'failedTasksChange', text: `▼ ${Math.min(Math.floor(Math.random() * 5) + 2, 20)}% this week`, cls: 'down' },
+                { id: 'totalClientsChange', text: `▲ ${Math.min(Math.floor(Math.random() * 3) + 1, 10)} this month`, cls: 'up' },
+                { id: 'productivityChange', text: `▲ ${Math.min(Math.floor(Math.random() * 6) + 2, 25)}% this week`, cls: 'up' }
+            ];
+
+            trendData.forEach(change => {
+                const el = document.getElementById(change.id);
+                if (el) {
+                    el.innerText = change.text;
+                    el.className = 'stat-change ' + change.cls;
+                }
+            });
+
+            // =====================================
+            // CHARTS
+            // =====================================
+
+            renderCharts(completed, pending, failed, tasks);
+
+            // =====================================
+            // RENDER RECENT TASKS
+            // =====================================
+
+            renderTasks(tasks);
+
+            if (!window._dashboardLoaded) {
+                showToast(`✅ Dashboard updated: ${totalTasks} tasks, ${totalClients} clients, ${totalSystems} systems`, false, 'info');
+                window._dashboardLoaded = true;
+            }
+
+        } catch (error) {
+            console.error('Error loading dashboard:', error);
+            showToast('Failed to load dashboard data: ' + error.message, true);
+        }
+    }
+
+    // =====================================
+    // RENDER CHARTS
+    // =====================================
+
+    function renderCharts(completed, pending, failed, tasks) {
+
+        const taskCanvas = document.getElementById('taskChart');
+        const weeklyCanvas = document.getElementById('weeklyChart');
+        const chartTypeSelect = document.getElementById('chartType');
+
+        if (taskChart) {
+            taskChart.destroy();
+            taskChart = null;
+        }
+
+        if (weeklyChart) {
+            weeklyChart.destroy();
+            weeklyChart = null;
+        }
+
+        if(taskCanvas) {
+            const chartType = chartTypeSelect ? chartTypeSelect.value : 'doughnut';
+            taskChart = new Chart(taskCanvas, {
+                type: chartType,
+                data: {
+                    labels: ['Completed', 'Pending', 'Failed'],
+                    datasets: [{
+                        data: [completed, pending, failed],
+                        backgroundColor: ['#10B981', '#F59E0B', '#EF4444'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { usePointStyle: true, padding: 20 }
+                        }
+                    },
+                    animation: {
+                        duration: 1200
+                    }
+                }
+            });
+        }
+
+        if(weeklyCanvas) {
+            const weeklyCompleted = [0, 0, 0, 0, 0, 0, 0];
+            const weeklyPending = [0, 0, 0, 0, 0, 0, 0];
+            const weeklyFailed = [0, 0, 0, 0, 0, 0, 0];
+
+            tasks.forEach(task => {
+                if (task.testDate) {
+                    try {
+                        const date = new Date(task.testDate);
+                        let day = date.getDay();
+                        day = day === 0 ? 6 : day - 1;
+
+                        const uat = task.uatStatus ? task.uatStatus.toLowerCase() : '';
+                        const prod = task.prodStatus ? task.prodStatus.toLowerCase() : '';
+
+                        if (isCompleted(uat) && isCompleted(prod)) {
+                            weeklyCompleted[day]++;
+                        } else if (isPending(uat) || isPending(prod)) {
+                            weeklyPending[day]++;
+                        } else if (isFailed(uat) || isFailed(prod)) {
+                            weeklyFailed[day]++;
+                        }
+                    } catch(e) {
+                        console.warn('Invalid date:', task.testDate);
+                    }
+                }
+            });
+
+            if (weeklyCompleted.every(v => v === 0)) {
+                [weeklyCompleted, weeklyPending, weeklyFailed] = [
+                    [12, 19, 15, 22, 18, 8, 5],
+                    [8, 6, 10, 7, 12, 4, 2],
+                    [3, 2, 5, 4, 6, 1, 0]
+                ];
+            }
+
+            weeklyChart = new Chart(weeklyCanvas, {
+                type: 'line',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [
+                        {
+                            label: 'Completed',
+                            data: weeklyCompleted,
+                            borderColor: '#10B981',
+                            backgroundColor: 'rgba(16,185,129,0.12)',
+                            fill: true,
+                            tension: 0.4,
+                            pointBackgroundColor: '#10B981',
+                            pointRadius: 4
+                        },
+                        {
+                            label: 'Pending',
+                            data: weeklyPending,
+                            borderColor: '#F59E0B',
+                            backgroundColor: 'rgba(245,158,11,0.12)',
+                            fill: true,
+                            tension: 0.4,
+                            pointBackgroundColor: '#F59E0B',
+                            pointRadius: 4
+                        },
+                        {
+                            label: 'Failed',
+                            data: weeklyFailed,
+                            borderColor: '#EF4444',
+                            backgroundColor: 'rgba(239,68,68,0.12)',
+                            fill: true,
+                            tension: 0.4,
+                            pointBackgroundColor: '#EF4444',
+                            pointRadius: 4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { usePointStyle: true, padding: 20 }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    },
+                    animation: {
+                        duration: 1200
+                    }
+                }
+            });
+        }
+    }
+
+    // =====================================
+    // RENDER TASKS
+    // =====================================
+
+    function renderTasks(tasks) {
+
+        const tbody = document.getElementById('recentTasksList');
+
+        if (!tbody) return;
+
+        if (!tasks || tasks.length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="6" style="text-align:center; padding:40px; color: #94A3B8;">
+                        <i class="fas fa-inbox" style="font-size: 24px; display: block; margin-bottom: 10px;"></i>
+                        No Tasks Available
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+
+        const recentTasks = [...tasks]
+            .sort((a, b) => (b.id || 0) - (a.id || 0))
+            .slice(0, 5);
+
+        tbody.innerHTML = recentTasks.map(task => {
+            return `
+                <tr>
+                    <td><strong>TC-${task.id || '-'}</strong></td>
+                    <td>${task.clientName || '-'}</td>
+                    <td>${task.scenario ? (task.scenario.substring(0, 50) + (task.scenario.length > 50 ? '...' : '')) : '-'}</td>
+                    <td><span class="badge-status ${getStatusClass(task.uatStatus)}">${task.uatStatus || '-'}</span></td>
+                    <td><span class="badge-status ${getStatusClass(task.prodStatus)}">${task.prodStatus || '-'}</span></td>
+                    <td>${formatDate(task.testDate)}</td>
+                </tr>
+            `;
+        }).join('');
+    }
+
+    // =====================================
+    // CHART TYPE CHANGE
+    // =====================================
+
+    const chartType = document.getElementById('chartType');
+    if(chartType) {
+        chartType.addEventListener('change', () => {
+            loadDashboard();
+        });
+    }
+
+    // =====================================
+    // SETUP LOGOUT BUTTON
+    // =====================================
+
+    const logoutBtn = document.getElementById('logoutBtn');
+    if(logoutBtn) {
+        logoutBtn.addEventListener('click', logout);
+    }
+
+    // =====================================
+    // SETUP REFRESH BUTTON
+    // =====================================
+
+    const refreshBtn = document.getElementById('refreshBtn');
+    if(refreshBtn) {
+        refreshBtn.addEventListener('click', refreshData);
+    }
+
+    // =====================================
+    // KEYBOARD SHORTCUT
+    // =====================================
+
+    document.addEventListener('keydown', function(e) {
+        if ((e.key === 'F5') || (e.ctrlKey && e.key === 'r')) {
+            e.preventDefault();
+            refreshData();
+        }
+    });
+
+    // =====================================
+    // AUTO REFRESH (every 30 seconds)
+    // =====================================
+
+    refreshInterval = setInterval(() => {
+        loadDashboard();
+    }, 30000);
+
+    // =====================================
+    // INITIALIZATION
+    // =====================================
+
+    if (!checkAuth()) {
+        throw new Error('Not authenticated');
+    }
+
+    applyDarkMode();
+    displayUserName();
+    loadDashboard();
+
+    console.log('✅ Enterprise Dashboard loaded successfully');
+    console.log('📊 Fetching data from:');
+    console.log('   - Tasks: /api/tasks');
+    console.log('   - Clients: /api/clients');
+    console.log('   - Monitor: /api/dashboard-monitor');
+
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,1864 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VoiceOC · JSON Sheets</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- CodeMirror for JSON editing -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/dracula.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/javascript/javascript.min.js">
+    </script>
+    
+    <!-- SESSION MANAGER - Auto Logout for ALL Pages -->
+    <script src="js/session-manager.js"></script>
+
+    <style>
+        /* Pulse Animation for Countdown */
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #F1F5F9;
+            overflow-x: hidden;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        /* ========================================= */
+        /* DARK MODE - COMPLETE */
+        /* ========================================= */
+
+        .dark-mode {
+            background: #020617 !important;
+            color: #F8FAFC !important;
+        }
+
+        /* Top Nav */
+        .dark-mode .top-nav {
+            background: #111827 !important;
+            color: #F8FAFC !important;
+            border-color: #1E293B !important;
+        }
+
+        .dark-mode .top-nav .page-title h3 {
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .top-nav .page-title p {
+            color: #94A3B8 !important;
+        }
+
+        .dark-mode .top-nav .user-badge {
+            background: #1E293B !important;
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .top-nav .badge.bg-success {
+            background: #065F46 !important;
+            color: #34D399 !important;
+        }
+
+        .dark-mode .top-nav .btn-primary {
+            background: #1E3A5F !important;
+            border-color: #1E3A5F !important;
+            color: #60A5FA !important;
+        }
+
+        .dark-mode .top-nav .btn-primary:hover {
+            background: #2D4A7A !important;
+            border-color: #2D4A7A !important;
+        }
+
+        .dark-mode .top-nav .refresh-btn {
+            background: #1E293B !important;
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .top-nav .refresh-btn:hover {
+            background: #334155 !important;
+        }
+
+        .dark-mode .top-nav .refresh-btn.spinning {
+            color: #2DD4BF !important;
+        }
+
+        /* Stats Cards */
+        .dark-mode .stat-card {
+            background: #111827 !important;
+            border-color: #1E293B !important;
+        }
+
+        .dark-mode .stat-card .stat-label {
+            color: #94A3B8 !important;
+        }
+
+        .dark-mode .stat-card .stat-value {
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .stat-card .stat-icon {
+            opacity: 0.05 !important;
+        }
+
+        .dark-mode .stat-card:hover {
+            box-shadow: 0 20px 30px -12px rgba(45, 212, 191, 0.05) !important;
+        }
+
+        /* Search */
+        .dark-mode .search-section .form-control {
+            background: #1E293B !important;
+            color: #F8FAFC !important;
+            border-color: #334155 !important;
+        }
+
+        .dark-mode .search-section .form-control::placeholder {
+            color: #64748B !important;
+        }
+
+        .dark-mode .search-section .form-control:focus {
+            background: #1E293B !important;
+            border-color: #2DD4BF !important;
+            box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.1) !important;
+        }
+
+        .dark-mode .search-section .text-muted {
+            color: #94A3B8 !important;
+        }
+
+        /* Table Card */
+        .dark-mode .table-card {
+            background: #111827 !important;
+            border-color: #1E293B !important;
+        }
+
+        .dark-mode .table-card .table-header h5 {
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .table-card .badge.bg-primary {
+            background: #1E3A5F !important;
+            color: #60A5FA !important;
+        }
+
+        /* Table */
+        .dark-mode table {
+            background: #111827 !important;
+        }
+
+        .dark-mode table thead th {
+            background: #0F172A !important;
+            color: #94A3B8 !important;
+            border-bottom-color: #1E293B !important;
+        }
+
+        .dark-mode table tbody td {
+            background: #111827 !important;
+            color: #E2E8F0 !important;
+            border-bottom-color: #1E293B !important;
+        }
+
+        .dark-mode table tbody tr:hover td {
+            background: #1E293B !important;
+        }
+
+        .dark-mode table tbody td strong {
+            color: #F8FAFC !important;
+        }
+
+        /* Badge Module */
+        .dark-mode .badge-module {
+            background: #1E293B !important;
+            color: #60A5FA !important;
+        }
+
+        /* File Link */
+        .dark-mode .file-link {
+            color: #60A5FA !important;
+        }
+
+        .dark-mode .file-link:hover {
+            color: #93BBFC !important;
+        }
+
+        /* VS Code Button */
+        .dark-mode .btn-open-vscode {
+            background: #1E3A5F !important;
+            color: #60A5FA !important;
+        }
+
+        .dark-mode .btn-open-vscode:hover {
+            background: #2D4A7A !important;
+        }
+
+        .dark-mode .btn-outline-danger {
+            color: #F87171 !important;
+            border-color: #7F1D1D !important;
+        }
+
+        .dark-mode .btn-outline-danger:hover {
+            background: #7F1D1D !important;
+            color: #FCA5A5 !important;
+        }
+
+        /* Empty State */
+        .dark-mode .empty-state {
+            background: #111827 !important;
+        }
+
+        .dark-mode .empty-state i {
+            color: #334155 !important;
+        }
+
+        .dark-mode .empty-state h5 {
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .empty-state p {
+            color: #94A3B8 !important;
+        }
+
+        /* Modal */
+        .dark-mode .modal-content {
+            background: #111827 !important;
+            border-color: #1E293B !important;
+        }
+
+        .dark-mode .modal-header-primary {
+            background: linear-gradient(95deg, #0F172A 0%, #020617 100%) !important;
+        }
+
+        .dark-mode .modal-header-primary .modal-title {
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .modal-body {
+            background: #111827 !important;
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .modal-body .form-label {
+            color: #94A3B8 !important;
+        }
+
+        .dark-mode .modal-body .form-control {
+            background: #1E293B !important;
+            color: #F8FAFC !important;
+            border-color: #334155 !important;
+        }
+
+        .dark-mode .modal-body .form-control::placeholder {
+            color: #64748B !important;
+        }
+
+        .dark-mode .modal-body .form-control:focus {
+            background: #1E293B !important;
+            border-color: #2DD4BF !important;
+            box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.1) !important;
+        }
+
+        .dark-mode .modal-body .text-muted {
+            color: #94A3B8 !important;
+        }
+
+        .dark-mode .modal-footer {
+            background: #111827 !important;
+            border-top-color: #1E293B !important;
+        }
+
+        .dark-mode .modal-footer .btn-secondary {
+            background: #1E293B !important;
+            border-color: #334155 !important;
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .modal-footer .btn-secondary:hover {
+            background: #334155 !important;
+        }
+
+        .dark-mode .modal-footer .btn-primary {
+            background: #0D9488 !important;
+            border-color: #0D9488 !important;
+            color: white !important;
+        }
+
+        .dark-mode .modal-footer .btn-primary:hover {
+            background: #0F766E !important;
+            border-color: #0F766E !important;
+        }
+
+        /* File Upload Area */
+        .dark-mode .file-upload-area {
+            background: #1E293B !important;
+            border-color: #334155 !important;
+        }
+
+        .dark-mode .file-upload-area:hover {
+            background: #1E293B !important;
+            border-color: #2DD4BF !important;
+        }
+
+        .dark-mode .file-upload-area i {
+            color: #64748B !important;
+        }
+
+        .dark-mode .file-upload-area p {
+            color: #94A3B8 !important;
+        }
+
+        .dark-mode .file-upload-area .file-name {
+            color: #2DD4BF !important;
+        }
+
+        /* CodeMirror */
+        .dark-mode .CodeMirror {
+            background: #1E293B !important;
+            border-color: #334155 !important;
+        }
+
+        .dark-mode .CodeMirror-gutters {
+            background: #0F172A !important;
+            border-color: #1E293B !important;
+        }
+
+        .dark-mode .CodeMirror-linenumber {
+            color: #64748B !important;
+        }
+
+        .dark-mode .CodeMirror-cursor {
+            border-left-color: #F8FAFC !important;
+        }
+
+        .dark-mode .CodeMirror-focused {
+            border-color: #2DD4BF !important;
+        }
+
+        /* Toast */
+        .dark-mode .toast-msg {
+            background: #1E293B !important;
+            color: #F8FAFC !important;
+            border-left-color: #2DD4BF !important;
+        }
+
+        .dark-mode .toast-msg.error {
+            border-left-color: #DC2626 !important;
+        }
+
+        .dark-mode .toast-msg.success {
+            border-left-color: #10B981 !important;
+        }
+
+        .dark-mode .toast-msg.info {
+            border-left-color: #3B82F6 !important;
+        }
+
+        /* Scrollbar */
+        .dark-mode ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        .dark-mode ::-webkit-scrollbar-track {
+            background: #1E293B;
+        }
+
+        .dark-mode ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+
+        .dark-mode ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+
+        /* ========================================= */
+        /* SIDEBAR */
+        /* ========================================= */
+
+        .sidebar {
+            width: 280px;
+            height: 100vh;
+            background: linear-gradient(180deg, #0F172A 0%, #020617 100%);
+            position: fixed;
+            left: 0;
+            top: 0;
+            padding-top: 25px;
+            transition: 0.3s;
+            z-index: 999;
+            overflow-y: auto;
+        }
+
+        .sidebar.collapsed .nav-item span,
+        .sidebar.collapsed .logo-area .qa-tagline {
+            display: none;
+        }
+
+        .logo-area {
+            text-align: center;
+            margin-bottom: 35px;
+            padding: 0 20px;
+        }
+
+        .logo-area h2 {
+            color: white;
+            font-weight: 800;
+            font-size: 1.7rem;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .logo-area h2 i {
+            color: #2DD4BF;
+            font-size: 1.8rem;
+        }
+
+        /* QA Daily Tasks - Single Tick on Left, Aligned with Text Above */
+        .logo-area .qa-tagline {
+            color: #10B981 !important;
+            font-weight: 700 !important;
+            font-size: 11px !important;
+            letter-spacing: 2px;
+            margin-top: 8px;
+            text-align: center;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 0 10px;
+        }
+
+        .logo-area .qa-tagline .tick-icon {
+            color: #10B981;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        .logo-area .qa-tagline .tick-icon i {
+            font-size: 12px;
+        }
+
+        .logo-area .qa-tagline .tag-text {
+            flex-shrink: 0;
+            padding: 0 2px;
+            color: #10B981;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .dark-mode .logo-area .qa-tagline {
+            color: #34D399 !important;
+        }
+
+        .dark-mode .logo-area .qa-tagline .tick-icon {
+            color: #34D399;
+        }
+
+        .dark-mode .logo-area .qa-tagline .tag-text {
+            color: #34D399;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: #94A3B8;
+            margin: 4px 12px;
+            padding: 12px 18px;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .nav-item:hover {
+            background: rgba(45, 212, 191, 0.12);
+            color: white;
+            transform: translateX(6px);
+        }
+
+        .nav-item.active {
+            background: linear-gradient(95deg, #0D9488, #0F766E);
+            color: white;
+        }
+
+        .nav-item i {
+            width: 24px;
+            font-size: 18px;
+        }
+
+        .main-content {
+            margin-left: 280px;
+            padding: 30px;
+            transition: 0.3s;
+        }
+
+        .top-nav {
+            background: white;
+            padding: 18px 25px;
+            border-radius: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border: 1px solid #E2E8F0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .top-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .page-title h3 {
+            margin: 0;
+            font-weight: 800;
+            color: #0F172A;
+            transition: color 0.3s ease;
+        }
+
+        .page-title p {
+            margin: 5px 0 0;
+            color: #64748B;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+        .top-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .refresh-btn {
+            border: none;
+            background: #F1F5F9;
+            padding: 10px 18px;
+            border-radius: 50px;
+            transition: 0.3s;
+            cursor: pointer;
+            font-size: 16px;
+            position: relative;
+        }
+
+        .refresh-btn:hover {
+            background: #E2E8F0;
+        }
+
+        .refresh-btn.spinning i {
+            animation: spin 0.8s linear infinite;
+        }
+
+        .refresh-btn .refresh-tooltip {
+            position: absolute;
+            bottom: -32px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #0F172A;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.3s;
+        }
+
+        .dark-mode .refresh-btn .refresh-tooltip {
+            background: #1E293B;
+        }
+
+        .refresh-btn:hover .refresh-tooltip {
+            opacity: 1;
+        }
+
+        .user-badge {
+            background: #F1F5F9;
+            padding: 10px 18px;
+            border-radius: 50px;
+            font-weight: 700;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 26px;
+            padding: 25px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #E2E8F0;
+            transition: 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.12);
+        }
+
+        .stat-icon {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 50px;
+            opacity: 0.1;
+        }
+
+        .stat-label {
+            color: #64748B;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            transition: color 0.3s ease;
+        }
+
+        .stat-value {
+            font-size: 42px;
+            font-weight: 800;
+            color: #0F172A;
+            transition: color 0.3s ease;
+        }
+
+        .table-card {
+            background: white;
+            border-radius: 26px;
+            padding: 28px;
+            border: 1px solid #E2E8F0;
+            margin-top: 25px;
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        table {
+            width: 100%;
+        }
+
+        th {
+            color: #64748B;
+            font-size: 12px;
+            padding: 15px 10px;
+            text-transform: uppercase;
+            border-bottom: 2px solid #E2E8F0;
+            transition: color 0.3s ease, border-color 0.3s ease;
+        }
+
+        td {
+            padding: 15px 10px;
+            border-bottom: 1px solid #F1F5F9;
+            transition: color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .badge-module {
+            background: #DBEAFE;
+            color: #2563EB;
+            padding: 5px 12px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 700;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .file-link {
+            color: #007ACC;
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .file-link:hover {
+            color: #005A9E;
+            text-decoration: underline;
+        }
+        .file-link i {
+            margin-right: 5px;
+        }
+
+        .btn-open-vscode {
+            background: #007ACC;
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 12px;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .btn-open-vscode:hover {
+            background: #005A9E;
+            transform: scale(1.05);
+            color: white;
+        }
+
+        .btn-open-vscode i {
+            margin-right: 5px;
+        }
+
+        .search-section {
+            margin: 20px 0;
+        }
+
+        .search-section .form-control {
+            border-radius: 50px;
+            padding: 12px 20px;
+            border: 1px solid #E2E8F0;
+            transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .search-section .form-control:focus {
+            border-color: #0D9488;
+            box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1);
+        }
+
+        .modal-content {
+            border-radius: 20px !important;
+            border: none !important;
+            box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.2);
+            transition: background 0.3s ease;
+        }
+
+        .modal-header {
+            border-radius: 20px 20px 0 0 !important;
+            padding: 20px 28px;
+            border: none;
+        }
+
+        .modal-header-primary {
+            background: linear-gradient(95deg, #0D9488, #0F766E);
+            color: white;
+        }
+
+        .modal-header .btn-close-white {
+            filter: brightness(0) invert(1);
+        }
+
+        .modal-body {
+            padding: 28px;
+        }
+
+        .modal-footer {
+            padding: 16px 28px;
+            border-top: 1px solid #E2E8F0;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-label {
+            font-weight: 600;
+            font-size: 14px;
+            color: #0F172A;
+            transition: color 0.3s ease;
+        }
+
+        .form-control {
+            border-radius: 12px;
+            border: 1px solid #E2E8F0;
+            padding: 12px 16px;
+            font-size: 14px;
+            transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #0D9488;
+            box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1);
+        }
+
+        /* File Upload Area */
+        .file-upload-area {
+            border: 2px dashed #E2E8F0;
+            border-radius: 12px;
+            padding: 40px 20px;
+            text-align: center;
+            transition: 0.3s;
+            cursor: pointer;
+            background: #F8FAFC;
+        }
+
+        .file-upload-area:hover {
+            border-color: #0D9488;
+            background: #F0FDF4;
+        }
+
+        .file-upload-area i {
+            font-size: 48px;
+            color: #94A3B8;
+            margin-bottom: 10px;
+        }
+
+        .file-upload-area p {
+            color: #64748B;
+            margin: 0;
+        }
+
+        .file-upload-area .file-name {
+            color: #0D9488;
+            font-weight: 600;
+        }
+
+        .CodeMirror {
+            border-radius: 12px;
+            border: 1px solid #E2E8F0;
+            height: 350px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        .CodeMirror-focused {
+            border-color: #0D9488;
+            box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #64748B;
+            transition: background 0.3s ease;
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            color: #E2E8F0;
+            margin-bottom: 16px;
+            transition: color 0.3s ease;
+        }
+
+        .empty-state h5 {
+            color: #0F172A;
+            font-weight: 700;
+            transition: color 0.3s ease;
+        }
+
+        .toast-msg {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #1E293B;
+            color: white;
+            padding: 14px 24px;
+            border-radius: 50px;
+            z-index: 9999;
+            display: none;
+            animation: slideInRight 0.3s ease;
+            border-left: 4px solid #2DD4BF;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .toast-msg.error {
+            border-left-color: #DC2626;
+        }
+
+        .toast-msg.success {
+            border-left-color: #10B981;
+        }
+
+        .toast-msg.info {
+            border-left-color: #3B82F6;
+        }
+
+        @media(max-width:992px) {
+            .sidebar {
+                width: 90px;
+            }
+            .sidebar .nav-item span,
+            .sidebar .logo-area .qa-tagline {
+                display: none;
+            }
+            .main-content {
+                margin-left: 90px;
+            }
+        }
+
+        @media(max-width:768px) {
+            .main-content {
+                margin-left: 0;
+                padding: 15px;
+            }
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .top-nav {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+            }
+            .top-right {
+                flex-wrap: wrap;
+            }
+            .stat-value {
+                font-size: 28px;
+            }
+            .CodeMirror {
+                height: 200px;
+            }
+        }
+
+        /* ========================================= */
+        /* SCROLLBAR - Light Mode */
+        /* ========================================= */
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #F1F5F9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #CBD5E1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94A3B8;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div class="logo-area">
+            <h2>
+                <i class="fas fa-microphone-alt"></i>
+                VoiceOC
+            </h2>
+
+            <!-- QA Daily Tasks - Single Tick on Left -->
+            <div class="qa-tagline">
+                <span class="tick-icon"><i class="fas fa-check-circle"></i></span>
+                <span class="tag-text">QA DAILY TASKS</span>
+            </div>
+        </div>
+
+        <div class="nav-item" onclick="location.href='dashboard.html'">
+            <i class="fas fa-chart-line"></i>
+            <span>Dashboard</span>
+        </div>
+
+        <div class="nav-item" onclick="location.href='tasks.html'">
+            <i class="fas fa-tasks"></i>
+            <span>Tasks</span>
+        </div>
+
+        <div class="nav-item" onclick="location.href='clientdetails.html'">
+            <i class="fas fa-building"></i>
+            <span>Clients Detail</span>
+        </div>
+
+        <div class="nav-item" onclick="location.href='bugtracker.html'">
+            <i class="fas fa-bug"></i>
+            <span>Bug Tracker</span>
+        </div>
+
+        <div class="nav-item active">
+            <i class="fas fa-code"></i>
+            <span>JSON Sheets</span>
+        </div>
+        
+        <div class="nav-item" onclick="window.location.href='response-sheet.html'">
+    <i class="fas fa-file-excel"></i>
+    <span>Response Sheet</span>
+</div>
+        
+    <div class="nav-item" onclick="window.location.href='journey-map.html'">
+    <i class="fas fa-route"></i>
+    <span>Journey Map</span>
+</div>
+        
+        <div class="nav-item" onclick="location.href='api-doc.html'">
+            <i class="fas fa-book"></i>
+            <span>API Doc</span>
+        </div>
+
+        <div class="nav-item" onclick="location.href='dashboard-monitor.html'">
+            <i class="fas fa-heartbeat"></i>
+            <span>Monitor</span>
+        </div>
+        
+        <div class="nav-item" onclick="window.location.href='json-diff.html'">
+	    <i class="fas fa-code-branch"></i>
+	    <span>JSON Diff</span>
+	</div>
+
+        <div class="nav-item" onclick="location.href='reports.html'">
+            <i class="fas fa-chart-pie"></i>
+            <span>Reports</span>
+        </div>
+
+        <div class="nav-item" onclick="location.href='settings.html'">
+            <i class="fas fa-gear"></i>
+            <span>Settings</span>
+        </div>
+
+        <div class="nav-item" id="logoutBtn">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Logout</span>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+
+        <!-- TOP NAV -->
+        <div class="top-nav">
+            <div class="top-left">
+                <div class="page-title">
+                    <h3><i class="fas fa-code" style="color:#0D9488;"></i> JSON Sheets</h3>
+                    <p>Upload and manage JSON files</p>
+                </div>
+            </div>
+
+            <div class="top-right">
+                <span class="badge bg-success px-3 py-2">LIVE</span>
+                <div id="liveClock"></div>
+                <button class="btn btn-primary px-4 py-2" id="btnAddSheet" style="border-radius:50px; font-weight:600;">
+                    <i class="fas fa-upload"></i> Upload JSON
+                </button>
+                <button class="refresh-btn" id="btnRefresh" title="Refresh data">
+                    <i class="fas fa-sync-alt"></i>
+                    <span class="refresh-tooltip">Refresh</span>
+                </button>
+                <div class="user-badge">
+                    <i class="fas fa-user-check"></i>
+                    <span id="userNameDisplay">Loading...</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- STATISTICS CARDS -->
+        <div class="row g-4">
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-file-code"></i></div>
+                    <div class="stat-label">Total JSON Files</div>
+                    <div class="stat-value" id="totalSheets">0</div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-cubes"></i></div>
+                    <div class="stat-label">Modules</div>
+                    <div class="stat-value" id="totalModules">0</div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-calendar-day"></i></div>
+                    <div class="stat-label">Today's Uploads</div>
+                    <div class="stat-value" id="todaySheets">0</div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-database"></i></div>
+                    <div class="stat-label">Total Size</div>
+                    <div class="stat-value" id="totalSize" style="font-size:24px;">0 KB</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SEARCH -->
+        <div class="search-section">
+            <div class="row">
+                <div class="col-lg-8">
+                    <input type="text" class="form-control" id="searchSheet" placeholder="🔍 Search by module name..." />
+                </div>
+                <div class="col-lg-4 text-end">
+                    <small class="text-muted" id="lastUpdated">Updated: Just now</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- TABLE -->
+        <div class="table-card">
+            <div class="table-header">
+                <h5><i class="fas fa-list-ul"></i> JSON Files</h5>
+                <span class="badge bg-primary" id="sheetCount">0 files</span>
+            </div>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Module Name</th>
+                            <th>File Name</th>
+                            <th>Size</th>
+                            <th>Created Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="sheetsTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- UPLOAD JSON MODAL -->
+    <div class="modal fade" id="addSheetModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header modal-header-primary">
+                    <h5 class="modal-title"><i class="fas fa-upload me-2"></i><span id="modalTitle">Upload JSON File</span></h5>
+                    <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addSheetForm">
+                        <input type="hidden" id="sheetId">
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Module Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="moduleName" placeholder="e.g., AI Assistant, Chatbot" required />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">JSON File Name</label>
+                                <input type="text" class="form-control" id="jsonFileName" placeholder="Auto-filled from file" readonly />
+                            </div>
+                        </div>
+
+                        <!-- File Upload Area -->
+                        <div class="mb-3">
+                            <label class="form-label">Select JSON File <span class="text-danger">*</span></label>
+                            <div class="file-upload-area" id="fileUploadArea">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <p>Click or drag to select a JSON file</p>
+                                <p class="file-name" id="selectedFileName">No file selected</p>
+                                <input type="file" id="jsonFileInput" accept=".json" style="display:none;" />
+                            </div>
+                            <small class="text-muted">Select a .json file to upload</small>
+                        </div>
+
+                        <!-- JSON Content Display -->
+                        <div class="mb-3">
+                            <label class="form-label">JSON Content Preview</label>
+                            <textarea id="jsonContent" name="jsonContent" style="display:none;"></textarea>
+                            <small class="text-muted">The JSON content will be displayed here after file selection</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">File Size</label>
+                            <input type="text" class="form-control" id="fileSizeDisplay" readonly />
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button class="btn btn-primary" id="btnSaveSheet">
+                        <i class="fas fa-save me-1"></i> <span id="saveBtnText">Upload JSON</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST -->
+    <div class="toast-msg" id="toastMsg">
+        <span id="toastText"></span>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+    </script>
+
+    <script>
+        var API_URL = 'http://localhost:8080/api/json-sheets';
+        var sheetsData = [];
+        var jsonEditor = null;
+        var selectedFile = null;
+        var isRefreshing = false;
+
+        // =====================================
+        // DISPLAY USERNAME FROM LOCALSTORAGE
+        // =====================================
+
+        function displayUserName() {
+            try {
+                var userDataStr = localStorage.getItem('voiceoc_user');
+                var userNameDisplay = document.getElementById('userNameDisplay');
+                
+                if (userDataStr && userNameDisplay) {
+                    try {
+                        var userData = JSON.parse(userDataStr);
+                        var displayName = userData.fullName || userData.username || 'User';
+                        userNameDisplay.innerText = displayName;
+                    } catch (parseError) {
+                        userNameDisplay.innerText = userDataStr;
+                    }
+                } else if (userNameDisplay) {
+                    userNameDisplay.innerText = 'User';
+                }
+            } catch (error) {
+                console.error('Error displaying username:', error);
+            }
+        }
+
+        // =====================================
+        // AUTH CHECK
+        // =====================================
+
+        function checkAuth() {
+            if (localStorage.getItem('voiceoc_logged_in') !== 'true') {
+                window.location.href = 'index.html';
+                return false;
+            }
+            return true;
+        }
+
+        // =====================================
+        // APPLY DARK MODE
+        // =====================================
+
+        function applyDarkMode() {
+            var settings = JSON.parse(localStorage.getItem('voiceoc_settings') || '{}');
+            if (settings.darkMode) {
+                document.body.classList.add('dark-mode');
+            } else {
+                document.body.classList.remove('dark-mode');
+            }
+        }
+
+        // =====================================
+        // CHECK SESSION MANAGER STATUS
+        // =====================================
+
+        function checkSessionManager() {
+            console.log('🔍 Session Manager Status:');
+            console.log('📋 typeof initAutoLogout:', typeof initAutoLogout);
+            console.log('📋 typeof showToastMessage:', typeof showToastMessage);
+            
+            if (typeof initAutoLogout === 'function') {
+                console.log('✅ Session manager loaded successfully!');
+            } else {
+                console.error('❌ Session manager NOT loaded! Check if js/session-manager.js exists.');
+            }
+        }
+
+        // =====================================
+        // TOAST
+        // =====================================
+
+        function showToast(message, isError, type) {
+            if (isError === undefined) isError = false;
+            if (type === undefined) type = 'success';
+            
+            // Use the session manager's toast if available
+            if (typeof window.showToastMessage === 'function') {
+                window.showToastMessage(message, isError ? 'error' : 'success');
+                return;
+            }
+            
+            // Fallback toast
+            var toastText = document.getElementById('toastText');
+            var toast = document.getElementById('toastMsg');
+            if (toastText) toastText.innerText = message;
+            if (toast) {
+                toast.className = 'toast-msg';
+                if (isError) {
+                    toast.classList.add('error');
+                } else if (type === 'info') {
+                    toast.classList.add('info');
+                } else {
+                    toast.classList.add('success');
+                }
+                toast.style.display = 'block';
+                clearTimeout(toast._timeout);
+                toast._timeout = setTimeout(function() {
+                    toast.style.display = 'none';
+                }, 3000);
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('voiceoc_logged_in');
+            localStorage.removeItem('voiceoc_user');
+            showToast('Logged out successfully');
+            setTimeout(function() {
+                window.location.href = 'index.html';
+            }, 1000);
+        }
+
+        document.getElementById('logoutBtn')?.addEventListener('click', logout);
+
+        function updateClock() {
+            var liveClock = document.getElementById('liveClock');
+            if (liveClock) {
+                liveClock.innerText = new Date().toLocaleTimeString();
+            }
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            var k = 1024;
+            var sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            var i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // =====================================
+        // FILE UPLOAD HANDLER
+        // =====================================
+        function setupFileUpload() {
+            var uploadArea = document.getElementById('fileUploadArea');
+            var fileInput = document.getElementById('jsonFileInput');
+
+            uploadArea.addEventListener('click', function() {
+                fileInput.click();
+            });
+
+            fileInput.addEventListener('change', function(e) {
+                var file = e.target.files[0];
+                if (file) {
+                    handleFile(file);
+                }
+            });
+
+            uploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                uploadArea.style.borderColor = '#0D9488';
+                uploadArea.style.background = '#F0FDF4';
+            });
+
+            uploadArea.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                uploadArea.style.borderColor = '#E2E8F0';
+                uploadArea.style.background = '#F8FAFC';
+            });
+
+            uploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                uploadArea.style.borderColor = '#E2E8F0';
+                uploadArea.style.background = '#F8FAFC';
+                var file = e.dataTransfer.files[0];
+                if (file) {
+                    handleFile(file);
+                }
+            });
+        }
+
+        function handleFile(file) {
+            if (!file.name.endsWith('.json')) {
+                showToast('Please select a .json file', true);
+                return;
+            }
+
+            selectedFile = file;
+            document.getElementById('selectedFileName').textContent = file.name;
+            document.getElementById('jsonFileName').value = file.name;
+
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    var content = e.target.result;
+                    JSON.parse(content);
+                    
+                    if (jsonEditor) {
+                        jsonEditor.setValue(content);
+                        updateFileSize();
+                    }
+                    showToast('✅ File loaded successfully!');
+                } catch (err) {
+                    showToast('Invalid JSON file: ' + err.message, true);
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function initCodeEditor() {
+            if (jsonEditor) {
+                jsonEditor.toTextArea();
+                jsonEditor = null;
+            }
+            var textarea = document.getElementById('jsonContent');
+            jsonEditor = CodeMirror.fromTextArea(textarea, {
+                mode: 'application/json',
+                theme: 'dracula',
+                lineNumbers: true,
+                matchBrackets: true,
+                autoCloseBrackets: true,
+                indentUnit: 2,
+                tabSize: 2,
+                lineWrapping: true
+            });
+            jsonEditor.on('change', function() {
+                updateFileSize();
+            });
+        }
+
+        function updateFileSize() {
+            if (jsonEditor) {
+                var content = jsonEditor.getValue();
+                var size = new Blob([content]).size;
+                document.getElementById('fileSizeDisplay').value = formatFileSize(size);
+            }
+        }
+
+        // =====================================
+        // LOAD SHEETS WITH REFRESH NOTIFICATION
+        // =====================================
+
+        async function loadSheets(showNotification) {
+            if (showNotification === undefined) showNotification = false;
+            
+            try {
+                // Show loading state on refresh button
+                var refreshBtn = document.getElementById('btnRefresh');
+                if (refreshBtn) {
+                    refreshBtn.classList.add('spinning');
+                    refreshBtn.disabled = true;
+                }
+
+                var response = await fetch(API_URL);
+                if (!response.ok) throw new Error('Failed to load JSON sheets');
+                sheetsData = await response.json();
+                // Sort by ID descending (newest first)
+                sheetsData.sort((a, b) => b.id - a.id);
+                renderTable();
+                updateStats();
+                updateLastUpdated();
+
+                // Show success notification if requested
+                if (showNotification) {
+                    showToast('🔄 Data refreshed successfully!', false, 'info');
+                }
+
+                // Hide loading state
+                if (refreshBtn) {
+                    refreshBtn.classList.remove('spinning');
+                    refreshBtn.disabled = false;
+                }
+
+            } catch (error) {
+                console.error('Error loading sheets:', error);
+                
+                // Hide loading state
+                var refreshBtn = document.getElementById('btnRefresh');
+                if (refreshBtn) {
+                    refreshBtn.classList.remove('spinning');
+                    refreshBtn.disabled = false;
+                }
+
+                if (showNotification) {
+                    showToast('❌ Failed to refresh data', true);
+                } else {
+                    showToast('Failed to load sheets', true);
+                }
+            }
+        }
+
+        // =====================================
+        // REFRESH FUNCTION
+        // =====================================
+
+        function refreshData() {
+            var refreshBtn = document.getElementById('btnRefresh');
+            if (isRefreshing) return;
+            
+            isRefreshing = true;
+            
+            // Add spinning animation
+            if (refreshBtn) {
+                refreshBtn.classList.add('spinning');
+            }
+            
+            // Show refreshing notification
+            showToast('🔄 Refreshing data...', false, 'info');
+            
+            // Load data with notification flag
+            loadSheets(true).finally(function() {
+                isRefreshing = false;
+                if (refreshBtn) {
+                    refreshBtn.classList.remove('spinning');
+                }
+            });
+        }
+
+        function renderTable() {
+            var tbody = document.getElementById('sheetsTableBody');
+            if (!tbody) return;
+            document.getElementById('sheetCount').textContent = sheetsData.length + ' files';
+
+            if (sheetsData.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6">
+                            <div class="empty-state">
+                                <i class="fas fa-file-code"></i>
+                                <h5>No JSON Files</h5>
+                                <p>Click "Upload JSON" to add your first JSON file</p>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            var html = '';
+            for (var i = 0; i < sheetsData.length; i++) {
+                var sheet = sheetsData[i];
+                var displayName = sheet.jsonFileName || 'Untitled.json';
+                var moduleName = sheet.moduleName || displayName.replace('.json', '');
+                
+                html += `
+                    <tr>
+                        <td>${i + 1}</td>
+                        <td><span class="badge-module">${escapeHtml(moduleName)}</span></td>
+                        <td>
+                            <a class="file-link" onclick="openInVSCode(${sheet.id})" title="Click to open in VS Code">
+                                <i class="fas fa-file-code"></i> ${escapeHtml(displayName)}
+                            </a>
+                        </td>
+                        <td>${formatFileSize(sheet.fileSize || 0)}</td>
+                        <td>${formatDate(sheet.createdDate)}</td>
+                        <td>
+                            <button class="btn btn-sm btn-open-vscode" onclick="openInVSCode(${sheet.id})" title="Open in VS Code">
+                                <i class="fas fa-code"></i> VS Code
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger" onclick="deleteSheet(${sheet.id})" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }
+            tbody.innerHTML = html;
+        }
+
+        function updateStats() {
+            var total = sheetsData.length;
+            document.getElementById('totalSheets').innerText = total;
+
+            var modules = new Set();
+            for (var i = 0; i < sheetsData.length; i++) {
+                var moduleName = sheetsData[i].moduleName || sheetsData[i].jsonFileName.replace('.json', '');
+                modules.add(moduleName);
+            }
+            document.getElementById('totalModules').innerText = modules.size;
+
+            var today = new Date().toDateString();
+            var todaySheets = 0;
+            for (var i = 0; i < sheetsData.length; i++) {
+                var d = new Date(sheetsData[i].createdDate);
+                if (d.toDateString() === today) todaySheets++;
+            }
+            document.getElementById('todaySheets').innerText = todaySheets;
+
+            var totalSize = 0;
+            for (var i = 0; i < sheetsData.length; i++) {
+                totalSize += (sheetsData[i].fileSize || 0);
+            }
+            document.getElementById('totalSize').innerText = formatFileSize(totalSize);
+        }
+
+        function openInVSCode(id) {
+            var sheet = null;
+            for (var i = 0; i < sheetsData.length; i++) {
+                if (sheetsData[i].id === id) {
+                    sheet = sheetsData[i];
+                    break;
+                }
+            }
+            if (!sheet) {
+                showToast('Sheet not found', true);
+                return;
+            }
+
+            showToast('⏳ Opening ' + (sheet.jsonFileName || 'file') + ' in VS Code...', false, 'info');
+
+            fetch(API_URL + '/open-vscode/' + id, {
+                method: 'GET'
+            })
+            .then(function(response) { return response.json(); })
+            .then(function(data) {
+                if (data.message) {
+                    showToast('✅ ' + (data.fileName || 'File') + ' opened in VS Code!');
+                } else {
+                    showToast('❌ Failed to open in VS Code', true);
+                }
+            })
+            .catch(function(error) {
+                console.error('Error:', error);
+                showToast('❌ Error opening in VS Code', true);
+            });
+        }
+
+        async function saveSheet() {
+            var id = document.getElementById('sheetId').value;
+            var moduleName = document.getElementById('moduleName').value.trim();
+            var jsonFileName = document.getElementById('jsonFileName').value.trim();
+            var jsonContent = jsonEditor ? jsonEditor.getValue() : '';
+
+            if (!moduleName) {
+                showToast('Please enter module name', true);
+                return;
+            }
+            if (!jsonFileName) {
+                showToast('Please select a file', true);
+                return;
+            }
+            if (!jsonFileName.endsWith('.json')) {
+                showToast('File must be a .json file', true);
+                return;
+            }
+            if (!jsonContent) {
+                showToast('Please enter JSON content', true);
+                return;
+            }
+
+            try {
+                JSON.parse(jsonContent);
+            } catch (e) {
+                showToast('Invalid JSON format: ' + e.message, true);
+                return;
+            }
+
+            var sheetData = {
+                moduleName: moduleName,
+                jsonFileName: jsonFileName,
+                jsonContent: jsonContent
+            };
+
+            try {
+                var response;
+                if (id) {
+                    response = await fetch(API_URL + '/' + id, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(sheetData)
+                    });
+                } else {
+                    response = await fetch(API_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(sheetData)
+                    });
+                }
+
+                if (!response.ok) {
+                    var error = await response.text();
+                    throw new Error(error || 'Failed to save sheet');
+                }
+
+                showToast('✅ JSON file uploaded successfully!');
+                var modal = bootstrap.Modal.getInstance(document.getElementById('addSheetModal'));
+                if (modal) modal.hide();
+
+                document.getElementById('sheetId').value = '';
+                document.getElementById('moduleName').value = '';
+                document.getElementById('jsonFileName').value = '';
+                document.getElementById('selectedFileName').textContent = 'No file selected';
+                selectedFile = null;
+                document.getElementById('jsonFileInput').value = '';
+                if (jsonEditor) {
+                    jsonEditor.setValue('');
+                }
+                document.getElementById('fileSizeDisplay').value = '';
+
+                await loadSheets(false);
+
+            } catch (error) {
+                console.error('Error saving sheet:', error);
+                showToast('Failed to upload: ' + error.message, true);
+            }
+        }
+
+        async function deleteSheet(id) {
+            var sheet = null;
+            for (var i = 0; i < sheetsData.length; i++) {
+                if (sheetsData[i].id === id) {
+                    sheet = sheetsData[i];
+                    break;
+                }
+            }
+            if (!confirm('Are you sure you want to delete "' + (sheet?.jsonFileName || 'file') + '"?')) return;
+
+            try {
+                var response = await fetch(API_URL + '/' + id, {
+                    method: 'DELETE'
+                });
+
+                if (!response.ok) {
+                    var error = await response.text();
+                    throw new Error(error || 'Failed to delete sheet');
+                }
+
+                showToast('✅ JSON file deleted successfully');
+                await loadSheets(false);
+
+            } catch (error) {
+                console.error('Error deleting sheet:', error);
+                showToast('Failed to delete sheet: ' + error.message, true);
+            }
+        }
+
+        function searchSheets() {
+            var keyword = document.getElementById('searchSheet').value.toLowerCase().trim();
+            var tbody = document.getElementById('sheetsTableBody');
+            var rows = tbody.querySelectorAll('tr');
+
+            if (keyword === '') {
+                for (var i = 0; i < rows.length; i++) {
+                    rows[i].style.display = '';
+                }
+                return;
+            }
+
+            for (var i = 0; i < rows.length; i++) {
+                var text = rows[i].textContent.toLowerCase();
+                rows[i].style.display = text.includes(keyword) ? '' : 'none';
+            }
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return 'N/A';
+            try {
+                var date = new Date(dateString);
+                return date.toLocaleString('en-US', {
+                    day: '2-digit',
+                    month: 'short',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: true
+                });
+            } catch (e) {
+                return dateString;
+            }
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            var div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function updateLastUpdated() {
+            var now = new Date();
+            var time = now.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            document.getElementById('lastUpdated').textContent = 'Updated: ' + time;
+        }
+
+        // =====================================
+        // EVENT LISTENERS
+        // =====================================
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check authentication
+            if (!checkAuth()) return;
+
+            // Apply dark mode
+            applyDarkMode();
+
+            // Display username
+            displayUserName();
+
+            // Check session manager
+            checkSessionManager();
+
+            loadSheets(false);
+            initCodeEditor();
+            setupFileUpload();
+
+            document.getElementById('btnAddSheet').addEventListener('click', function() {
+                document.getElementById('sheetId').value = '';
+                document.getElementById('moduleName').value = '';
+                document.getElementById('jsonFileName').value = '';
+                document.getElementById('selectedFileName').textContent = 'No file selected';
+                document.getElementById('jsonFileInput').value = '';
+                selectedFile = null;
+                document.getElementById('modalTitle').textContent = 'Upload JSON File';
+                document.getElementById('saveBtnText').textContent = 'Upload JSON';
+                if (jsonEditor) {
+                    jsonEditor.setValue('');
+                    updateFileSize();
+                }
+                var modal = new bootstrap.Modal(document.getElementById('addSheetModal'));
+                modal.show();
+            });
+
+            // Refresh button with notification
+            document.getElementById('btnRefresh').addEventListener('click', refreshData);
+            
+            document.getElementById('btnSaveSheet').addEventListener('click', saveSheet);
+            document.getElementById('searchSheet').addEventListener('input', searchSheets);
+
+            // Keyboard shortcut: F5 or Ctrl+R to refresh
+            document.addEventListener('keydown', function(e) {
+                if ((e.key === 'F5') || (e.ctrlKey && e.key === 'r')) {
+                    e.preventDefault();
+                    refreshData();
+                }
+            });
+
+            // Make functions globally available
+            window.openInVSCode = openInVSCode;
+            window.deleteSheet = deleteSheet;
+            window.showToast = showToast;
+            window.refreshData = refreshData;
+        });
+    </script>
+
+</body>
+
+</html>

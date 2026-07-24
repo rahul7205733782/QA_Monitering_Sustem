@@ -1,0 +1,1726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Response Sheet Generator</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- SESSION MANAGER -->
+    <script src="js/session-manager.js"></script>
+
+    <style>
+        /* ========================================= */
+        /* SIDEBAR & LAYOUT STYLES */
+        /* ========================================= */
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #F1F5F9;
+            overflow-x: hidden;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        /* ========================================= */
+        /* DARK MODE - COMPLETE */
+        /* ========================================= */
+
+        .dark-mode {
+            background: #020617 !important;
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .top-nav {
+            background: #111827 !important;
+            border-color: #1E293B !important;
+        }
+
+        .dark-mode .top-nav .page-title h3 {
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .top-nav .page-title p {
+            color: #94A3B8 !important;
+        }
+
+        .dark-mode .top-nav .user-badge {
+            background: #1E293B !important;
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .top-nav .refresh-btn {
+            background: #1E293B !important;
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .top-nav .refresh-btn:hover {
+            background: #334155 !important;
+        }
+
+        .dark-mode .top-nav .badge.bg-success {
+            background: #065F46 !important;
+            color: #34D399 !important;
+        }
+
+        .dark-mode .stat-box {
+            background: #0F172A !important;
+            border-color: #1E293B !important;
+        }
+
+        .dark-mode .stat-box .stat-number {
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .stat-box .stat-label {
+            color: #94A3B8 !important;
+        }
+
+        .dark-mode .upload-area {
+            background: #0F172A !important;
+            border-color: #1E293B !important;
+        }
+
+        .dark-mode .upload-area:hover {
+            background: #1E293B !important;
+        }
+
+        .dark-mode .upload-area .text-muted {
+            color: #94A3B8 !important;
+        }
+
+        .dark-mode #languageContainer {
+            background: #0F172A !important;
+            border-color: #1E293B !important;
+        }
+
+        .dark-mode #languageContainer .text-muted {
+            color: #94A3B8 !important;
+        }
+
+        .dark-mode .language-checkbox {
+            background: #0F172A !important;
+            border-color: #1E293B !important;
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .language-checkbox:hover {
+            background: #1E293B !important;
+        }
+
+        .dark-mode .language-checkbox.selected {
+            border-color: #0D9488 !important;
+            background: #0F2A2A !important;
+        }
+
+        .dark-mode .preview-area {
+            background: #0F172A !important;
+            border-color: #1E293B !important;
+        }
+
+        .dark-mode .preview-area .text-muted {
+            color: #94A3B8 !important;
+        }
+
+        .dark-mode .preview-area table {
+            background: #0F172A !important;
+        }
+
+        .dark-mode .preview-area table thead th {
+            background: #1E293B !important;
+            color: #F8FAFC !important;
+            border-color: #334155 !important;
+        }
+
+        .dark-mode .preview-area table tbody td {
+            background: #0F172A !important;
+            color: #E2E8F0 !important;
+            border-color: #1E293B !important;
+        }
+
+        .dark-mode .preview-area table tbody tr:hover td {
+            background: #1E293B !important;
+        }
+
+        .dark-mode #historyTable {
+            background: #111827 !important;
+        }
+
+        .dark-mode #historyTable thead th {
+            background: #1E293B !important;
+            color: #F8FAFC !important;
+            border-color: #334155 !important;
+        }
+
+        .dark-mode #historyTable tbody td {
+            background: #111827 !important;
+            color: #E2E8F0 !important;
+            border-color: #1E293B !important;
+        }
+
+        .dark-mode #historyTable tbody tr:hover td {
+            background: #1E293B !important;
+        }
+
+        .dark-mode #historyTable tbody tr:nth-child(even) td {
+            background: #0F172A !important;
+        }
+
+        .dark-mode #historyTable tbody tr:nth-child(even):hover td {
+            background: #1E293B !important;
+        }
+
+        .dark-mode #historyTable .text-muted {
+            color: #94A3B8 !important;
+        }
+
+        .dark-mode #historyTable .btn-outline-primary {
+            color: #60A5FA !important;
+            border-color: #1E3A5F !important;
+        }
+
+        .dark-mode #historyTable .btn-outline-primary:hover {
+            background: #1E3A5F !important;
+            color: #60A5FA !important;
+        }
+
+        .dark-mode #historyTable .btn-outline-danger {
+            color: #F87171 !important;
+            border-color: #7F1D1D !important;
+        }
+
+        .dark-mode #historyTable .btn-outline-danger:hover {
+            background: #7F1D1D !important;
+            color: #FCA5A5 !important;
+        }
+
+        .dark-mode #historyTable .text-success {
+            color: #34D399 !important;
+        }
+
+        .dark-mode .btn-clear {
+            background: #1E293B !important;
+            color: #94A3B8 !important;
+            border-color: #334155 !important;
+        }
+
+        .dark-mode .btn-clear:hover {
+            background: #334155 !important;
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .btn-outline-secondary {
+            color: #94A3B8 !important;
+            border-color: #334155 !important;
+        }
+
+        .dark-mode .btn-outline-secondary:hover {
+            background: #334155 !important;
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .btn-danger {
+            background: #7F1D1D !important;
+            border-color: #7F1D1D !important;
+        }
+
+        .dark-mode .btn-danger:hover {
+            background: #991B1B !important;
+        }
+
+        .dark-mode .form-control {
+            background: #0F172A !important;
+            color: #F8FAFC !important;
+            border-color: #1E293B !important;
+        }
+
+        .dark-mode .form-control::placeholder {
+            color: #64748B !important;
+        }
+
+        .dark-mode .form-control:focus {
+            background: #0F172A !important;
+            border-color: #2DD4BF !important;
+            box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.1) !important;
+        }
+
+        .dark-mode .form-select {
+            background: #0F172A !important;
+            color: #F8FAFC !important;
+            border-color: #1E293B !important;
+        }
+
+        .dark-mode .form-select:focus {
+            border-color: #2DD4BF !important;
+            box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.1) !important;
+        }
+
+        .dark-mode .form-label {
+            color: #94A3B8 !important;
+        }
+
+        .dark-mode .fw-bold {
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .text-muted {
+            color: #94A3B8 !important;
+        }
+
+        .dark-mode .toast-msg {
+            background: #1E293B !important;
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .toast-msg.error {
+            border-left-color: #DC2626 !important;
+        }
+
+        .dark-mode .toast-msg.success {
+            border-left-color: #10B981 !important;
+        }
+
+        .dark-mode .toast-msg.info {
+            border-left-color: #3B82F6 !important;
+        }
+
+        .dark-mode ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        .dark-mode ::-webkit-scrollbar-track {
+            background: #1E293B;
+        }
+
+        .dark-mode ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+
+        .dark-mode ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+
+        .dark-mode .sidebar {
+            background: linear-gradient(180deg, #0F172A 0%, #020617 100%) !important;
+        }
+
+        .dark-mode .nav-item {
+            color: #94A3B8 !important;
+        }
+
+        .dark-mode .nav-item:hover {
+            background: rgba(45, 212, 191, 0.12) !important;
+            color: white !important;
+        }
+
+        .dark-mode .nav-item.active {
+            background: linear-gradient(95deg, #0D9488, #0F766E) !important;
+            color: white !important;
+        }
+
+        .dark-mode .logo-area .qa-tagline {
+            color: #34D399 !important;
+        }
+
+        .dark-mode .logo-area .qa-tagline .tick-icon {
+            color: #34D399;
+        }
+
+        .dark-mode .logo-area .qa-tagline .tag-text {
+            color: #34D399;
+        }
+
+        /* ========================================= */
+        /* SIDEBAR */
+        /* ========================================= */
+
+        .sidebar {
+            width: 280px;
+            height: 100vh;
+            background: linear-gradient(180deg, #0F172A 0%, #020617 100%);
+            position: fixed;
+            left: 0;
+            top: 0;
+            padding-top: 25px;
+            transition: 0.3s;
+            z-index: 999;
+            overflow-y: auto;
+        }
+
+        .sidebar.collapsed {
+            width: 90px;
+        }
+
+        .sidebar.collapsed .nav-item span,
+        .sidebar.collapsed .logo-area .qa-tagline {
+            display: none;
+        }
+
+        .logo-area {
+            text-align: center;
+            margin-bottom: 35px;
+            padding: 0 20px;
+        }
+
+        .logo-area h2 {
+            color: white;
+            font-weight: 800;
+            font-size: 1.7rem;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .logo-area h2 i {
+            color: #2DD4BF;
+            font-size: 1.8rem;
+        }
+
+        .logo-area .qa-tagline {
+            color: #10B981 !important;
+            font-weight: 700 !important;
+            font-size: 11px !important;
+            letter-spacing: 2px;
+            margin-top: 8px;
+            text-align: center;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 0 10px;
+        }
+
+        .logo-area .qa-tagline .tick-icon {
+            color: #10B981;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        .logo-area .qa-tagline .tick-icon i {
+            font-size: 12px;
+        }
+
+        .logo-area .qa-tagline .tag-text {
+            flex-shrink: 0;
+            padding: 0 2px;
+            color: #10B981;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: #94A3B8;
+            margin: 4px 12px;
+            padding: 12px 18px;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .nav-item:hover {
+            background: rgba(45, 212, 191, 0.12);
+            color: white;
+            transform: translateX(6px);
+        }
+
+        .nav-item.active {
+            background: linear-gradient(95deg, #0D9488, #0F766E);
+            color: white;
+        }
+
+        .nav-item i {
+            width: 24px;
+            font-size: 18px;
+        }
+
+        /* ========================================= */
+        /* MAIN CONTENT */
+        /* ========================================= */
+
+        .main-content {
+            margin-left: 280px;
+            padding: 30px;
+            transition: 0.3s;
+        }
+
+        .main-content.expanded {
+            margin-left: 90px;
+        }
+
+        /* ========================================= */
+        /* TOP NAV */
+        /* ========================================= */
+
+        .top-nav {
+            background: white;
+            padding: 18px 25px;
+            border-radius: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border: 1px solid #E2E8F0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .top-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .page-title h3 {
+            margin: 0;
+            font-weight: 800;
+            color: #0F172A;
+            transition: color 0.3s ease;
+        }
+
+        .page-title p {
+            margin: 5px 0 0;
+            color: #64748B;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+        .top-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .refresh-btn {
+            border: none;
+            background: #F1F5F9;
+            padding: 10px 18px;
+            border-radius: 50px;
+            transition: 0.3s;
+            cursor: pointer;
+            font-size: 16px;
+            position: relative;
+        }
+
+        .refresh-btn:hover {
+            background: #E2E8F0;
+        }
+
+        .refresh-btn.spinning i {
+            animation: spin 0.8s linear infinite;
+        }
+
+        .user-badge {
+            background: #F1F5F9;
+            padding: 10px 18px;
+            border-radius: 50px;
+            font-weight: 700;
+            transition: background 0.3s ease, color 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-badge .avatar-text {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #2DD4BF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: #0F172A;
+        }
+
+        /* ========================================= */
+        /* STATS */
+        /* ========================================= */
+
+        .stat-box {
+            background: #F8FAFC;
+            border-radius: 12px;
+            padding: 15px 20px;
+            text-align: center;
+            border: 1px solid #E2E8F0;
+        }
+
+        .stat-box .stat-number {
+            font-size: 28px;
+            font-weight: 800;
+            color: #0F172A;
+        }
+
+        .stat-box .stat-label {
+            font-size: 12px;
+            color: #64748B;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-top: 4px;
+        }
+
+        /* ========================================= */
+        /* UPLOAD AREA */
+        /* ========================================= */
+
+        .upload-area {
+            border: 2px dashed #E2E8F0;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+            background: #FAFBFC;
+        }
+
+        .upload-area:hover {
+            border-color: #0D9488;
+            background: #F8FAFC;
+        }
+
+        .upload-area i {
+            font-size: 40px;
+            color: #94A3B8;
+        }
+
+        .upload-area .file-name {
+            color: #0D9488;
+            font-weight: 600;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        /* ========================================= */
+        /* LANGUAGE CHECKBOXES */
+        /* ========================================= */
+
+        .language-checkbox {
+            padding: 8px 16px;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+            background: white;
+            display: inline-block;
+            margin: 4px;
+        }
+
+        .language-checkbox:hover {
+            background: #F8FAFC;
+            border-color: #0D9488;
+        }
+
+        .language-checkbox input[type="checkbox"] {
+            margin-right: 8px;
+            accent-color: #0D9488;
+        }
+
+        .language-checkbox.selected {
+            border-color: #0D9488;
+            background: #F0FDFA;
+        }
+
+        /* ========================================= */
+        /* BUTTONS */
+        /* ========================================= */
+
+        .btn-generate {
+            background: linear-gradient(95deg, #0D9488, #0F766E);
+            color: white;
+            border: none;
+            padding: 12px 40px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 16px;
+            transition: 0.3s;
+            width: 100%;
+        }
+
+        .btn-generate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(13, 148, 136, 0.3);
+            color: white;
+        }
+
+        .btn-generate:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .btn-clear {
+            background: #F1F5F9;
+            color: #64748B;
+            border: 1px solid #E2E8F0;
+            padding: 10px 24px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .btn-clear:hover {
+            background: #E2E8F0;
+            color: #0F172A;
+        }
+
+        .btn-danger {
+            background: #DC2626;
+            border: none;
+            color: white;
+            border-radius: 50px;
+            padding: 12px 40px;
+            font-weight: 700;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+
+        .btn-danger:hover {
+            background: #B91C1C;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* ========================================= */
+        /* PREVIEW AREA */
+        /* ========================================= */
+
+        .preview-area {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #E2E8F0;
+            border-radius: 12px;
+            padding: 15px;
+            background: #FAFBFC;
+        }
+
+        .preview-area table {
+            font-size: 13px;
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .preview-area table th {
+            background: #E2E8F0;
+            padding: 10px 12px;
+            text-align: left;
+            font-weight: 700;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            border-bottom: 2px solid #CBD5E1;
+        }
+
+        .preview-area table td {
+            padding: 8px 12px;
+            border-bottom: 1px solid #F1F5F9;
+        }
+
+        .preview-area table tr:hover td {
+            background: #F8FAFC;
+        }
+
+        /* ========================================= */
+        /* HISTORY TABLE */
+        /* ========================================= */
+
+        #historyTable {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        #historyTable th {
+            background: #F1F5F9;
+            padding: 10px 12px;
+            font-weight: 700;
+            border-bottom: 2px solid #E2E8F0;
+            text-align: left;
+        }
+
+        #historyTable td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #F1F5F9;
+            vertical-align: middle;
+        }
+
+        #historyTable tbody tr:hover td {
+            background: #F8FAFC;
+        }
+
+        /* ========================================= */
+        /* TOAST */
+        /* ========================================= */
+
+        .toast-msg {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #1E293B;
+            color: white;
+            padding: 14px 24px;
+            border-radius: 50px;
+            z-index: 9999;
+            display: none;
+            animation: slideInRight 0.3s ease;
+            border-left: 4px solid #2DD4BF;
+            max-width: 500px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .toast-msg.error {
+            border-left-color: #DC2626;
+        }
+
+        .toast-msg.success {
+            border-left-color: #10B981;
+        }
+
+        .toast-msg.info {
+            border-left-color: #3B82F6;
+        }
+
+        /* ========================================= */
+        /* RESPONSIVE */
+        /* ========================================= */
+
+        @media(max-width:992px) {
+            .sidebar {
+                width: 90px;
+            }
+            .sidebar .nav-item span,
+            .sidebar .logo-area .qa-tagline {
+                display: none;
+            }
+            .main-content {
+                margin-left: 90px;
+            }
+        }
+
+        @media(max-width:768px) {
+            .main-content {
+                margin-left: 0;
+                padding: 15px;
+            }
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .top-nav {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+            }
+            .top-right {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .stat-box .stat-number {
+                font-size: 20px;
+            }
+        }
+
+        /* ========================================= */
+        /* SCROLLBAR - Light Mode */
+        /* ========================================= */
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #F1F5F9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #CBD5E1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94A3B8;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ========================================= -->
+    <!-- SIDEBAR -->
+    <!-- ========================================= -->
+
+    <div class="sidebar">
+        <div class="logo-area">
+            <h2>
+                <i class="fas fa-microphone-alt"></i>
+                VoiceOC
+            </h2>
+            <div class="qa-tagline">
+                <span class="tick-icon"><i class="fas fa-check-circle"></i></span>
+                <span class="tag-text">QA DAILY TASKS</span>
+            </div>
+        </div>
+
+        <div class="nav-item" onclick="goPage('dashboard.html')">
+            <i class="fas fa-chart-line"></i>
+            <span>Dashboard</span>
+        </div>
+
+        <div class="nav-item" onclick="goPage('tasks.html')">
+            <i class="fas fa-tasks"></i>
+            <span>Tasks</span>
+        </div>
+
+        <div class="nav-item" onclick="goPage('clientdetails.html')">
+            <i class="fas fa-building"></i>
+            <span>Clients Detail</span>
+        </div>
+
+        <div class="nav-item" onclick="goPage('bugtracker.html')">
+            <i class="fas fa-bug"></i>
+            <span>Bug Tracker</span>
+        </div>
+
+        <div class="nav-item" onclick="location.href='json-sheet.html'">
+            <i class="fas fa-code"></i>
+            <span>JSON Sheets</span>
+        </div>
+
+      
+
+        <div class="nav-item active" onclick="goPage('response-sheet.html')">
+            <i class="fas fa-file-excel"></i>
+            <span>Response Sheet</span>
+        </div>
+        
+          <div class="nav-item" onclick="goPage('journey-map.html')">
+            <i class="fas fa-route"></i>
+            <span>Journey Map</span>
+        </div>
+
+        <div class="nav-item" onclick="location.href='api-doc.html'">
+            <i class="fas fa-book"></i>
+            <span>API Doc</span>
+        </div>
+
+        <div class="nav-item" onclick="location.href='dashboard-monitor.html'">
+            <i class="fas fa-heartbeat"></i>
+            <span>Monitor</span>
+        </div>
+        
+        <div class="nav-item" onclick="window.location.href='json-diff.html'">
+	    <i class="fas fa-code-branch"></i>
+	    <span>JSON Diff</span>
+	</div>
+
+        <div class="nav-item" onclick="goPage('reports.html')">
+            <i class="fas fa-chart-pie"></i>
+            <span>Reports</span>
+        </div>
+
+        <div class="nav-item" onclick="goPage('settings.html')">
+            <i class="fas fa-gear"></i>
+            <span>Settings</span>
+        </div>
+
+        <div class="nav-item" id="logoutBtn">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Logout</span>
+        </div>
+    </div>
+
+    <!-- ========================================= -->
+    <!-- MAIN CONTENT -->
+    <!-- ========================================= -->
+
+    <div class="main-content">
+
+        <!-- TOP NAV -->
+        <div class="top-nav">
+            <div class="top-left">
+                <div class="page-title">
+                    <h3><i class="fas fa-file-excel me-2" style="color:#0D9488;"></i>Response Sheet Generator</h3>
+                    <p>Upload JSON, select languages, and generate Excel dynamically</p>
+                </div>
+            </div>
+            <div class="top-right">
+                <span class="badge bg-success px-3 py-2">LIVE</span>
+                <div id="liveClock" style="font-weight:500; color:#64748B;"></div>
+                <button class="refresh-btn" id="refreshBtn" title="Refresh data">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+                <div class="user-badge" id="userBadge">
+                    <div class="avatar-text" id="avatarText">RK</div>
+                    <span id="userNameDisplay">Loading...</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-3 col-6">
+                <div class="stat-box">
+                    <div class="stat-number" id="totalRecords">0</div>
+                    <div class="stat-label">Records</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="stat-box">
+                    <div class="stat-number" id="totalLanguages">0</div>
+                    <div class="stat-label">Languages</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="stat-box">
+                    <div class="stat-number" id="selectedCount">0</div>
+                    <div class="stat-label">Selected</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="stat-box">
+                    <div class="stat-number" style="font-size:16px;" id="statusBadge">✅ Ready</div>
+                    <div class="stat-label">Status</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upload Area -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-7">
+                <div class="upload-area" id="uploadArea">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <h6 class="mt-2">Upload JSON File</h6>
+                    <p class="text-muted small">Click here or drag & drop</p>
+                    <div id="fileNameDisplay" style="display:none;" class="file-name mt-2"></div>
+                </div>
+                <input type="file" id="fileInput" accept=".json">
+            </div>
+            <div class="col-md-5">
+                <label class="fw-bold small text-muted">OR Paste JSON</label>
+                <textarea id="jsonInput" rows="5" class="form-control" placeholder='[{"text_hi":"नमस्ते","text_en":"Hello"}]'></textarea>
+                <button class="btn btn-sm btn-outline-secondary w-100 mt-1" id="parseJsonBtn">Parse JSON</button>
+            </div>
+        </div>
+
+        <!-- Languages -->
+        <div class="mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <label class="fw-bold mb-0"><i class="fas fa-language me-1"></i> Detected Languages</label>
+                <div>
+                    <button class="btn btn-sm btn-outline-secondary" id="selectAllBtn">Select All</button>
+                    <button class="btn btn-sm btn-outline-secondary" id="deselectAllBtn">Deselect All</button>
+                </div>
+            </div>
+            <div id="languageContainer" class="d-flex flex-wrap gap-1 p-2 border rounded" style="min-height:50px;background:#FAFBFC;">
+                <span class="text-muted">Upload or parse JSON to detect languages</span>
+            </div>
+        </div>
+
+        <!-- File Name & Generate & Clear -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-4">
+                <label class="fw-bold small text-muted">File Name</label>
+                <input type="text" class="form-control" id="excelFileName" value="Response_Sheet">
+                <small class="text-muted">.xlsx will be added automatically</small>
+            </div>
+            <div class="col-md-4 d-flex align-items-end">
+                <button class="btn-generate" id="generateBtn">
+                    <i class="fas fa-file-excel me-2"></i> Generate & Download Excel
+                </button>
+            </div>
+            <div class="col-md-4 d-flex align-items-end">
+                <button class="btn btn-danger w-100" id="clearAllBtn" style="border-radius:50px; padding:12px 40px; font-weight:700;">
+                    <i class="fas fa-eraser me-2"></i> Clear All
+                </button>
+            </div>
+        </div>
+
+        <!-- Preview -->
+        <div class="mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h6 class="fw-bold mb-0"><i class="fas fa-eye me-1"></i> Preview</h6>
+                <small class="text-muted" id="previewStatus">No data</small>
+            </div>
+            <div class="preview-area" id="previewArea">
+                <div class="text-center text-muted py-4">
+                    <i class="fas fa-code" style="font-size:36px;"></i>
+                    <p class="mt-2 mb-0">Upload or parse JSON to preview</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- History with Delete -->
+        <div>
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h6 class="fw-bold"><i class="fas fa-history me-1"></i> Generation History</h6>
+                <button class="btn btn-sm btn-danger" id="clearAllHistoryBtn" title="Clear All History">
+                    <i class="fas fa-trash me-1"></i> Clear All
+                </button>
+            </div>
+            <div class="table-responsive">
+                <table class="table" id="historyTable">
+                    <thead>
+                        <tr>
+                            <th>File Name</th>
+                            <th>Languages</th>
+                            <th>Records</th>
+                            <th>Date</th>
+                            <th>Downloads</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyBody">
+                        <tr>
+                            <td colspan="6" class="text-center text-muted">No history yet</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Toast -->
+    <div class="toast-msg" id="toastMsg">
+        <span id="toastText"></span>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // =====================================
+        // API BASE URL
+        // =====================================
+        const API_BASE = '/api/response-sheet';
+
+        // =====================================
+        // STATE
+        // =====================================
+        let jsonData = null;
+        let detectedLanguages = [];
+        let selectedLanguages = [];
+
+        // =====================================
+        // NAVIGATION
+        // =====================================
+
+        function goPage(page) {
+            window.location.href = page;
+        }
+
+        // =====================================
+        // DISPLAY USERNAME
+        // =====================================
+        function displayUserName() {
+            try {
+                const userDataStr = localStorage.getItem('voiceoc_user');
+                const userNameDisplay = document.getElementById('userNameDisplay');
+                const avatarText = document.getElementById('avatarText');
+
+                if (userDataStr && userNameDisplay) {
+                    try {
+                        const userData = JSON.parse(userDataStr);
+                        const displayName = userData.fullName || userData.username || 'User';
+                        userNameDisplay.innerText = displayName;
+                        const initial = displayName.substring(0, 2).toUpperCase();
+                        avatarText.textContent = initial;
+                    } catch (parseError) {
+                        userNameDisplay.innerText = userDataStr;
+                    }
+                } else if (userNameDisplay) {
+                    userNameDisplay.innerText = 'User';
+                }
+            } catch (error) {
+                console.error('Error displaying username:', error);
+            }
+        }
+
+        // =====================================
+        // AUTH CHECK
+        // =====================================
+
+        function checkAuth() {
+            if (localStorage.getItem('voiceoc_logged_in') !== 'true') {
+                window.location.href = 'index.html';
+                return false;
+            }
+            return true;
+        }
+
+        // =====================================
+        // LIVE CLOCK
+        // =====================================
+        function updateClock() {
+            const liveClock = document.getElementById('liveClock');
+            if (liveClock) {
+                liveClock.innerText = new Date().toLocaleTimeString();
+            }
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // =====================================
+        // TOAST
+        // =====================================
+        function showToast(message, isError = false, type = 'success') {
+            const toastText = document.getElementById('toastText');
+            const toast = document.getElementById('toastMsg');
+            if (toastText) toastText.innerText = message;
+            if (toast) {
+                toast.className = 'toast-msg';
+                if (isError) toast.classList.add('error');
+                else if (type === 'info') toast.classList.add('info');
+                else toast.classList.add('success');
+                toast.style.display = 'block';
+                clearTimeout(toast._timeout);
+                toast._timeout = setTimeout(() => { toast.style.display = 'none'; }, 4000);
+            }
+        }
+
+        // =====================================
+        // DARK MODE - Same as Settings
+        // =====================================
+
+        function applyDarkMode() {
+            const settings = JSON.parse(localStorage.getItem('voiceoc_settings') || '{}');
+            const isDarkMode = settings.darkMode || false;
+
+            if (isDarkMode) {
+                document.body.classList.add('dark-mode');
+            } else {
+                document.body.classList.remove('dark-mode');
+            }
+        }
+
+        // =====================================
+        // LOGOUT
+        // =====================================
+        function logout() {
+            localStorage.removeItem('voiceoc_logged_in');
+            localStorage.removeItem('voiceoc_user');
+            showToast('Logged out successfully');
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 1000);
+        }
+
+        document.getElementById('logoutBtn')?.addEventListener('click', logout);
+
+        // =====================================
+        // UPLOAD FILE
+        // =====================================
+        document.getElementById('uploadArea').addEventListener('click', function() {
+            document.getElementById('fileInput').click();
+        });
+
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(ev) {
+                    document.getElementById('jsonInput').value = ev.target.result;
+                    document.getElementById('fileNameDisplay').textContent = '📁 ' + file.name;
+                    document.getElementById('fileNameDisplay').style.display = 'block';
+                    setTimeout(parseJson, 200);
+                    showToast('📁 Loaded: ' + file.name);
+                };
+                reader.readAsText(file);
+            }
+            this.value = '';
+        });
+
+        // =====================================
+        // PARSE JSON
+        // =====================================
+        document.getElementById('parseJsonBtn').addEventListener('click', parseJson);
+
+        let parseTimeout;
+        document.getElementById('jsonInput').addEventListener('input', function() {
+            clearTimeout(parseTimeout);
+            const input = this.value.trim();
+            if (input) {
+                parseTimeout = setTimeout(parseJson, 500);
+            } else {
+                clearStats();
+            }
+        });
+
+        function clearStats() {
+            document.getElementById('totalRecords').textContent = '0';
+            document.getElementById('totalLanguages').textContent = '0';
+            document.getElementById('selectedCount').textContent = '0';
+            document.getElementById('statusBadge').innerHTML = '✅ Ready';
+            document.getElementById('previewArea').innerHTML =
+                `<div class="text-center text-muted py-4">
+                    <i class="fas fa-code" style="font-size:36px;"></i>
+                    <p class="mt-2 mb-0">Upload or parse JSON to preview</p>
+                </div>`;
+            document.getElementById('languageContainer').innerHTML =
+                '<span class="text-muted">Upload or parse JSON to detect languages</span>';
+            jsonData = null;
+            detectedLanguages = [];
+            selectedLanguages = [];
+        }
+
+        function parseJson() {
+            const input = document.getElementById('jsonInput').value.trim();
+            if (!input) {
+                clearStats();
+                return;
+            }
+
+            try {
+                const data = JSON.parse(input);
+
+                if (!Array.isArray(data)) {
+                    showToast('JSON must be an array (use [ ] brackets)', true);
+                    document.getElementById('statusBadge').innerHTML = '❌ Error';
+                    return;
+                }
+
+                if (data.length === 0) {
+                    showToast('JSON array is empty', true);
+                    document.getElementById('statusBadge').innerHTML = '❌ Error';
+                    return;
+                }
+
+                jsonData = data;
+                document.getElementById('totalRecords').textContent = data.length;
+                document.getElementById('statusBadge').innerHTML = '⏳ Detecting languages...';
+                updatePreview(data, []);
+                detectLanguages(input);
+
+            } catch (e) {
+                let errorMsg = e.message;
+                if (errorMsg.includes('Unexpected token')) {
+                    errorMsg = 'Invalid JSON: ' + errorMsg;
+                }
+                showToast('❌ ' + errorMsg, true);
+                document.getElementById('statusBadge').innerHTML = '❌ Error';
+                jsonData = null;
+            }
+        }
+
+        function updatePreview(data, langs) {
+            const preview = document.getElementById('previewArea');
+            const status = document.getElementById('previewStatus');
+
+            if (!data || data.length === 0) {
+                preview.innerHTML =
+                    `<div class="text-center text-muted py-4"><i class="fas fa-code" style="font-size:36px;"></i><p class="mt-2 mb-0">No data to preview</p></div>`;
+                status.textContent = 'No data';
+                return;
+            }
+
+            let fields = langs;
+            if (!fields || fields.length === 0) {
+                const firstItem = data[0];
+                fields = Object.keys(firstItem).slice(0, 5);
+            }
+
+            status.textContent = data.length + ' records' + (fields.length ? ', ' + fields.length + ' fields' : '');
+            let html = '<table><thead><tr>';
+            fields.forEach(f => html += '<th>' + f + '</th>');
+            html += '</tr></thead><tbody>';
+            data.slice(0, 10).forEach(item => {
+                html += '<tr>';
+                fields.forEach(f => {
+                    const v = item[f] || '';
+                    html += '<td>' + String(v).substring(0, 150) + '</td>';
+                });
+                html += '</tr>';
+            });
+            if (data.length > 10) {
+                html += '<tr><td colspan="' + fields.length +
+                    '" class="text-muted text-center">... and ' + (data.length - 10) + ' more items</td></tr>';
+            }
+            html += '</tbody></table>';
+            preview.innerHTML = html;
+        }
+
+        // =====================================
+        // DETECT LANGUAGES
+        // =====================================
+        function detectLanguages(jsonStr) {
+            fetch(API_BASE + '/detect-languages', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ jsonData: jsonStr })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.error) {
+                        showToast(data.error, true);
+                        document.getElementById('statusBadge').innerHTML = '❌ Error';
+                        return;
+                    }
+                    if (data.languages) {
+                        detectedLanguages = data.languages.map(l => l.field);
+                        selectedLanguages = [...detectedLanguages];
+                        renderLanguages(data.languages);
+                        updatePreview(jsonData, selectedLanguages);
+                        document.getElementById('totalLanguages').textContent = detectedLanguages.length;
+                        document.getElementById('selectedCount').textContent = selectedLanguages.length;
+                        document.getElementById('statusBadge').innerHTML = '✅ Languages detected';
+                        showToast('✅ Detected ' + detectedLanguages.length + ' languages');
+                    } else {
+                        document.getElementById('statusBadge').innerHTML = '⚠️ No languages found';
+                        showToast('No language fields (text_*) found in JSON', true);
+                    }
+                })
+                .catch(e => {
+                    showToast('Error detecting languages: ' + e.message, true);
+                    document.getElementById('statusBadge').innerHTML = '❌ Error';
+                });
+        }
+
+        // =====================================
+        // RENDER LANGUAGES
+        // =====================================
+        function renderLanguages(languages) {
+            const container = document.getElementById('languageContainer');
+            if (!languages || languages.length === 0) {
+                container.innerHTML = '<span class="text-muted">No language fields found</span>';
+                return;
+            }
+            container.innerHTML = '';
+            languages.forEach(lang => {
+                const label = document.createElement('label');
+                label.className = 'language-checkbox selected';
+                const cb = document.createElement('input');
+                cb.type = 'checkbox';
+                cb.value = lang.field;
+                cb.checked = true;
+                cb.addEventListener('change', function() {
+                    if (this.checked) {
+                        selectedLanguages.push(this.value);
+                        label.classList.add('selected');
+                    } else {
+                        selectedLanguages = selectedLanguages.filter(f => f !== this.value);
+                        label.classList.remove('selected');
+                    }
+                    document.getElementById('selectedCount').textContent = selectedLanguages.length;
+                    updatePreview(jsonData, selectedLanguages);
+                });
+                label.appendChild(cb);
+                label.appendChild(document.createTextNode(lang.displayName));
+                container.appendChild(label);
+            });
+        }
+
+        // =====================================
+        // SELECT / DESELECT ALL
+        // =====================================
+        document.getElementById('selectAllBtn').addEventListener('click', function() {
+            document.querySelectorAll('#languageContainer input[type="checkbox"]').forEach(cb => cb.checked = true);
+            selectedLanguages = [...detectedLanguages];
+            document.querySelectorAll('.language-checkbox').forEach(el => el.classList.add('selected'));
+            document.getElementById('selectedCount').textContent = selectedLanguages.length;
+            updatePreview(jsonData, selectedLanguages);
+        });
+
+        document.getElementById('deselectAllBtn').addEventListener('click', function() {
+            document.querySelectorAll('#languageContainer input[type="checkbox"]').forEach(cb => cb.checked = false);
+            selectedLanguages = [];
+            document.querySelectorAll('.language-checkbox').forEach(el => el.classList.remove('selected'));
+            document.getElementById('selectedCount').textContent = '0';
+            updatePreview(jsonData, []);
+        });
+
+        // =====================================
+        // CLEAR ALL - Reset everything to fresh state
+        // =====================================
+        function clearAll() {
+            // Clear JSON input
+            document.getElementById('jsonInput').value = '';
+
+            // Clear file name display
+            document.getElementById('fileNameDisplay').textContent = '';
+            document.getElementById('fileNameDisplay').style.display = 'none';
+
+            // Reset state
+            jsonData = null;
+            detectedLanguages = [];
+            selectedLanguages = [];
+
+            // Reset stats
+            document.getElementById('totalRecords').textContent = '0';
+            document.getElementById('totalLanguages').textContent = '0';
+            document.getElementById('selectedCount').textContent = '0';
+            document.getElementById('statusBadge').innerHTML = '✅ Ready';
+
+            // Reset preview
+            document.getElementById('previewArea').innerHTML =
+                `<div class="text-center text-muted py-4">
+                    <i class="fas fa-code" style="font-size:36px;"></i>
+                    <p class="mt-2 mb-0">Upload or parse JSON to preview</p>
+                </div>`;
+            document.getElementById('previewStatus').textContent = 'No data';
+
+            // Reset language container
+            document.getElementById('languageContainer').innerHTML =
+                '<span class="text-muted">Upload or parse JSON to detect languages</span>';
+
+            // Reset file input
+            document.getElementById('fileInput').value = '';
+
+            // Reset file name
+            document.getElementById('excelFileName').value = 'Response_Sheet';
+
+            showToast('🧹 All cleared! Ready for new task', false, 'info');
+        }
+
+        // =====================================
+        // GENERATE EXCEL
+        // =====================================
+        document.getElementById('generateBtn').addEventListener('click', function() {
+            if (!jsonData) {
+                showToast('Please load JSON data first', true);
+                return;
+            }
+            if (selectedLanguages.length === 0) {
+                showToast('Please select at least one language', true);
+                return;
+            }
+
+            const btn = this;
+            const originalHtml = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Generating...';
+            btn.disabled = true;
+
+            fetch(API_BASE + '/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        jsonData: JSON.stringify(jsonData),
+                        fileName: document.getElementById('excelFileName').value.trim() || 'Response_Sheet',
+                        selectedLanguages: selectedLanguages,
+                        uploadedBy: 'Rahul Kumar'
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.error) {
+                        showToast('Error: ' + data.error, true);
+                        return;
+                    }
+                    if (data.historyId) {
+                        showToast('✅ ' + data.message);
+                        document.getElementById('statusBadge').innerHTML = '✅ Generated';
+                        loadHistory();
+                        window.open(API_BASE + '/download/' + data.historyId, '_blank');
+
+                        // ✅ AUTO CLEAR AFTER SUCCESSFUL DOWNLOAD
+                        setTimeout(clearAll, 1500);
+                    }
+                })
+                .catch(e => {
+                    showToast('Error: ' + e.message, true);
+                    document.getElementById('statusBadge').innerHTML = '❌ Error';
+                })
+                .finally(() => {
+                    btn.innerHTML = originalHtml;
+                    btn.disabled = false;
+                });
+        });
+
+        // =====================================
+        // LOAD HISTORY - WITH DELETE BUTTON
+        // =====================================
+        function loadHistory() {
+            fetch(API_BASE + '/history')
+                .then(res => res.json())
+                .then(data => {
+                    const tbody = document.getElementById('historyBody');
+                    if (!data || data.length === 0) {
+                        tbody.innerHTML =
+                            '<tr><td colspan="6" class="text-center text-muted">No history yet</td></tr>';
+                        return;
+                    }
+                    tbody.innerHTML = data.map(h => `
+                            <tr>
+                                <td><i class="fas fa-file-excel text-success me-1"></i> ${h.fileName}</td>
+                                <td>${h.selectedLanguages || 'N/A'}</td>
+                                <td>${h.totalRecords || 0}</td>
+                                <td>${new Date(h.generatedDate).toLocaleString()}</td>
+                                <td>${h.downloadCount || 0}</td>
+                                <td>
+                                    <a href="${API_BASE}/download/${h.id}" class="btn btn-sm btn-outline-primary me-1" title="Download">
+                                        <i class="fas fa-download"></i>
+                                    </a>
+                                    <button class="btn btn-sm btn-outline-danger" onclick="deleteHistory(${h.id}, '${h.fileName}')" title="Delete">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        `).join('');
+                })
+                .catch(e => console.error('Error loading history:', e));
+        }
+
+        // =====================================
+        // DELETE HISTORY RECORD
+        // =====================================
+        function deleteHistory(id, fileName) {
+            if (!confirm(`Are you sure you want to delete "${fileName}"?`)) {
+                return;
+            }
+
+            showToast('🗑️ Deleting history record...', false, 'info');
+
+            fetch(`${API_BASE}/history/${id}`, {
+                    method: 'DELETE'
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.error) {
+                        showToast('Error: ' + data.error, true);
+                        return;
+                    }
+                    showToast('✅ ' + data.message, false, 'success');
+                    loadHistory();
+                })
+                .catch(e => {
+                    showToast('Error: ' + e.message, true);
+                });
+        }
+
+        // =====================================
+        // CLEAR ALL HISTORY
+        // =====================================
+        function clearAllHistory() {
+            if (!confirm('⚠️ Are you sure you want to delete ALL history records and files? This cannot be undone!')) {
+                return;
+            }
+
+            showToast('🗑️ Clearing all history...', false, 'info');
+
+            fetch(`${API_BASE}/history/clear-all`, {
+                    method: 'DELETE'
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.error) {
+                        showToast('Error: ' + data.error, true);
+                        return;
+                    }
+                    showToast('✅ ' + data.message, false, 'success');
+                    loadHistory();
+                })
+                .catch(e => {
+                    showToast('Error: ' + e.message, true);
+                });
+        }
+
+        // =====================================
+        // LOAD HISTORY ON PAGE LOAD
+        // =====================================
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!checkAuth()) return;
+
+            displayUserName();
+            applyDarkMode();
+            loadHistory();
+
+            const input = document.getElementById('jsonInput').value.trim();
+            if (input) {
+                setTimeout(parseJson, 500);
+            }
+
+            // Refresh button
+            document.getElementById('refreshBtn')?.addEventListener('click', function() {
+                showToast('🔄 Refreshing...', false, 'info');
+                loadHistory();
+            });
+
+            // Clear All button
+            document.getElementById('clearAllBtn')?.addEventListener('click', clearAll);
+
+            // Clear All History button
+            document.getElementById('clearAllHistoryBtn')?.addEventListener('click', clearAllHistory);
+        });
+
+        // =====================================
+        // SAMPLE DATA (Ctrl+S)
+        // =====================================
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 's') {
+                e.preventDefault();
+                const sample = [{
+                    "aiCode": "res_greet",
+                    "text_hi": "आपकी भाषा प्राथमिकता क्या है?",
+                    "text_en": "What is your language preference?",
+                    "text_ml": "നിങ്ങളുടെ ഭാഷാ മുൻഗണന എന്താണ്?",
+                    "text_ta": "உங்கள் மொழி விருப்பம் என்ன?",
+                    "text_te": "మీ భాషా ప్రాధాన్యత ఏమిటి?",
+                    "text_bn": "আপনার ভাষার পছন্দ কী?"
+                }, {
+                    "aiCode": "res_book_appointment",
+                    "text_hi": "आप कैसे आगे बढ़ना चाहेंगे?\n\n*1.* नया उपयोगकर्ता\n*2.* पंजीकृत उपयोगकर्ता",
+                    "text_en": "How would you like to proceed?\n\n*1.* New User\n*2.* Registered User",
+                    "text_ml": "നിങ്ങൾ എങ്ങനെ തുടരാൻ ആഗ്രഹിക്കുന്നു?\n\n*1.* പുതിയ ഉപയോക്താവ്\n*2.* രജിസ്റ്റർ ചെയ്ത ഉപയോക്താവ്",
+                    "text_ta": "நீங்கள் எவ்வாறு தொடர விரும்புகிறீர்கள்?\n\n*1.* புதிய பயனர்\n*2.* பதிவு செய்யப்பட்ட பயனர்",
+                    "text_te": "మీరు ఎలా కొనసాగాలనుకుంటున్నారు?\n\n*1.* కొత్త వినియోగదారు\n*2.* నమోదు చేసిన వినియోగదారు",
+                    "text_bn": "আপনি কীভাবে এগিয়ে যেতে চান?\n\n*1.* নতুন ব্যবহারকারী\n*2.* নিবন্ধিত ব্যবহারকারী"
+                }];
+                document.getElementById('jsonInput').value = JSON.stringify(sample, null, 2);
+                document.getElementById('fileNameDisplay').textContent = '📋 Sample data loaded';
+                document.getElementById('fileNameDisplay').style.display = 'block';
+                setTimeout(parseJson, 300);
+                showToast('📋 Sample data loaded!');
+            }
+        });
+
+        // =====================================
+        // GLOBAL FUNCTIONS
+        // =====================================
+
+        window.goPage = goPage;
+        window.logout = logout;
+        window.showToast = showToast;
+        window.applyDarkMode = applyDarkMode;
+        window.parseJson = parseJson;
+        window.clearAll = clearAll;
+        window.deleteHistory = deleteHistory;
+        window.clearAllHistory = clearAllHistory;
+
+        console.log('💡 Press Ctrl+S to load sample data');
+        console.log('💡 Dark mode is controlled from Settings page');
+        console.log('💡 Click "Clear All" to reset everything');
+        console.log('💡 After downloading, form auto-clears in 1.5 seconds');
+        console.log('💡 Delete individual history records with the trash button');
+    </script>
+</body>
+</html>

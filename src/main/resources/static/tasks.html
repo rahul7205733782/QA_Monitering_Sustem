@@ -1,0 +1,2067 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VoiceOC · Task Management</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- SESSION MANAGER - Auto Logout for ALL Pages -->
+    <script src="js/session-manager.js"></script>
+
+    <style>
+        /* Pulse Animation for Countdown */
+        @keyframes pulse {
+            0%,
+            100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #F1F5F9;
+            font-family: 'Inter', sans-serif;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        /* ========================================= */
+        /* DARK MODE - COMPLETE */
+        /* ========================================= */
+
+        .dark-mode {
+            background: #020617 !important;
+            color: #F8FAFC !important;
+        }
+
+        /* Top Nav */
+        .dark-mode .top-nav {
+            background: #111827 !important;
+            color: #F8FAFC !important;
+            border-color: #1E293B !important;
+        }
+
+        .dark-mode .top-nav .page-title h3 {
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .top-nav .page-title p {
+            color: #94A3B8 !important;
+        }
+
+        .dark-mode .top-nav .user-badge {
+            background: #1E293B !important;
+            color: #F8FAFC !important;
+        }
+
+        /* Filter Bar */
+        .dark-mode .filter-bar {
+            background: #111827 !important;
+            border-color: #1E293B !important;
+        }
+
+        .dark-mode .filter-bar .filter-title {
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .filter-bar .filter-title .task-count {
+            background: #1E293B !important;
+            color: #94A3B8 !important;
+        }
+
+        .dark-mode .filter-bar .filter-controls select {
+            background: #1E293B !important;
+            color: #F8FAFC !important;
+            border-color: #334155 !important;
+        }
+
+        .dark-mode .filter-bar .filter-controls select:focus {
+            background: #1E293B !important;
+            border-color: #2DD4BF !important;
+            box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.1) !important;
+        }
+
+        .dark-mode .filter-badge-clear {
+            background: #7F1D1D !important;
+            color: #F87171 !important;
+        }
+
+        .dark-mode .filter-badge-clear:hover {
+            background: #991B1B !important;
+        }
+
+        /* Task Cards */
+        .dark-mode .task-card {
+            background: #111827 !important;
+            border-color: #1E293B !important;
+        }
+
+        .dark-mode .task-card:hover {
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5) !important;
+        }
+
+        .dark-mode .task-card .task-title {
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .task-card .task-id {
+            color: #94A3B8 !important;
+        }
+
+        .dark-mode .task-card .task-detail {
+            color: #94A3B8 !important;
+        }
+
+        .dark-mode .task-card .task-detail i {
+            color: #2DD4BF !important;
+        }
+
+        .dark-mode .task-card .task-actions {
+            border-top-color: #1E293B !important;
+        }
+
+        /* Status Badges - Dark Mode */
+        .dark-mode .status-completed {
+            background: #065F46 !important;
+            color: #34D399 !important;
+        }
+
+        .dark-mode .status-progress {
+            background: #4C1D95 !important;
+            color: #A78BFA !important;
+        }
+
+        .dark-mode .status-pending {
+            background: #7F1D1D !important;
+            color: #F87171 !important;
+        }
+
+        /* Action Buttons */
+        .dark-mode .btn-view {
+            background: #1E3A5F !important;
+            color: #60A5FA !important;
+        }
+
+        .dark-mode .btn-view:hover {
+            background: #2D4A7A !important;
+        }
+
+        .dark-mode .btn-edit {
+            background: #4C1D95 !important;
+            color: #A78BFA !important;
+        }
+
+        .dark-mode .btn-edit:hover {
+            background: #6D28D9 !important;
+        }
+
+        .dark-mode .btn-delete {
+            background: #7F1D1D !important;
+            color: #F87171 !important;
+        }
+
+        .dark-mode .btn-delete:hover {
+            background: #991B1B !important;
+        }
+
+        /* Modal */
+        .dark-mode .modal-content {
+            background: #111827 !important;
+            border-color: #1E293B !important;
+        }
+
+        .dark-mode .modal-header-gradient {
+            background: linear-gradient(95deg, #0F172A 0%, #020617 100%) !important;
+        }
+
+        .dark-mode .modal-header-gradient .modal-title {
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .modal-body {
+            background: #111827 !important;
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .modal-body .form-label {
+            color: #94A3B8 !important;
+        }
+
+        .dark-mode .modal-body .form-control {
+            background: #1E293B !important;
+            color: #F8FAFC !important;
+            border-color: #334155 !important;
+        }
+
+        .dark-mode .modal-body .form-control::placeholder {
+            color: #64748B !important;
+        }
+
+        .dark-mode .modal-body .form-control:focus {
+            background: #1E293B !important;
+            border-color: #2DD4BF !important;
+            box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.1) !important;
+        }
+
+        .dark-mode .modal-body .form-select {
+            background: #1E293B !important;
+            color: #F8FAFC !important;
+            border-color: #334155 !important;
+        }
+
+        .dark-mode .modal-body .form-select:focus {
+            border-color: #2DD4BF !important;
+            box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.1) !important;
+        }
+
+        .dark-mode .modal-body textarea.form-control {
+            background: #1E293B !important;
+            color: #F8FAFC !important;
+            border-color: #334155 !important;
+        }
+
+        .dark-mode .modal-body textarea.form-control:focus {
+            background: #1E293B !important;
+            border-color: #2DD4BF !important;
+            box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.1) !important;
+        }
+
+        .dark-mode .modal-footer {
+            background: #111827 !important;
+            border-top-color: #1E293B !important;
+        }
+
+        .dark-mode .modal-footer .btn-secondary {
+            background: #1E293B !important;
+            border-color: #334155 !important;
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .modal-footer .btn-secondary:hover {
+            background: #334155 !important;
+        }
+
+        .dark-mode .modal-footer .btn-success {
+            background: #065F46 !important;
+            border-color: #065F46 !important;
+            color: #34D399 !important;
+        }
+
+        .dark-mode .modal-footer .btn-success:hover {
+            background: #047857 !important;
+            border-color: #047857 !important;
+        }
+
+        .dark-mode .modal-footer .btn-primary {
+            background: #1E3A5F !important;
+            border-color: #1E3A5F !important;
+            color: #60A5FA !important;
+        }
+
+        .dark-mode .modal-footer .btn-primary:hover {
+            background: #2D4A7A !important;
+            border-color: #2D4A7A !important;
+        }
+
+        /* Detail Modal */
+        .dark-mode .detail-label {
+            color: #94A3B8 !important;
+        }
+
+        .dark-mode .detail-value {
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .detail-card {
+            background: #1E293B !important;
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .divider {
+            background: #1E293B !important;
+        }
+
+        .dark-mode .modal-body .text-primary {
+            color: #60A5FA !important;
+        }
+
+        /* Empty State */
+        .dark-mode .empty-state {
+            background: #111827 !important;
+        }
+
+        .dark-mode .empty-state i {
+            color: #334155 !important;
+        }
+
+        .dark-mode .empty-state h3 {
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .empty-state p {
+            color: #94A3B8 !important;
+        }
+
+        .dark-mode .empty-state .btn-outline-primary {
+            color: #60A5FA !important;
+            border-color: #1E3A5F !important;
+        }
+
+        .dark-mode .empty-state .btn-outline-primary:hover {
+            background: #1E3A5F !important;
+            color: #F8FAFC !important;
+        }
+
+        /* Toast */
+        .dark-mode .toast-msg {
+            background: #1E293B !important;
+            color: #F8FAFC !important;
+            border-left-color: #2DD4BF !important;
+        }
+
+        .dark-mode .toast-msg.error {
+            border-left-color: #DC2626 !important;
+        }
+
+        .dark-mode .toast-msg.success {
+            border-left-color: #10B981 !important;
+        }
+
+        /* Float Button */
+        .dark-mode .add-task-btn {
+            background: linear-gradient(95deg, #0D9488, #0F766E) !important;
+        }
+
+        /* Scrollbar */
+        .dark-mode ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        .dark-mode ::-webkit-scrollbar-track {
+            background: #1E293B;
+        }
+
+        .dark-mode ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+
+        .dark-mode ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+
+        /* ========================================= */
+        /* SIDEBAR */
+        /* ========================================= */
+
+        .sidebar {
+            width: 280px;
+            height: 100vh;
+            background: linear-gradient(180deg, #0F172A 0%, #020617 100%);
+            position: fixed;
+            left: 0;
+            top: 0;
+            padding-top: 30px;
+            z-index: 1000;
+        }
+
+        .logo-area {
+            padding: 0 24px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .logo-area h2 {
+            color: white;
+            font-weight: 800;
+            font-size: 1.7rem;
+        }
+
+        .logo-area h2 i {
+            color: #2DD4BF;
+            margin-right: 10px;
+        }
+
+        /* QA Daily Tasks - Single Tick on Left */
+        .logo-area .qa-tagline {
+            color: #10B981 !important;
+            font-weight: 700 !important;
+            font-size: 11px !important;
+            letter-spacing: 2px;
+            margin-top: 8px;
+            text-align: center;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 0 10px;
+        }
+
+        .logo-area .qa-tagline .tick-icon {
+            color: #10B981;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        .logo-area .qa-tagline .tick-icon i {
+            font-size: 12px;
+        }
+
+        .logo-area .qa-tagline .tag-text {
+            flex-shrink: 0;
+            padding: 0 2px;
+            color: #10B981;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .dark-mode .logo-area .qa-tagline {
+            color: #34D399 !important;
+        }
+
+        .dark-mode .logo-area .qa-tagline .tick-icon {
+            color: #34D399;
+        }
+
+        .dark-mode .logo-area .qa-tagline .tag-text {
+            color: #34D399;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            color: #94A3B8;
+            padding: 12px 24px;
+            margin: 6px 12px;
+            border-radius: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .nav-item:hover {
+            background: rgba(45, 212, 191, 0.12);
+            color: white;
+        }
+
+        .nav-item.active {
+            background: linear-gradient(95deg, #0D9488, #0F766E);
+            color: white;
+        }
+
+        /* ========================================= */
+        /* MAIN */
+        /* ========================================= */
+
+        .main-content {
+            margin-left: 280px;
+            padding: 28px 36px;
+        }
+
+        /* ========================================= */
+        /* TOPBAR */
+        /* ========================================= */
+
+        .top-nav {
+            background: white;
+            border-radius: 24px;
+            padding: 16px 28px;
+            margin-bottom: 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .page-title h3 {
+            margin: 0;
+            font-weight: 800;
+            color: #0F172A;
+            transition: color 0.3s ease;
+        }
+
+        .page-title p {
+            margin-top: 5px;
+            color: #64748B;
+            transition: color 0.3s ease;
+        }
+
+        .user-badge {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #F1F5F9;
+            padding: 8px 20px;
+            border-radius: 50px;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .user-badge i {
+            color: #2DD4BF;
+        }
+
+        /* ========================================= */
+        /* FILTER BAR */
+        /* ========================================= */
+
+        .filter-bar {
+            background: white;
+            border-radius: 16px;
+            padding: 16px 24px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #E2E8F0;
+            flex-wrap: wrap;
+            gap: 12px;
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .filter-bar .filter-title {
+            font-weight: 700;
+            color: #0F172A;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: color 0.3s ease;
+        }
+
+        .filter-bar .filter-title .task-count {
+            background: #F1F5F9;
+            padding: 2px 14px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            color: #64748B;
+            font-weight: 600;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .filter-bar .filter-controls {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-bar .filter-controls select {
+            border-radius: 50px;
+            padding: 8px 20px;
+            border: 1px solid #E2E8F0;
+            background: white;
+            font-weight: 500;
+            font-size: 0.9rem;
+            min-width: 180px;
+            cursor: pointer;
+            transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .filter-bar .filter-controls select:focus {
+            outline: none;
+            border-color: #2DD4BF;
+            box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.1);
+        }
+
+        /* Clear button now sits beside search box */
+        .filter-badge-clear {
+            color: #EF4444;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-decoration: none;
+            padding: 6px 14px;
+            border-radius: 50px;
+            background: #FEF2F2;
+            transition: 0.2s;
+            display: none;
+            white-space: nowrap;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .filter-badge-clear:hover {
+            background: #FEE2E2;
+            text-decoration: none;
+        }
+
+        /* Search box */
+        .search-box {
+            position: relative;
+            flex: 1;
+            min-width: 180px;
+            max-width: 260px;
+        }
+        .search-box input {
+            border-radius: 50px;
+            padding: 8px 18px 8px 40px;
+            border: 1px solid #E2E8F0;
+            width: 100%;
+            font-size: 0.9rem;
+            background: white;
+            transition: 0.2s;
+        }
+        .search-box input:focus {
+            outline: none;
+            border-color: #2DD4BF;
+            box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.1);
+        }
+        .search-box i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94A3B8;
+        }
+        .dark-mode .search-box input {
+            background: #1E293B;
+            border-color: #334155;
+            color: #F8FAFC;
+        }
+        .dark-mode .search-box input::placeholder {
+            color: #64748B;
+        }
+        .dark-mode .search-box i {
+            color: #64748B;
+        }
+
+        /* Group search + clear button */
+        .search-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+            min-width: 220px;
+            max-width: 380px;
+        }
+
+        /* ========================================= */
+        /* TASK CARD */
+        /* ========================================= */
+
+        .task-card {
+            background: white;
+            border-radius: 24px;
+            padding: 24px;
+            margin-bottom: 24px;
+            border: 1px solid #E2E8F0;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .task-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+            cursor: pointer;
+        }
+
+        .task-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #0F172A;
+            transition: color 0.3s ease;
+        }
+
+        .task-id {
+            font-size: 0.75rem;
+            color: #64748B;
+            margin-top: 4px;
+            transition: color 0.3s ease;
+        }
+
+        .task-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 16px;
+            cursor: pointer;
+        }
+
+        .task-detail {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: #475569;
+            transition: color 0.3s ease;
+        }
+
+        .task-detail i {
+            color: #2DD4BF;
+        }
+
+        /* ========================================= */
+        /* STATUS BADGES - 3 COLORS */
+        /* ========================================= */
+
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            display: inline-block;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .status-completed {
+            background: #D1FAE5;
+            color: #059669;
+        }
+
+        .status-progress {
+            background: #EDE9FE;
+            color: #7C3AED;
+        }
+
+        .status-pending {
+            background: #FEE2E2;
+            color: #DC2626;
+        }
+
+        /* ========================================= */
+        /* ACTION BUTTONS */
+        /* ========================================= */
+
+        .task-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #E2E8F0;
+            flex-wrap: wrap;
+            transition: border-color 0.3s ease;
+        }
+
+        .btn-task {
+            padding: 6px 14px;
+            border: none;
+            border-radius: 20px;
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .btn-task:hover {
+            opacity: 0.85;
+            transform: scale(0.97);
+        }
+
+        .btn-view {
+            background: #3B82F6;
+        }
+
+        .btn-edit {
+            background: #8B5CF6;
+        }
+
+        .btn-delete {
+            background: #EF4444;
+        }
+
+        /* ========================================= */
+        /* PAGINATION */
+        /* ========================================= */
+
+        .pagination-wrapper {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .pagination-wrapper .pagination {
+            gap: 4px;
+        }
+
+        .pagination-wrapper .page-item .page-link {
+            border-radius: 50px;
+            padding: 8px 16px;
+            color: #0F172A;
+            border: 1px solid #E2E8F0;
+            background: white;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+        .pagination-wrapper .page-item.active .page-link {
+            background: #0D9488;
+            border-color: #0D9488;
+            color: white;
+        }
+        .pagination-wrapper .page-item .page-link:hover {
+            background: #F1F5F9;
+        }
+        .dark-mode .pagination-wrapper .page-item .page-link {
+            background: #1E293B;
+            border-color: #334155;
+            color: #F8FAFC;
+        }
+        .dark-mode .pagination-wrapper .page-item.active .page-link {
+            background: #0D9488;
+            border-color: #0D9488;
+            color: white;
+        }
+        .dark-mode .pagination-wrapper .page-item .page-link:hover {
+            background: #334155;
+        }
+
+        /* ========================================= */
+        /* FLOAT BUTTON */
+        /* ========================================= */
+
+        .add-task-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(95deg, #0D9488, #0F766E);
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 10px 25px -5px rgba(13, 148, 136, 0.4);
+            transition: 0.2s;
+        }
+
+        .add-task-btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* ========================================= */
+        /* TOAST */
+        /* ========================================= */
+
+        .toast-msg {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #1E293B;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            border-left: 4px solid #2DD4BF;
+            display: none;
+            z-index: 9999;
+            font-size: 0.9rem;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .toast-msg.error {
+            border-left-color: #DC2626 !important;
+        }
+
+        .toast-msg.success {
+            border-left-color: #10B981 !important;
+        }
+
+        /* ========================================= */
+        /* DETAIL MODAL STYLES */
+        /* ========================================= */
+
+        .detail-section {
+            margin-bottom: 20px;
+        }
+
+        .detail-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+            color: #64748B;
+            margin-bottom: 6px;
+            transition: color 0.3s ease;
+        }
+
+        .detail-value {
+            font-size: 0.95rem;
+            color: #0F172A;
+            font-weight: 500;
+            word-break: break-word;
+            transition: color 0.3s ease;
+        }
+
+        .detail-card {
+            background: #F8FAFC;
+            border-radius: 16px;
+            padding: 16px;
+            margin-top: 8px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            max-height: 200px;
+            overflow-y: auto;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .divider {
+            height: 1px;
+            background: #E2E8F0;
+            margin: 16px 0;
+            transition: background 0.3s ease;
+        }
+
+        /* ========================================= */
+        /* EMPTY STATE */
+        /* ========================================= */
+
+        .empty-state {
+            background: white;
+            border-radius: 24px;
+            padding: 80px 20px;
+            text-align: center;
+            transition: background 0.3s ease;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: #CBD5E1;
+            margin-bottom: 20px;
+            transition: color 0.3s ease;
+        }
+
+        .empty-state h3 {
+            color: #475569;
+            margin-bottom: 8px;
+            font-weight: 700;
+            transition: color 0.3s ease;
+        }
+
+        .empty-state p {
+            color: #94A3B8;
+            transition: color 0.3s ease;
+        }
+
+        /* ========================================= */
+        /* FORM STYLES */
+        /* ========================================= */
+
+        .form-label {
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-bottom: 6px;
+            color: #334155;
+            transition: color 0.3s ease;
+        }
+
+        .modal-header-gradient {
+            background: linear-gradient(95deg, #0F172A 0%, #020617 100%);
+            color: white;
+            border-radius: 24px 24px 0 0;
+            transition: background 0.3s ease;
+        }
+
+        .required-star {
+            color: #DC2626;
+            margin-left: 3px;
+        }
+
+        /* ========================================= */
+        /* SCENARIO TEXT STYLING */
+        /* ========================================= */
+
+        .scenario-text {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            line-height: 1.6;
+        }
+
+        /* ========================================= */
+        /* SCROLLBAR - Light Mode */
+        /* ========================================= */
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #F1F5F9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #CBD5E1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94A3B8;
+        }
+
+        /* Clickable card header */
+        .card-clickable {
+            cursor: pointer;
+        }
+        .card-clickable:hover .task-title {
+            color: #2DD4BF;
+        }
+
+        /* Responsive tweaks */
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 80px;
+            }
+            .sidebar .logo-area h2 {
+                font-size: 1.2rem;
+            }
+            .sidebar .logo-area p,
+            .sidebar .logo-area .qa-tagline,
+            .sidebar .nav-item span {
+                display: none;
+            }
+            .sidebar .nav-item {
+                justify-content: center;
+                padding: 12px;
+            }
+            .main-content {
+                margin-left: 80px;
+                padding: 20px;
+            }
+            .filter-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .filter-controls {
+                flex-wrap: wrap;
+            }
+            .search-group {
+                max-width: 100%;
+                min-width: 100%;
+            }
+            .search-box {
+                max-width: 100%;
+                min-width: 100%;
+            }
+        }
+        @media (max-width: 576px) {
+            .top-nav {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+            .task-header {
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ========================================= -->
+    <!-- SIDEBAR -->
+    /* ========================================= */
+
+    <div class="sidebar">
+        <div class="logo-area">
+            <h2><i class="fas fa-microphone-alt"></i> VoiceOC</h2>
+            <!-- QA Daily Tasks - Single Tick on Left -->
+            <div class="qa-tagline">
+                <span class="tick-icon"><i class="fas fa-check-circle"></i></span>
+                <span class="tag-text">QA DAILY TASKS</span>
+            </div>
+        </div>
+        <div class="nav-item" onclick="window.location.href='dashboard.html'">
+            <i class="fas fa-chart-line"></i>
+            <span>Dashboard</span>
+        </div>
+        <div class="nav-item active">
+            <i class="fas fa-tasks"></i>
+            <span>Tasks</span>
+        </div>
+        <div class="nav-item" onclick="window.location.href='clientdetails.html'">
+            <i class="fas fa-building"></i>
+            <span>Clients Detail</span>
+        </div>
+        <div class="nav-item" onclick="window.location.href='bugtracker.html'">
+            <i class="fas fa-bug"></i>
+            <span>Bug Tracker</span>
+        </div>
+        <div class="nav-item" onclick="window.location.href='json-sheet.html'">
+            <i class="fas fa-code"></i>
+            <span>JSON Sheets</span>
+        </div>
+        
+        <div class="nav-item" onclick="window.location.href='response-sheet.html'">
+    <i class="fas fa-file-excel"></i>
+    <span>Response Sheet</span>
+</div>
+
+<div class="nav-item" onclick="window.location.href='journey-map.html'">
+    <i class="fas fa-route"></i>
+    <span>Journey Map</span>
+</div>
+
+        <div class="nav-item" onclick="window.location.href='api-doc.html'">
+            <i class="fas fa-book"></i>
+            <span>API Doc</span>
+        </div>
+        <div class="nav-item" onclick="window.location.href='dashboard-monitor.html'">
+            <i class="fas fa-heartbeat"></i>
+            <span>Monitor</span>
+        </div>
+        
+        <div class="nav-item" onclick="window.location.href='json-diff.html'">
+	    <i class="fas fa-code-branch"></i>
+	    <span>JSON Diff</span>
+	</div>
+        <div class="nav-item" onclick="window.location.href='reports.html'">
+            <i class="fas fa-chart-pie"></i>
+            <span>Reports</span>
+        </div>
+        <div class="nav-item" onclick="window.location.href='settings.html'">
+            <i class="fas fa-gear"></i>
+            <span>Settings</span>
+        </div>
+        <div class="nav-item" id="logoutBtn">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Logout</span>
+        </div>
+    </div>
+
+    <!-- ========================================= -->
+    <!-- MAIN -->
+    <!-- ========================================= -->
+
+    <div class="main-content">
+
+        <div class="top-nav">
+            <div class="page-title">
+                <h3><i class="fas fa-tasks" style="color:#2DD4BF;"></i> QA Test Management</h3>
+                <p>Manage test cases with UAT/PROD status tracking</p>
+            </div>
+            <div class="user-badge">
+                <i class="fas fa-user-check"></i>
+                <span id="userNameDisplay">Loading...</span>
+            </div>
+        </div>
+
+        <!-- ========================================= -->
+        <!-- FILTER BAR + SEARCH + CLEAR BUTTON BESIDE SEARCH -->
+        <!-- ========================================= -->
+
+        <div class="filter-bar">
+            <div class="filter-title">
+                <i class="fas fa-filter" style="color:#2DD4BF;"></i>
+                <span id="pageHeading">📋 All Tasks</span>
+                <span class="task-count" id="taskCount">0</span>
+            </div>
+
+            <div class="filter-controls" style="flex:1; gap:12px;">
+                <!-- Search group: search box + clear button beside it -->
+                <div class="search-group">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchInput" placeholder="Search by client, scenario, dev...">
+                    </div>
+                    <a href="tasks.html" class="filter-badge-clear" id="clearFilterBtn">
+                        <i class="fas fa-times-circle"></i> Clear
+                    </a>
+                </div>
+
+                <select id="statusFilter" class="form-select" style="min-width:150px;">
+                    <option value="all">📋 All Tasks</option>
+                    <option value="completed">✅ Completed</option>
+                    <option value="progress">🔄 In Progress</option>
+                    <option value="pending">⏳ Pending</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- TASKS CONTAINER -->
+        <div id="tasksContainer"></div>
+
+        <!-- PAGINATION -->
+        <div class="pagination-wrapper" id="paginationWrapper">
+            <nav>
+                <ul class="pagination" id="paginationControls"></ul>
+            </nav>
+        </div>
+
+    </div>
+
+    <!-- ========================================= -->
+    <!-- ADD BUTTON -->
+    <!-- ========================================= -->
+
+    <button class="add-task-btn" data-bs-toggle="modal" data-bs-target="#addTaskModal">
+        <i class="fas fa-plus"></i>
+    </button>
+
+    <!-- ========================================= -->
+    <!-- ADD TASK MODAL -->
+    <!-- ========================================= -->
+
+    <div class="modal fade" id="addTaskModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content" style="border-radius:24px;">
+                <div class="modal-header modal-header-gradient">
+                    <h5 class="modal-title"><i class="fas fa-plus-circle me-2"></i> Add New Task</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Date <span class="required-star">*</span></label>
+                            <input type="date" class="form-control" id="testDate">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Client Name <span class="required-star">*</span></label>
+                            <input type="text" class="form-control" id="clientName" placeholder="Enter client name">
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label">Scenario <span class="required-star">*</span></label>
+                            <textarea class="form-control" id="scenario" rows="3" placeholder="Describe the test scenario"></textarea>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">UAT Status <span class="required-star">*</span></label>
+                            <select class="form-select" id="uatStatus">
+                                <option value="Completed">✅ Completed</option>
+                                <option value="In Progress">🔄 In Progress</option>
+                                <option value="Pending">⏳ Pending</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">PROD Status <span class="required-star">*</span></label>
+                            <select class="form-select" id="prodStatus">
+                                <option value="Completed">✅ Completed</option>
+                                <option value="In Progress">🔄 In Progress</option>
+                                <option value="Pending">⏳ Pending</option>
+                            </select>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label">Remarks</label>
+                            <textarea class="form-control" id="remarks" rows="2" placeholder="Any additional remarks"></textarea>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Dev Name <span class="required-star">*</span></label>
+                            <input type="text" class="form-control" id="devName" placeholder="Developer name">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Number Tested With <span class="required-star">*</span></label>
+                            <input type="text" class="form-control" id="testedNumber" placeholder="Phone number used for testing">
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label">URL Tested On <span class="required-star">*</span></label>
+                            <input type="text" class="form-control" id="testedUrl" placeholder="https://...">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button class="btn btn-success" id="saveTaskBtn"><i class="fas fa-save me-1"></i> Save Test Case</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================= -->
+    <!-- EDIT TASK MODAL -->
+    <!-- ========================================= -->
+
+    <div class="modal fade" id="editTaskModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content" style="border-radius:24px;">
+                <div class="modal-header modal-header-gradient">
+                    <h5 class="modal-title"><i class="fas fa-edit me-2"></i> Edit Test Case</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="editTaskId">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Date <span class="required-star">*</span></label>
+                            <input type="date" class="form-control" id="editTestDate">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Client Name <span class="required-star">*</span></label>
+                            <input type="text" class="form-control" id="editClientName" placeholder="Enter client name">
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label">Scenario <span class="required-star">*</span></label>
+                            <textarea class="form-control" id="editScenario" rows="3" placeholder="Describe the test scenario"></textarea>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">UAT Status <span class="required-star">*</span></label>
+                            <select class="form-select" id="editUatStatus">
+                                <option value="Completed">✅ Completed</option>
+                                <option value="In Progress">🔄 In Progress</option>
+                                <option value="Pending">⏳ Pending</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">PROD Status <span class="required-star">*</span></label>
+                            <select class="form-select" id="editProdStatus">
+                                <option value="Completed">✅ Completed</option>
+                                <option value="In Progress">🔄 In Progress</option>
+                                <option value="Pending">⏳ Pending</option>
+                            </select>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label">Remarks</label>
+                            <textarea class="form-control" id="editRemarks" rows="2" placeholder="Any additional remarks"></textarea>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Dev Name <span class="required-star">*</span></label>
+                            <input type="text" class="form-control" id="editDevName" placeholder="Developer name">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Number Tested With <span class="required-star">*</span></label>
+                            <input type="text" class="form-control" id="editTestedNumber" placeholder="Phone number used for testing">
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label">URL Tested On <span class="required-star">*</span></label>
+                            <input type="text" class="form-control" id="editTestedUrl" placeholder="https://...">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button class="btn btn-primary" id="updateTaskBtn"><i class="fas fa-save me-1"></i> Update Test Case</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================= -->
+    <!-- VIEW TASK DETAILS MODAL -->
+    <!-- ========================================= -->
+
+    <div class="modal fade" id="viewTaskModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content" style="border-radius:24px;">
+                <div class="modal-header modal-header-gradient">
+                    <h5 class="modal-title"><i class="fas fa-info-circle me-2"></i> Test Case Details</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="viewTaskBody"></div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================= -->
+    <!-- TOAST -->
+    <!-- ========================================= -->
+
+    <div class="toast-msg" id="toastMsg"><span id="toastText"></span></div>
+
+    <!-- ========================================= -->
+    <!-- SCRIPT -->
+    <!-- ========================================= -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+    </script>
+
+    <script>
+        let tasks = [];
+        let allTasks = [];
+        let currentFilter = 'all';
+        let currentPage = 1;
+        const pageSize = 10; // 10 tasks per page
+        let searchQuery = '';
+
+        // =====================================
+        // API BASE URL
+        // =====================================
+
+        const API_BASE = 'http://localhost:8080/api/tasks';
+
+        // =====================================
+        // APPLY DARK MODE
+        // =====================================
+
+        function applyDarkMode() {
+            const settings = JSON.parse(localStorage.getItem('voiceoc_settings') || '{}');
+            if (settings.darkMode) {
+                document.body.classList.add('dark-mode');
+            } else {
+                document.body.classList.remove('dark-mode');
+            }
+        }
+
+        // =====================================
+        // DISPLAY USERNAME FROM LOCALSTORAGE
+        // =====================================
+
+        function displayUserName() {
+            try {
+                const userDataStr = localStorage.getItem('voiceoc_user');
+                const userNameDisplay = document.getElementById('userNameDisplay');
+                if (userDataStr && userNameDisplay) {
+                    try {
+                        const userData = JSON.parse(userDataStr);
+                        const displayName = userData.fullName || userData.username || 'User';
+                        userNameDisplay.innerText = displayName;
+                    } catch (parseError) {
+                        userNameDisplay.innerText = userDataStr;
+                    }
+                } else if (userNameDisplay) {
+                    userNameDisplay.innerText = 'User';
+                }
+            } catch (error) {
+                console.error('Error displaying username:', error);
+            }
+        }
+
+        // =====================================
+        // TOAST FUNCTION
+        // =====================================
+
+        function showToast(message, isError = false) {
+            if (typeof window.showToastMessage === 'function') {
+                window.showToastMessage(message, isError ? 'error' : 'success');
+                return;
+            }
+            document.getElementById('toastText').innerText = message;
+            const toast = document.getElementById('toastMsg');
+            toast.className = 'toast-msg';
+            if (isError) {
+                toast.classList.add('error');
+            } else {
+                toast.classList.add('success');
+            }
+            toast.style.display = 'block';
+            clearTimeout(toast._timeout);
+            toast._timeout = setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+
+        // =====================================
+        // AUTH CHECK
+        // =====================================
+
+        function checkAuth() {
+            if (localStorage.getItem('voiceoc_logged_in') !== 'true') {
+                window.location.href = 'index.html';
+            }
+        }
+
+        // =====================================
+        // NAVIGATION
+        // =====================================
+
+        function goPage(page) {
+            window.location.href = page;
+        }
+
+        // =====================================
+        // GET STATUS CLASS - 3 COLORS
+        // =====================================
+
+        function getStatusClass(status) {
+            if (!status) return 'status-pending';
+            const s = status.toLowerCase();
+            if (s === 'completed') return 'status-completed';
+            if (s === 'in progress') return 'status-progress';
+            if (s === 'pending') return 'status-pending';
+            return 'status-pending';
+        }
+
+        function isCompleted(status) {
+            if (!status) return false;
+            return status.toLowerCase() === 'completed';
+        }
+
+        function isInProgress(status) {
+            if (!status) return false;
+            return status.toLowerCase() === 'in progress';
+        }
+
+        function isPending(status) {
+            if (!status) return false;
+            return status.toLowerCase() === 'pending';
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return 'Not set';
+            try {
+                const date = new Date(dateString);
+                return date.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                });
+            } catch (e) {
+                return dateString;
+            }
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        // =====================================
+        // FILTER + SEARCH
+        // =====================================
+
+        function getFilteredData() {
+            let filtered = allTasks;
+
+            // Apply status filter
+            switch (currentFilter) {
+                case "completed":
+                    filtered = filtered.filter(t => isCompleted(t.uatStatus) && isCompleted(t.prodStatus));
+                    break;
+                case "progress":
+                    filtered = filtered.filter(t => isInProgress(t.uatStatus) || isInProgress(t.prodStatus));
+                    break;
+                case "pending":
+                    filtered = filtered.filter(t => isPending(t.uatStatus) || isPending(t.prodStatus));
+                    break;
+                default:
+                    break;
+            }
+
+            // Apply search
+            if (searchQuery.trim() !== '') {
+                const q = searchQuery.trim().toLowerCase();
+                filtered = filtered.filter(t =>
+                    (t.clientName && t.clientName.toLowerCase().includes(q)) ||
+                    (t.scenario && t.scenario.toLowerCase().includes(q)) ||
+                    (t.devName && t.devName.toLowerCase().includes(q)) ||
+                    (t.remarks && t.remarks.toLowerCase().includes(q)) ||
+                    (t.testedNumber && t.testedNumber.includes(q)) ||
+                    (t.id && t.id.toString().includes(q))
+                );
+            }
+
+            // Sort newest first
+            filtered = filtered.sort((a, b) => b.id - a.id);
+            return filtered;
+        }
+
+        // =====================================
+        // RENDER TASKS WITH PAGINATION
+        // =====================================
+
+        function renderTasks() {
+            const filtered = getFilteredData();
+            const totalItems = filtered.length;
+            const totalPages = Math.ceil(totalItems / pageSize) || 1;
+
+            // Ensure current page is valid
+            if (currentPage > totalPages) currentPage = totalPages;
+            if (currentPage < 1) currentPage = 1;
+
+            const start = (currentPage - 1) * pageSize;
+            const end = Math.min(start + pageSize, totalItems);
+            const pageItems = filtered.slice(start, end);
+
+            // Update heading and count
+            let headingText = '';
+            let icon = '';
+            switch (currentFilter) {
+                case "completed":
+                    headingText = '✅ Completed Tasks';
+                    icon = '✅';
+                    break;
+                case "progress":
+                    headingText = '🔄 In Progress Tasks';
+                    icon = '🔄';
+                    break;
+                case "pending":
+                    headingText = '⏳ Pending Tasks';
+                    icon = '⏳';
+                    break;
+                default:
+                    headingText = '📋 All Tasks';
+                    icon = '📋';
+            }
+            document.getElementById('pageHeading').innerHTML = `${icon} ${headingText}`;
+            document.getElementById('taskCount').innerText = totalItems;
+
+            // Show/hide clear button
+            const clearBtn = document.getElementById('clearFilterBtn');
+            if (currentFilter === 'all' && searchQuery.trim() === '') {
+                clearBtn.style.display = 'none';
+            } else {
+                clearBtn.style.display = 'inline-block';
+            }
+
+            const container = document.getElementById('tasksContainer');
+
+            if (totalItems === 0) {
+                let filterName = '';
+                switch (currentFilter) {
+                    case 'completed':
+                        filterName = 'Completed';
+                        break;
+                    case 'progress':
+                        filterName = 'In Progress';
+                        break;
+                    case 'pending':
+                        filterName = 'Pending';
+                        break;
+                    default:
+                        filterName = '';
+                }
+                const emptyMsg = filterName ?
+                    `No ${filterName.toLowerCase()} tasks available.` :
+                    'No test cases found.';
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-folder-open"></i>
+                        <h3>No Data Found</h3>
+                        <p>${emptyMsg}</p>
+                        ${(currentFilter !== 'all' || searchQuery.trim() !== '') ? `
+                            <button class="btn btn-outline-primary mt-3" style="border-radius:50px;padding:10px 30px;" onclick="clearAllFilters()">
+                                <i class="fas fa-undo me-2"></i> View All Tasks
+                            </button>
+                        ` : `
+                            <p class="text-muted">Click the <strong>+</strong> button to create your first test case</p>
+                        `}
+                    </div>
+                `;
+                document.getElementById('paginationControls').innerHTML = '';
+                return;
+            }
+
+            // Render cards
+            container.innerHTML = pageItems.map(task => `
+                <div class="task-card">
+                    <div class="task-header card-clickable" onclick="showFullDetails(${task.id})">
+                        <div>
+                            <div class="task-title">${escapeHtml(task.clientName)}</div>
+                            <div class="task-id">TSK-${task.id} | ${formatDate(task.testDate)}</div>
+                        </div>
+                        <div>
+                            <span class="status-badge ${getStatusClass(task.uatStatus)} me-1">UAT: ${task.uatStatus || '-'}</span>
+                            <span class="status-badge ${getStatusClass(task.prodStatus)}">PROD: ${task.prodStatus || '-'}</span>
+                        </div>
+                    </div>
+                    <div class="task-details card-clickable" onclick="showFullDetails(${task.id})">
+                        <div class="task-detail"><i class="fas fa-code-branch"></i>${escapeHtml(task.scenario?.substring(0, 100))}${task.scenario?.length > 100 ? '...' : ''}</div>
+                        <div class="task-detail"><i class="fas fa-user-code"></i>${escapeHtml(task.devName)}</div>
+                        <div class="task-detail"><i class="fas fa-phone-alt"></i>${escapeHtml(task.testedNumber)}</div>
+                    </div>
+                    <div class="task-actions">
+                        <button class="btn-task btn-view" onclick="event.stopPropagation(); showFullDetails(${task.id})"><i class="fas fa-eye me-1"></i> View</button>
+                        <button class="btn-task btn-edit" onclick="event.stopPropagation(); openEditTask(${task.id})"><i class="fas fa-edit me-1"></i> Edit</button>
+                        <button class="btn-task btn-delete" onclick="event.stopPropagation(); deleteTask(${task.id})"><i class="fas fa-trash me-1"></i> Delete</button>
+                    </div>
+                </div>
+            `).join('');
+
+            // Render pagination
+            renderPagination(totalPages);
+        }
+
+        // =====================================
+        // PAGINATION CONTROLS
+        // =====================================
+
+        function renderPagination(totalPages) {
+            const container = document.getElementById('paginationControls');
+            if (totalPages <= 1) {
+                container.innerHTML = '';
+                return;
+            }
+
+            let html = '';
+            // Previous
+            html += `<li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+                        <a class="page-link" href="#" onclick="changePage(${currentPage - 1}); return false;">&laquo;</a>
+                    </li>`;
+
+            for (let i = 1; i <= totalPages; i++) {
+                html += `<li class="page-item ${i === currentPage ? 'active' : ''}">
+                            <a class="page-link" href="#" onclick="changePage(${i}); return false;">${i}</a>
+                        </li>`;
+            }
+
+            // Next
+            html += `<li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+                        <a class="page-link" href="#" onclick="changePage(${currentPage + 1}); return false;">&raquo;</a>
+                    </li>`;
+
+            container.innerHTML = html;
+        }
+
+        function changePage(page) {
+            const filtered = getFilteredData();
+            const totalPages = Math.ceil(filtered.length / pageSize) || 1;
+            if (page < 1 || page > totalPages) return;
+            currentPage = page;
+            renderTasks();
+            // Scroll to top of task list
+            document.getElementById('tasksContainer').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // =====================================
+        // CLEAR ALL FILTERS
+        // =====================================
+
+        function clearAllFilters() {
+            document.getElementById('statusFilter').value = 'all';
+            document.getElementById('searchInput').value = '';
+            currentFilter = 'all';
+            searchQuery = '';
+            currentPage = 1;
+            window.history.replaceState({}, '', 'tasks.html');
+            renderTasks();
+        }
+
+        // =====================================
+        // LOAD TASKS FROM API
+        // =====================================
+
+        function loadTasks() {
+            fetch(API_BASE)
+                .then(response => {
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    return response.json();
+                })
+                .then(data => {
+                    allTasks = data.sort((a, b) => b.id - a.id);
+                    console.log('Loaded tasks:', allTasks.length);
+                    const params = new URLSearchParams(window.location.search);
+                    const urlFilter = params.get("filter") || "all";
+                    document.getElementById('statusFilter').value = urlFilter;
+                    currentFilter = urlFilter;
+                    currentPage = 1;
+                    renderTasks();
+                })
+                .catch(error => {
+                    console.error('Error loading tasks:', error);
+                    showToast('Failed to load tasks', true);
+                });
+        }
+
+        // =====================================
+        // SHOW FULL DETAILS
+        // =====================================
+
+        function showFullDetails(taskId) {
+            const task = allTasks.find(t => t.id === taskId);
+            if (!task) {
+                showToast('Task not found', true);
+                return;
+            }
+            const modalBody = document.getElementById('viewTaskBody');
+            modalBody.innerHTML = `
+                <div class="detail-section">
+                    <div class="detail-label"><i class="fas fa-hashtag"></i> TEST ID</div>
+                    <div class="detail-value fw-bold fs-4">TSK-${task.id}</div>
+                </div>
+                <div class="divider"></div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="detail-section">
+                            <div class="detail-label"><i class="fas fa-calendar-alt"></i> TEST DATE</div>
+                            <div class="detail-value">${formatDate(task.testDate)}</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="detail-section">
+                            <div class="detail-label"><i class="fas fa-building"></i> CLIENT NAME</div>
+                            <div class="detail-value fw-semibold">${escapeHtml(task.clientName)}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="detail-section">
+                    <div class="detail-label"><i class="fas fa-code-branch"></i> TEST SCENARIO</div>
+                    <div class="detail-card">${escapeHtml(task.scenario) || 'No scenario provided'}</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="detail-section">
+                            <div class="detail-label"><i class="fas fa-cloud-upload-alt"></i> UAT STATUS</div>
+                            <div class="detail-value"><span class="status-badge ${getStatusClass(task.uatStatus)}">${task.uatStatus || 'Pending'}</span></div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="detail-section">
+                            <div class="detail-label"><i class="fas fa-rocket"></i> PROD STATUS</div>
+                            <div class="detail-value"><span class="status-badge ${getStatusClass(task.prodStatus)}">${task.prodStatus || 'Pending'}</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="detail-section">
+                    <div class="detail-label"><i class="fas fa-comment"></i> REMARKS</div>
+                    <div class="detail-card">${task.remarks ? escapeHtml(task.remarks) : 'No remarks provided'}</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="detail-section">
+                            <div class="detail-label"><i class="fas fa-user-code"></i> DEVELOPER NAME</div>
+                            <div class="detail-value">${escapeHtml(task.devName)}</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="detail-section">
+                            <div class="detail-label"><i class="fas fa-phone-alt"></i> TESTED NUMBER</div>
+                            <div class="detail-value">${escapeHtml(task.testedNumber)}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="detail-section">
+                    <div class="detail-label"><i class="fas fa-link"></i> TESTED URL</div>
+                    <div class="detail-value"><a href="${escapeHtml(task.testedUrl)}" target="_blank" class="text-primary">${escapeHtml(task.testedUrl)}</a></div>
+                </div>
+            `;
+            const modal = new bootstrap.Modal(document.getElementById('viewTaskModal'));
+            modal.show();
+        }
+
+        // =====================================
+        // OPEN EDIT MODAL
+        // =====================================
+
+        function openEditTask(taskId) {
+            const task = allTasks.find(t => t.id === taskId);
+            if (!task) {
+                showToast('Task not found', true);
+                return;
+            }
+            document.getElementById('editTaskId').value = task.id;
+            document.getElementById('editTestDate').value = task.testDate || '';
+            document.getElementById('editClientName').value = task.clientName || '';
+            document.getElementById('editScenario').value = task.scenario || '';
+            document.getElementById('editUatStatus').value = task.uatStatus || 'Pending';
+            document.getElementById('editProdStatus').value = task.prodStatus || 'Pending';
+            document.getElementById('editRemarks').value = task.remarks || '';
+            document.getElementById('editDevName').value = task.devName || '';
+            document.getElementById('editTestedNumber').value = task.testedNumber || '';
+            document.getElementById('editTestedUrl').value = task.testedUrl || '';
+            const modal = new bootstrap.Modal(document.getElementById('editTaskModal'));
+            modal.show();
+        }
+
+        // =====================================
+        // UPDATE TASK
+        // =====================================
+
+        function updateTask() {
+            const id = parseInt(document.getElementById('editTaskId').value);
+            const testDate = document.getElementById('editTestDate').value;
+            const clientName = document.getElementById('editClientName').value.trim();
+            const scenario = document.getElementById('editScenario').value.trim();
+            const uatStatus = document.getElementById('editUatStatus').value;
+            const prodStatus = document.getElementById('editProdStatus').value;
+            const remarks = document.getElementById('editRemarks').value.trim();
+            const devName = document.getElementById('editDevName').value.trim();
+            const testedNumber = document.getElementById('editTestedNumber').value.trim();
+            const testedUrl = document.getElementById('editTestedUrl').value.trim();
+
+            if (!testDate || !clientName || !scenario || !devName || !testedNumber || !testedUrl) {
+                showToast('Please fill all required fields', true);
+                return;
+            }
+            if (!id) { showToast('Invalid task ID', true); return; }
+
+            const updatedTask = { testDate, clientName, scenario, uatStatus, prodStatus, remarks, devName, testedNumber,
+                testedUrl
+            };
+
+            fetch(`${API_BASE}/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(updatedTask)
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    return response.json();
+                })
+                .then(() => {
+                    loadTasks();
+                    showToast('Test case updated successfully');
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('editTaskModal'));
+                    if (modal) modal.hide();
+                })
+                .catch(error => {
+                    console.error('Error updating task:', error);
+                    showToast('Failed to update task: ' + error.message, true);
+                });
+        }
+
+        // =====================================
+        // DELETE TASK
+        // =====================================
+
+        function deleteTask(id) {
+            if (!confirm('Delete this test case?')) return;
+            fetch(`${API_BASE}/${id}`, { method: 'DELETE' })
+                .then(response => {
+                    if (response.ok) {
+                        loadTasks();
+                        showToast('Test case deleted');
+                    } else {
+                        showToast('Failed to delete task', true);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error deleting task:', error);
+                    showToast('Failed to delete task', true);
+                });
+        }
+
+        // =====================================
+        // ADD TASK
+        // =====================================
+
+        function addTask() {
+            const testDate = document.getElementById('testDate').value;
+            const clientName = document.getElementById('clientName').value.trim();
+            const scenario = document.getElementById('scenario').value.trim();
+            const uatStatus = document.getElementById('uatStatus').value;
+            const prodStatus = document.getElementById('prodStatus').value;
+            const remarks = document.getElementById('remarks').value.trim();
+            const devName = document.getElementById('devName').value.trim();
+            const testedNumber = document.getElementById('testedNumber').value.trim();
+            const testedUrl = document.getElementById('testedUrl').value.trim();
+
+            if (!testDate || !clientName || !scenario || !devName || !testedNumber || !testedUrl) {
+                showToast('Please fill all required fields', true);
+                return;
+            }
+
+            const newTask = { testDate, clientName, scenario, uatStatus, prodStatus, remarks, devName, testedNumber,
+                testedUrl
+            };
+
+            fetch(API_BASE, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(newTask)
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    return response.json();
+                })
+                .then(() => {
+                    loadTasks();
+                    showToast('Test case added successfully');
+                    document.getElementById('testDate').value = '';
+                    document.getElementById('clientName').value = '';
+                    document.getElementById('scenario').value = '';
+                    document.getElementById('remarks').value = '';
+                    document.getElementById('devName').value = '';
+                    document.getElementById('testedNumber').value = '';
+                    document.getElementById('testedUrl').value = '';
+                    document.getElementById('uatStatus').value = 'Completed';
+                    document.getElementById('prodStatus').value = 'Pending';
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('addTaskModal'));
+                    if (modal) modal.hide();
+                })
+                .catch(error => {
+                    console.error('Error adding task:', error);
+                    showToast('Failed to add task. Check if backend is running.', true);
+                });
+        }
+
+        // =====================================
+        // LOGOUT
+        // =====================================
+
+        function logout() {
+            localStorage.removeItem('voiceoc_logged_in');
+            localStorage.removeItem('voiceoc_user');
+            showToast('Logged out successfully');
+            setTimeout(() => { window.location.href = 'index.html'; }, 500);
+        }
+
+        // =====================================
+        // NAVIGATION - Sidebar
+        // =====================================
+
+        function initNavigation() {
+            const routes = { dashboard: 'dashboard.html', tasks: 'tasks.html', bugtracker: 'bugtracker.html',
+                reports: 'reports.html', clients: 'clientdetails.html', settings: 'settings.html' };
+            document.querySelectorAll('.nav-item[data-nav]').forEach(item => {
+                item.addEventListener('click', () => {
+                    const navName = item.getAttribute('data-nav');
+                    if (navName !== 'tasks') window.location.href = routes[navName];
+                });
+            });
+        }
+
+        // =====================================
+        // INITIALIZATION
+        // =====================================
+
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAuth();
+            applyDarkMode();
+            displayUserName();
+
+            // Filter change
+            document.getElementById('statusFilter').addEventListener('change', function() {
+                currentFilter = this.value;
+                currentPage = 1;
+                if (currentFilter === 'all') {
+                    window.history.replaceState({}, '', 'tasks.html');
+                } else {
+                    window.history.replaceState({}, '', 'tasks.html?filter=' + currentFilter);
+                }
+                renderTasks();
+            });
+
+            // Search input (debounced)
+            let searchTimer;
+            document.getElementById('searchInput').addEventListener('input', function() {
+                clearTimeout(searchTimer);
+                searchTimer = setTimeout(() => {
+                    searchQuery = this.value;
+                    currentPage = 1;
+                    renderTasks();
+                }, 300);
+            });
+
+            // Clear button - now beside search box
+            document.getElementById('clearFilterBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                clearAllFilters();
+            });
+
+            loadTasks();
+            initNavigation();
+            document.getElementById('logoutBtn')?.addEventListener('click', logout);
+            document.getElementById('saveTaskBtn')?.addEventListener('click', addTask);
+            document.getElementById('updateTaskBtn')?.addEventListener('click', updateTask);
+        });
+
+        // Make functions globally accessible
+        window.showFullDetails = showFullDetails;
+        window.openEditTask = openEditTask;
+        window.deleteTask = deleteTask;
+        window.goPage = goPage;
+        window.showToast = showToast;
+        window.changePage = changePage;
+        window.clearAllFilters = clearAllFilters;
+    </script>
+
+</body>
+
+</html>

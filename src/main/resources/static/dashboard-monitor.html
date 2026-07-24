@@ -1,0 +1,2561 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VoiceOC · Dashboard Monitor</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Chart.js for Graphs -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js">
+    </script>
+
+    <!-- DataTables -->
+    <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js">
+    </script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js">
+    </script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js">
+    </script>
+    
+    <!-- SESSION MANAGER - Auto Logout for ALL Pages -->
+    <script src="js/session-manager.js"></script>
+
+    <style>
+        /* Pulse Animation for Countdown */
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* ========================================= */
+        /* ALL YOUR EXISTING STYLES HERE */
+        /* ========================================= */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #F1F5F9;
+            overflow-x: hidden;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        /* ========================================= */
+        /* DARK MODE */
+        /* ========================================= */
+
+        .dark-mode {
+            background: #020617 !important;
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .top-nav,
+        .dark-mode .stat-card,
+        .dark-mode .table-card,
+        .dark-mode .meter-card,
+        .dark-mode .chart-card {
+            background: #111827 !important;
+            color: #F8FAFC !important;
+            border-color: #1E293B !important;
+        }
+
+        .dark-mode .top-nav .page-title h3,
+        .dark-mode .top-nav .page-title p {
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .top-nav .user-badge,
+        .dark-mode .top-nav .refresh-btn {
+            background: #1E293B !important;
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .top-nav .refresh-btn:hover {
+            background: #334155 !important;
+        }
+
+        .dark-mode .top-nav .refresh-btn.spinning {
+            color: #2DD4BF !important;
+        }
+
+        .dark-mode .stat-card .stat-label {
+            color: #94A3B8 !important;
+        }
+
+        .dark-mode .stat-card .stat-value {
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .stat-card .stat-icon {
+            opacity: 0.05 !important;
+        }
+
+        .dark-mode .table-card h5,
+        .dark-mode .table-card .badge,
+        .dark-mode .meter-card h5,
+        .dark-mode .chart-card h5 {
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .table-card .badge.bg-primary {
+            background: #1E3A5F !important;
+            color: #60A5FA !important;
+        }
+
+        .dark-mode table thead th {
+            background: #0F172A !important;
+            color: #94A3B8 !important;
+            border-bottom-color: #1E293B !important;
+        }
+
+        .dark-mode table tbody td {
+            background: #111827 !important;
+            color: #E2E8F0 !important;
+            border-bottom-color: #1E293B !important;
+        }
+
+        .dark-mode table tbody tr:hover td {
+            background: #1E293B !important;
+        }
+
+        .dark-mode .status-badge.up {
+            background: #065F46 !important;
+            color: #34D399 !important;
+        }
+
+        .dark-mode .status-badge.down {
+            background: #7F1D1D !important;
+            color: #F87171 !important;
+        }
+
+        .dark-mode .status-badge.checking {
+            background: #78350F !important;
+            color: #FBBF24 !important;
+        }
+
+        .dark-mode .btn-check {
+            background: #1E3A5F !important;
+            color: #60A5FA !important;
+        }
+
+        .dark-mode .btn-check:hover {
+            background: #2D4A7A !important;
+        }
+
+        .dark-mode .btn-outline-danger {
+            color: #F87171 !important;
+            border-color: #7F1D1D !important;
+        }
+
+        .dark-mode .btn-outline-danger:hover {
+            background: #7F1D1D !important;
+            color: #FCA5A5 !important;
+        }
+
+        .dark-mode .modal-content {
+            background: #111827 !important;
+            border-color: #1E293B !important;
+        }
+
+        .dark-mode .modal-header-primary {
+            background: linear-gradient(95deg, #0F172A 0%, #020617 100%) !important;
+        }
+
+        .dark-mode .modal-header-primary .modal-title {
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .modal-body {
+            background: #111827 !important;
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .modal-body .form-label {
+            color: #94A3B8 !important;
+        }
+
+        .dark-mode .modal-body .form-control {
+            background: #1E293B !important;
+            color: #F8FAFC !important;
+            border-color: #334155 !important;
+        }
+
+        .dark-mode .modal-footer {
+            background: #111827 !important;
+            border-top-color: #1E293B !important;
+        }
+
+        .dark-mode .modal-footer .btn-secondary {
+            background: #1E293B !important;
+            border-color: #334155 !important;
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .modal-footer .btn-primary {
+            background: #0D9488 !important;
+            border-color: #0D9488 !important;
+            color: white !important;
+        }
+
+        .dark-mode .toast-msg {
+            background: #1E293B !important;
+            color: #F8FAFC !important;
+            border-left-color: #2DD4BF !important;
+        }
+
+        .dark-mode .toast-msg.error {
+            border-left-color: #DC2626 !important;
+        }
+
+        .dark-mode .toast-msg.success {
+            border-left-color: #10B981 !important;
+        }
+
+        .dark-mode .toast-msg.info {
+            border-left-color: #3B82F6 !important;
+        }
+
+        .dark-mode .view-dropdown .btn {
+            background: #1E293B !important;
+            color: #F8FAFC !important;
+            border-color: #334155 !important;
+        }
+
+        .dark-mode .view-dropdown .dropdown-menu {
+            background: #1E293B !important;
+            border-color: #334155 !important;
+        }
+
+        .dark-mode .view-dropdown .dropdown-item {
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .view-dropdown .dropdown-item:hover {
+            background: #334155 !important;
+        }
+
+        .dark-mode .stat-card.active-total {
+            border-color: #3B82F6 !important;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.2) !important;
+        }
+
+        .dark-mode .stat-card.active-up {
+            border-color: #10B981 !important;
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.2) !important;
+        }
+
+        .dark-mode .stat-card.active-down {
+            border-color: #EF4444 !important;
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.2) !important;
+        }
+
+        .dark-mode .meter-item {
+            background: #1E293B !important;
+            border-color: #334155 !important;
+        }
+
+        .dark-mode .meter-item .client-name {
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .meter-item .meter-bar {
+            background: #334155 !important;
+        }
+
+        /* ========================================= */
+        /* SIDEBAR */
+        /* ========================================= */
+
+        .sidebar {
+            width: 280px;
+            height: 100vh;
+            background: linear-gradient(180deg, #0F172A 0%, #020617 100%);
+            position: fixed;
+            left: 0;
+            top: 0;
+            padding-top: 25px;
+            transition: 0.3s;
+            z-index: 999;
+            overflow-y: auto;
+        }
+
+        .sidebar.collapsed .nav-item span,
+        .sidebar.collapsed .logo-area .qa-tagline {
+            display: none;
+        }
+
+        .logo-area {
+            text-align: center;
+            margin-bottom: 35px;
+            padding: 0 20px;
+        }
+
+        .logo-area h2 {
+            color: white;
+            font-weight: 800;
+            font-size: 1.7rem;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .logo-area h2 i {
+            color: #2DD4BF;
+            font-size: 1.8rem;
+        }
+
+        /* QA Daily Tasks - Single Tick on Left, Aligned with Text Above */
+        .logo-area .qa-tagline {
+            color: #10B981 !important;
+            font-weight: 700 !important;
+            font-size: 11px !important;
+            letter-spacing: 2px;
+            margin-top: 8px;
+            text-align: center;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 0 10px;
+        }
+
+        .logo-area .qa-tagline .tick-icon {
+            color: #10B981;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        .logo-area .qa-tagline .tick-icon i {
+            font-size: 12px;
+        }
+
+        .logo-area .qa-tagline .tag-text {
+            flex-shrink: 0;
+            padding: 0 2px;
+            color: #10B981;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .dark-mode .logo-area .qa-tagline {
+            color: #34D399 !important;
+        }
+
+        .dark-mode .logo-area .qa-tagline .tick-icon {
+            color: #34D399;
+        }
+
+        .dark-mode .logo-area .qa-tagline .tag-text {
+            color: #34D399;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: #94A3B8;
+            margin: 4px 12px;
+            padding: 12px 18px;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .nav-item:hover {
+            background: rgba(45, 212, 191, 0.12);
+            color: white;
+            transform: translateX(6px);
+        }
+
+        .nav-item.active {
+            background: linear-gradient(95deg, #0D9488, #0F766E);
+            color: white;
+        }
+
+        .nav-item i {
+            width: 24px;
+            font-size: 18px;
+        }
+
+        /* ========================================= */
+        /* MAIN CONTENT */
+        /* ========================================= */
+
+        .main-content {
+            margin-left: 280px;
+            padding: 30px;
+            transition: 0.3s;
+        }
+
+        /* ========================================= */
+        /* TOP NAV */
+        /* ========================================= */
+
+        .top-nav {
+            background: white;
+            padding: 18px 25px;
+            border-radius: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border: 1px solid #E2E8F0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            flex-wrap: wrap;
+            gap: 10px;
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .page-title h3 {
+            margin: 0;
+            font-weight: 800;
+            color: #0F172A;
+            transition: color 0.3s ease;
+        }
+
+        .page-title p {
+            margin: 5px 0 0;
+            color: #64748B;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+        .top-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .user-badge {
+            background: #F1F5F9;
+            padding: 10px 18px;
+            border-radius: 50px;
+            font-weight: 700;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .refresh-btn {
+            border: none;
+            background: #F1F5F9;
+            padding: 10px 18px;
+            border-radius: 50px;
+            transition: 0.3s;
+            cursor: pointer;
+            font-size: 16px;
+            position: relative;
+        }
+
+        .refresh-btn:hover {
+            background: #E2E8F0;
+        }
+
+        .refresh-btn.spinning i {
+            animation: spin 0.8s linear infinite;
+        }
+
+        .refresh-btn .refresh-tooltip {
+            position: absolute;
+            bottom: -32px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #0F172A;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.3s;
+        }
+
+        .dark-mode .refresh-btn .refresh-tooltip {
+            background: #1E293B;
+        }
+
+        .refresh-btn:hover .refresh-tooltip {
+            opacity: 1;
+        }
+
+        /* ========================================= */
+        /* STAT CARDS */
+        /* ========================================= */
+
+        .stat-card {
+            background: white;
+            border-radius: 26px;
+            padding: 25px;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.12);
+        }
+
+        .stat-card .stat-icon {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 50px;
+            opacity: 0.1;
+        }
+
+        .stat-card .stat-label {
+            color: #64748B;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            transition: color 0.3s ease;
+        }
+
+        .stat-card .stat-value {
+            font-size: 36px;
+            font-weight: 800;
+            color: #0F172A;
+            transition: color 0.3s ease;
+        }
+
+        .stat-card .stat-value .status-dot {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-left: 8px;
+        }
+
+        .stat-card .stat-value .status-dot.up {
+            background: #10B981;
+        }
+
+        .stat-card .stat-value .status-dot.down {
+            background: #EF4444;
+        }
+
+        .stat-card.active-total {
+            border-color: #3B82F6;
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.15);
+            background: #EFF6FF !important;
+        }
+
+        .stat-card.active-up {
+            border-color: #10B981;
+            box-shadow: 0 0 30px rgba(16, 185, 129, 0.15);
+            background: #ECFDF5 !important;
+        }
+
+        .stat-card.active-down {
+            border-color: #EF4444;
+            box-shadow: 0 0 30px rgba(239, 68, 68, 0.15);
+            background: #FEF2F2 !important;
+        }
+
+        .dark-mode .stat-card.active-total {
+            background: #1E293B !important;
+            border-color: #60A5FA !important;
+        }
+
+        .dark-mode .stat-card.active-up {
+            background: #1E293B !important;
+            border-color: #34D399 !important;
+        }
+
+        .dark-mode .stat-card.active-down {
+            background: #1E293B !important;
+            border-color: #F87171 !important;
+        }
+
+        /* ========================================= */
+        /* VIEW DROPDOWN */
+        /* ========================================= */
+
+        .view-dropdown .btn {
+            border-radius: 50px;
+            padding: 8px 20px;
+            font-weight: 600;
+            border: 1px solid #E2E8F0;
+            background: white;
+            transition: 0.3s;
+        }
+
+        .view-dropdown .btn:hover {
+            background: #F1F5F9;
+        }
+
+        .view-dropdown .dropdown-menu {
+            border-radius: 16px;
+            border: 1px solid #E2E8F0;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            padding: 8px;
+        }
+
+        .view-dropdown .dropdown-item {
+            border-radius: 10px;
+            padding: 10px 16px;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        .view-dropdown .dropdown-item:hover {
+            background: #F1F5F9;
+        }
+
+        .view-dropdown .dropdown-item i {
+            margin-right: 10px;
+            width: 20px;
+        }
+
+        /* ========================================= */
+        /* TABLE */
+        /* ========================================= */
+
+        .table-card {
+            background: white;
+            border-radius: 26px;
+            padding: 28px;
+            border: 1px solid #E2E8F0;
+            margin-top: 25px;
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .table-header h5 {
+            margin: 0;
+            font-weight: 700;
+        }
+
+        /* ========================================= */
+        /* METER VIEW */
+        /* ========================================= */
+
+        .meter-card {
+            background: white;
+            border-radius: 26px;
+            padding: 28px;
+            border: 1px solid #E2E8F0;
+            margin-top: 25px;
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .meter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .meter-item {
+            background: linear-gradient(145deg, #F8FAFC, #F1F5F9);
+            border-radius: 20px;
+            padding: 20px 16px 16px;
+            text-align: center;
+            border: 1px solid #E2E8F0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .meter-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            border-radius: 20px 20px 0 0;
+        }
+
+        .meter-item.up::before {
+            background: linear-gradient(90deg, #10B981, #34D399);
+        }
+
+        .meter-item.down::before {
+            background: linear-gradient(90deg, #EF4444, #F87171);
+        }
+
+        .meter-item.checking::before {
+            background: linear-gradient(90deg, #F59E0B, #FBBF24);
+        }
+
+        .meter-item:hover {
+            transform: translateY(-6px) scale(1.02);
+            box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.15);
+            border-color: #CBD5E1;
+        }
+
+        .meter-item .status-icon {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .meter-item .status-icon.up {
+            color: #10B981;
+        }
+        .meter-item .status-icon.down {
+            color: #EF4444;
+        }
+        .meter-item .status-icon.checking {
+            color: #F59E0B;
+        }
+
+        .meter-item .client-name {
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: #0F172A;
+        }
+
+        .meter-item .client-sub {
+            font-size: 11px;
+            color: #94A3B8;
+            margin-bottom: 12px;
+        }
+
+        .meter-item .meter-bar {
+            width: 100%;
+            height: 6px;
+            background: #E2E8F0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 8px 0 6px;
+        }
+
+        .meter-item .meter-bar .meter-fill {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .meter-item .meter-fill.up {
+            background: linear-gradient(90deg, #10B981, #34D399);
+        }
+
+        .meter-item .meter-fill.down {
+            background: linear-gradient(90deg, #EF4444, #F87171);
+        }
+
+        .meter-item .meter-fill.checking {
+            background: linear-gradient(90deg, #F59E0B, #FBBF24);
+        }
+
+        .meter-item .status-text {
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .meter-item .status-text .status-label {
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+        }
+
+        .meter-item .status-text .status-label.up {
+            background: #D1FAE5;
+            color: #059669;
+        }
+
+        .meter-item .status-text .status-label.down {
+            background: #FEE2E2;
+            color: #DC2626;
+        }
+
+        .meter-item .status-text .status-label.checking {
+            background: #FEF3C7;
+            color: #D97706;
+        }
+
+        .meter-item .response-time {
+            font-size: 13px;
+            font-weight: 600;
+            color: #0F172A;
+            margin-top: 4px;
+        }
+
+        .meter-item .response-time small {
+            font-weight: 400;
+            color: #94A3B8;
+        }
+
+        .meter-item .last-checked {
+            font-size: 10px;
+            color: #94A3B8;
+            margin-top: 4px;
+        }
+
+        .meter-item .pulse-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 6px;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        .meter-item .pulse-dot.up {
+            background: #10B981;
+        }
+        .meter-item .pulse-dot.down {
+            background: #EF4444;
+        }
+        .meter-item .pulse-dot.checking {
+            background: #F59E0B;
+        }
+
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.5;
+                transform: scale(0.8);
+            }
+        }
+
+        .dark-mode .meter-item {
+            background: linear-gradient(145deg, #1E293B, #111827) !important;
+            border-color: #334155 !important;
+        }
+
+        .dark-mode .meter-item .client-name {
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .meter-item .client-sub {
+            color: #64748B !important;
+        }
+
+        .dark-mode .meter-item .meter-bar {
+            background: #334155 !important;
+        }
+
+        .dark-mode .meter-item .response-time {
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .meter-item .status-text .status-label.up {
+            background: #065F46 !important;
+            color: #34D399 !important;
+        }
+
+        .dark-mode .meter-item .status-text .status-label.down {
+            background: #7F1D1D !important;
+            color: #F87171 !important;
+        }
+
+        .dark-mode .meter-item .status-text .status-label.checking {
+            background: #78350F !important;
+            color: #FBBF24 !important;
+        }
+
+        .dark-mode .meter-item:hover {
+            border-color: #475569 !important;
+        }
+
+        /* ========================================= */
+        /* CHART VIEW */
+        /* ========================================= */
+
+        .chart-card {
+            background: white;
+            border-radius: 26px;
+            padding: 28px;
+            border: 1px solid #E2E8F0;
+            margin-top: 25px;
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .chart-card .chart-container {
+            position: relative;
+            height: 400px;
+        }
+
+        /* ========================================= */
+        /* DATA TABLES - MODERN PAGINATION */
+        /* ========================================= */
+
+        .dataTables_wrapper .dataTables_paginate {
+            display: flex;
+            justify-content: flex-end;
+            gap: 4px;
+            margin-top: 16px;
+        }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
+            padding: 8px 14px;
+            border-radius: 10px;
+            border: 1px solid #E2E8F0;
+            background: white;
+            color: #0F172A;
+            font-weight: 500;
+            font-size: 13px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin: 0 2px;
+        }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+            background: #F1F5F9;
+            border-color: #CBD5E1;
+        }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+            background: #0D9488;
+            border-color: #0D9488;
+            color: white;
+        }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+            background: #0F766E;
+            border-color: #0F766E;
+        }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button.disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .dataTables_wrapper .dataTables_length {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: #64748B;
+        }
+
+        .dataTables_wrapper .dataTables_length select {
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: 1px solid #E2E8F0;
+            background: white;
+            font-size: 13px;
+            outline: none;
+        }
+
+        .dataTables_wrapper .dataTables_length select:focus {
+            border-color: #0D9488;
+        }
+
+        .dataTables_wrapper .dataTables_filter {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .dataTables_wrapper .dataTables_filter input {
+            padding: 8px 16px;
+            border-radius: 10px;
+            border: 1px solid #E2E8F0;
+            background: white;
+            font-size: 13px;
+            outline: none;
+            min-width: 200px;
+            transition: 0.3s;
+        }
+
+        .dataTables_wrapper .dataTables_filter input:focus {
+            border-color: #0D9488;
+            box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1);
+        }
+
+        .dataTables_wrapper .dataTables_info {
+            font-size: 13px;
+            color: #64748B;
+            margin-top: 12px;
+        }
+
+        .dark-mode .dataTables_wrapper .dataTables_paginate .paginate_button {
+            background: #1E293B !important;
+            border-color: #334155 !important;
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+            background: #334155 !important;
+            border-color: #475569 !important;
+        }
+
+        .dark-mode .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+            background: #0D9488 !important;
+            border-color: #0D9488 !important;
+            color: white !important;
+        }
+
+        .dark-mode .dataTables_wrapper .dataTables_length select {
+            background: #1E293B !important;
+            border-color: #334155 !important;
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .dataTables_wrapper .dataTables_filter input {
+            background: #1E293B !important;
+            border-color: #334155 !important;
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .dataTables_wrapper .dataTables_filter input::placeholder {
+            color: #64748B !important;
+        }
+
+        .dark-mode .dataTables_wrapper .dataTables_info {
+            color: #94A3B8 !important;
+        }
+
+        /* ========================================= */
+        /* STATUS BADGE */
+        /* ========================================= */
+
+        .status-badge {
+            padding: 5px 14px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .status-badge.up {
+            background: #D1FAE5;
+            color: #059669;
+        }
+
+        .status-badge.down {
+            background: #FEE2E2;
+            color: #DC2626;
+        }
+
+        .status-badge.checking {
+            background: #FEF3C7;
+            color: #D97706;
+        }
+
+        .status-dot-small {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .status-dot-small.up {
+            background: #10B981;
+        }
+
+        .status-dot-small.down {
+            background: #EF4444;
+        }
+
+        .status-dot-small.checking {
+            background: #F59E0B;
+        }
+
+        /* ========================================= */
+        /* BUTTONS */
+        /* ========================================= */
+
+        .btn-check {
+            background: #3B82F6;
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-check:hover {
+            background: #2563EB;
+            transform: scale(1.05);
+        }
+
+        .btn-check:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* ========================================= */
+        /* MODAL */
+        /* ========================================= */
+
+        .modal-content {
+            border-radius: 20px !important;
+            border: none !important;
+            box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.2);
+            transition: background 0.3s ease;
+        }
+
+        .modal-header-primary {
+            background: linear-gradient(95deg, #0D9488, #0F766E);
+            color: white;
+            border-radius: 20px 20px 0 0 !important;
+            padding: 20px 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header-primary .btn-close-white {
+            filter: brightness(0) invert(1);
+            background: transparent;
+            border: none;
+            font-size: 24px;
+        }
+
+        .modal-body {
+            padding: 28px;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .modal-footer {
+            padding: 16px 28px;
+            border-top: 1px solid #E2E8F0;
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .form-label {
+            font-weight: 600;
+            font-size: 14px;
+            color: #0F172A;
+            transition: color 0.3s ease;
+        }
+
+        .form-control {
+            border-radius: 12px;
+            border: 1px solid #E2E8F0;
+            padding: 12px 16px;
+            font-size: 14px;
+            transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #0D9488;
+            box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1);
+        }
+
+        /* ========================================= */
+        /* TOAST */
+        /* ========================================= */
+
+        .toast-msg {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #1E293B;
+            color: white;
+            padding: 14px 24px;
+            border-radius: 50px;
+            z-index: 9999;
+            display: none;
+            animation: slideInRight 0.3s ease;
+            border-left: 4px solid #2DD4BF;
+            transition: background 0.3s ease, color 0.3s ease;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            max-width: 90%;
+        }
+
+        .toast-msg.error {
+            border-left-color: #DC2626;
+        }
+
+        .toast-msg.success {
+            border-left-color: #10B981;
+        }
+
+        .toast-msg.info {
+            border-left-color: #3B82F6;
+        }
+
+        /* ========================================= */
+        /* RESPONSIVE */
+        /* ========================================= */
+
+        @media(max-width:992px) {
+            .sidebar {
+                width: 90px;
+            }
+            .sidebar .nav-item span,
+            .sidebar .logo-area .qa-tagline {
+                display: none;
+            }
+            .main-content {
+                margin-left: 90px;
+            }
+        }
+
+        @media(max-width:768px) {
+            .main-content {
+                margin-left: 0;
+                padding: 15px;
+            }
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .top-nav {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .top-right {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .stat-value {
+                font-size: 28px;
+            }
+            .table-card {
+                padding: 15px;
+            }
+            .meter-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 12px;
+            }
+            .chart-card .chart-container {
+                height: 250px;
+            }
+            .dataTables_wrapper .dataTables_filter input {
+                min-width: 120px;
+            }
+        }
+
+        /* ========================================= */
+        /* VIEW SWITCH ANIMATION */
+        /* ========================================= */
+
+        .view-container {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .view-container.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ========================================= */
+        /* SCROLLBAR */
+        /* ========================================= */
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #F1F5F9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #CBD5E1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94A3B8;
+        }
+
+        .dark-mode ::-webkit-scrollbar-track {
+            background: #1E293B;
+        }
+
+        .dark-mode ::-webkit-scrollbar-thumb {
+            background: #334155;
+        }
+
+        .dark-mode ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <!-- ========================================= -->
+    <!-- SIDEBAR -->
+    <!-- ========================================= -->
+
+    <div class="sidebar">
+        <div class="logo-area">
+            <h2>
+                <i class="fas fa-microphone-alt"></i>
+                VoiceOC
+            </h2>
+
+            <!-- QA Daily Tasks - Single Tick on Left -->
+            <div class="qa-tagline">
+                <span class="tick-icon"><i class="fas fa-check-circle"></i></span>
+                <span class="tag-text">QA DAILY TASKS</span>
+            </div>
+        </div>
+
+        <div class="nav-item" onclick="location.href='dashboard.html'">
+            <i class="fas fa-chart-line"></i>
+            <span>Dashboard</span>
+        </div>
+
+        <div class="nav-item" onclick="location.href='tasks.html'">
+            <i class="fas fa-tasks"></i>
+            <span>Tasks</span>
+        </div>
+
+        <div class="nav-item" onclick="location.href='clientdetails.html'">
+            <i class="fas fa-building"></i>
+            <span>Clients Detail</span>
+        </div>
+
+        <div class="nav-item" onclick="location.href='bugtracker.html'">
+            <i class="fas fa-bug"></i>
+            <span>Bug Tracker</span>
+        </div>
+
+        <div class="nav-item" onclick="location.href='json-sheet.html'">
+            <i class="fas fa-code"></i>
+            <span>JSON Sheets</span>
+        </div>
+        
+        <div class="nav-item" onclick="window.location.href='response-sheet.html'">
+    <i class="fas fa-file-excel"></i>
+    <span>Response Sheet</span>
+</div>
+        
+    <div class="nav-item" onclick="window.location.href='journey-map.html'">
+    <i class="fas fa-route"></i>
+    <span>Journey Map</span>
+</div>
+
+        <div class="nav-item" onclick="location.href='api-doc.html'">
+            <i class="fas fa-book"></i>
+            <span>API Doc</span>
+        </div>
+
+        <div class="nav-item active">
+            <i class="fas fa-heartbeat"></i>
+            <span>Monitor</span>
+        </div>
+        
+        <div class="nav-item" onclick="window.location.href='json-diff.html'">
+	    <i class="fas fa-code-branch"></i>
+	    <span>JSON Diff</span>
+	</div>
+
+        <div class="nav-item" onclick="location.href='reports.html'">
+            <i class="fas fa-chart-pie"></i>
+            <span>Reports</span>
+        </div>
+
+        <div class="nav-item" onclick="location.href='settings.html'">
+            <i class="fas fa-gear"></i>
+            <span>Settings</span>
+        </div>
+
+        <div class="nav-item" id="logoutBtn">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Logout</span>
+        </div>
+    </div>
+
+    <!-- ========================================= -->
+    <!-- MAIN CONTENT -->
+    <!-- ========================================= -->
+
+    <div class="main-content">
+
+        <!-- TOP NAV -->
+        <div class="top-nav">
+            <div class="page-title">
+                <h3><i class="fas fa-heartbeat" style="color:#0D9488;"></i> Dashboard Monitor</h3>
+                <p>Real-time dashboard health monitoring</p>
+            </div>
+
+            <div class="top-right">
+                <span class="badge bg-success px-3 py-2">LIVE</span>
+                <span id="liveClock" class="fw-bold"></span>
+
+                <!-- View Dropdown -->
+                <div class="dropdown view-dropdown">
+                    <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-table"></i> View
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item active" data-view="table" onclick="switchView('table')">
+                                <i class="fas fa-table"></i> Table View
+                            </a></li>
+                        <li><a class="dropdown-item" data-view="meter" onclick="switchView('meter')">
+                                <i class="fas fa-chart-simple"></i> Meter View
+                            </a></li>
+                        <li><a class="dropdown-item" data-view="chart" onclick="switchView('chart')">
+                                <i class="fas fa-chart-bar"></i> Graph View
+                            </a></li>
+                    </ul>
+                </div>
+
+                <button class="btn btn-success px-4 py-2" id="btnCheckAll" style="border-radius:50px; font-weight:600; font-size:14px;">
+                    <i class="fas fa-play"></i> Check All
+                </button>
+                <button class="btn btn-primary px-4 py-2" id="btnAddDashboard" style="border-radius:50px; font-weight:600; font-size:14px;">
+                    <i class="fas fa-plus"></i> Add
+                </button>
+                <button class="refresh-btn" id="btnRefresh" title="Refresh data">
+                    <i class="fas fa-sync-alt"></i>
+                    <span class="refresh-tooltip">Refresh</span>
+                </button>
+                <span class="user-badge">
+                    <i class="fas fa-user-check"></i>
+                    <span id="userNameDisplay">User</span>
+                </span>
+            </div>
+        </div>
+
+        <!-- STATISTICS CARDS -->
+        <div class="row g-4">
+            <div class="col-md-3 col-6">
+                <div class="stat-card" id="statTotal" onclick="filterByStatus('all')">
+                    <div class="stat-icon"><i class="fas fa-list"></i></div>
+                    <div class="stat-label">Total</div>
+                    <div class="stat-value" id="totalDashboards">0</div>
+                </div>
+            </div>
+
+            <div class="col-md-3 col-6">
+                <div class="stat-card" id="statUp" onclick="filterByStatus('UP')">
+                    <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+                    <div class="stat-label">UP</div>
+                    <div class="stat-value" id="upDashboards">0 <span class="status-dot up"></span></div>
+                </div>
+            </div>
+
+            <div class="col-md-3 col-6">
+                <div class="stat-card" id="statDown" onclick="filterByStatus('DOWN')">
+                    <div class="stat-icon"><i class="fas fa-times-circle"></i></div>
+                    <div class="stat-label">DOWN</div>
+                    <div class="stat-value" id="downDashboards">0 <span class="status-dot down"></span></div>
+                </div>
+            </div>
+
+            <div class="col-md-3 col-6">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                    <div class="stat-label">Avg Response</div>
+                    <div class="stat-value" id="avgResponse" style="font-size:28px;">0 ms</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================= -->
+        <!-- TABLE VIEW -->
+        <!-- ========================================= -->
+
+        <div class="view-container active" id="tableView">
+            <div class="table-card">
+                <div class="table-header">
+                    <h5><i class="fas fa-table-list"></i> Dashboard Status</h5>
+                    <div>
+                        <span class="badge bg-primary" id="dashboardCount">0 dashboards</span>
+                        <button class="btn btn-sm btn-outline-secondary ms-2" onclick="clearFilter()">
+                            <i class="fas fa-times"></i> Clear
+                        </button>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table id="monitorTable" class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Client Name</th>
+                                <th>Dashboard URL</th>
+                                <th>Status</th>
+                                <th>Code</th>
+                                <th>Response</th>
+                                <th>Uptime</th>
+                                <th>Last Checked</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="monitorTableBody">
+                            <tr>
+                                <td colspan="9" class="text-center py-4 text-muted">
+                                    <i class="fas fa-spinner fa-spin me-2"></i> Loading dashboards...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================= -->
+        <!-- METER VIEW -->
+        <!-- ========================================= -->
+
+        <div class="view-container" id="meterView">
+            <div class="meter-card">
+                <div class="table-header">
+                    <h5><i class="fas fa-chart-simple"></i> Performance Meter</h5>
+                    <span class="badge bg-primary" id="meterCount">0 dashboards</span>
+                </div>
+                <div class="meter-grid" id="meterGrid">
+                    <!-- Meters will be rendered here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================= -->
+        <!-- CHART VIEW -->
+        <!-- ========================================= -->
+
+        <div class="view-container" id="chartView">
+            <div class="chart-card">
+                <div class="table-header">
+                    <h5><i class="fas fa-chart-pie"></i> Status Distribution</h5>
+                    <span class="badge bg-primary">Overview</span>
+                </div>
+                <div class="chart-container">
+                    <canvas id="statusChart"></canvas>
+                </div>
+            </div>
+            <div class="chart-card mt-4">
+                <div class="table-header">
+                    <h5><i class="fas fa-chart-line"></i> Response Times</h5>
+                    <span class="badge bg-primary">Latest Checks</span>
+                </div>
+                <div class="chart-container">
+                    <canvas id="responseChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ========================================= -->
+    <!-- ADD DASHBOARD MODAL -->
+    <!-- ========================================= -->
+
+    <div class="modal fade" id="addModal" tabindex="-1">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header modal-header-primary">
+                    <h5 class="modal-title"><i class="fas fa-plus me-2"></i>Add Dashboard</h5>
+                    <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addForm">
+                        <div class="mb-3">
+                            <label class="form-label">Client Name <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="clientName" placeholder="e.g., Max Healthcare" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Dashboard URL <span class="text-danger">*</span></label>
+                            <input type="url" class="form-control" id="dashboardUrl" placeholder="https://example.com/dashboard" required />
+                            <small class="text-muted">Enter the full URL including https://</small>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button class="btn btn-primary" id="btnSaveDashboard">
+                        <i class="fas fa-save me-1"></i> Save
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================= -->
+    <!-- TOAST -->
+    <!-- ========================================= -->
+
+    <div class="toast-msg" id="toastMsg">
+        <span id="toastText"></span>
+    </div>
+
+    <!-- ========================================= -->
+    <!-- SCRIPTS -->
+    <!-- ========================================= -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+    </script>
+
+    <script>
+        const API_BASE = 'http://localhost:8080/api/dashboard-monitor';
+        let dataTable = null;
+        let allDashboards = [];
+        let isCheckingAll = false;
+        let currentFilter = 'all';
+        let statusChart = null;
+        let responseChart = null;
+        let isRefreshing = false;
+        let autoRefreshInterval = null;
+        let countdownValue = 5;
+
+        // =====================================
+        // DISPLAY USERNAME
+        // =====================================
+
+        function displayUserName() {
+            try {
+                var userDataStr = localStorage.getItem('voiceoc_user');
+                var userNameDisplay = document.getElementById('userNameDisplay');
+                if (userDataStr && userNameDisplay) {
+                    try {
+                        var userData = JSON.parse(userDataStr);
+                        userNameDisplay.innerText = userData.fullName || userData.username || 'User';
+                    } catch (e) {
+                        userNameDisplay.innerText = userDataStr;
+                    }
+                }
+            } catch (error) {
+                console.error('Error displaying username:', error);
+            }
+        }
+
+        // =====================================
+        // APPLY DARK MODE
+        // =====================================
+
+        function applyDarkMode() {
+            try {
+                var settings = JSON.parse(localStorage.getItem('voiceoc_settings') || '{}');
+                if (settings.darkMode) {
+                    document.body.classList.add('dark-mode');
+                } else {
+                    document.body.classList.remove('dark-mode');
+                }
+                if (dataTable) {
+                    dataTable.draw();
+                }
+                if (document.getElementById('chartView').classList.contains('active')) {
+                    renderCharts();
+                }
+            } catch (e) {
+                console.error('Error applying dark mode:', e);
+            }
+        }
+
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'voiceoc_settings') {
+                applyDarkMode();
+            }
+        });
+
+        // =====================================
+        // CHECK SESSION MANAGER STATUS
+        // =====================================
+
+        function checkSessionManager() {
+            console.log('🔍 Session Manager Status:');
+            console.log('📋 typeof initAutoLogout:', typeof initAutoLogout);
+            console.log('📋 typeof showToastMessage:', typeof showToastMessage);
+            
+            if (typeof initAutoLogout === 'function') {
+                console.log('✅ Session manager loaded successfully!');
+            } else {
+                console.error('❌ Session manager NOT loaded! Check if js/session-manager.js exists.');
+            }
+        }
+
+        // =====================================
+        // AUTH CHECK
+        // =====================================
+
+        function checkAuth() {
+            if (localStorage.getItem('voiceoc_logged_in') !== 'true') {
+                window.location.href = 'index.html';
+                return false;
+            }
+            return true;
+        }
+
+        // =====================================
+        // TOAST - Using session manager's toast
+        // =====================================
+
+        function showToast(message, isError, type) {
+            if (isError === undefined) isError = false;
+            if (type === undefined) type = 'success';
+            
+            // Use the session manager's toast if available
+            if (typeof window.showToastMessage === 'function') {
+                window.showToastMessage(message, isError ? 'error' : 'success');
+                return;
+            }
+            
+            // Fallback toast
+            var toastText = document.getElementById('toastText');
+            var toast = document.getElementById('toastMsg');
+            if (toastText) toastText.innerText = message;
+            if (toast) {
+                toast.className = 'toast-msg';
+                if (isError) {
+                    toast.classList.add('error');
+                } else if (type === 'info') {
+                    toast.classList.add('info');
+                } else {
+                    toast.classList.add('success');
+                }
+                toast.style.display = 'block';
+                clearTimeout(toast._timeout);
+                toast._timeout = setTimeout(function() {
+                    toast.style.display = 'none';
+                }, 3000);
+            }
+        }
+
+        // =====================================
+        // LOGOUT
+        // =====================================
+
+        function logout() {
+            localStorage.removeItem('voiceoc_logged_in');
+            localStorage.removeItem('voiceoc_user');
+            showToast('Logged out successfully');
+            setTimeout(function() {
+                window.location.href = 'index.html';
+            }, 1000);
+        }
+
+        document.getElementById('logoutBtn')?.addEventListener('click', logout);
+
+        // =====================================
+        // LIVE CLOCK
+        // =====================================
+
+        function updateClock() {
+            var liveClock = document.getElementById('liveClock');
+            if (liveClock) {
+                liveClock.innerText = new Date().toLocaleTimeString();
+            }
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // =====================================
+        // AUTO-REFRESH COUNTDOWN
+        // =====================================
+
+        function startAutoRefresh() {
+            if (autoRefreshInterval) {
+                clearInterval(autoRefreshInterval);
+                autoRefreshInterval = null;
+            }
+
+            countdownValue = 5;
+
+            autoRefreshInterval = setInterval(function() {
+                countdownValue--;
+                if (countdownValue <= 0) {
+                    countdownValue = 5;
+                    autoRefreshData();
+                }
+            }, 1000);
+        }
+
+        function autoRefreshData() {
+            loadDashboards(false).catch(function(err) {
+                console.error('Auto-refresh error:', err);
+            });
+        }
+
+        // =====================================
+        // VIEW SWITCHER
+        // =====================================
+
+        function switchView(view) {
+            document.querySelectorAll('.view-container').forEach(function(el) {
+                el.classList.remove('active');
+            });
+
+            if (view === 'table') {
+                document.getElementById('tableView').classList.add('active');
+                renderTable();
+            } else if (view === 'meter') {
+                document.getElementById('meterView').classList.add('active');
+                renderMeterView();
+            } else if (view === 'chart') {
+                document.getElementById('chartView').classList.add('active');
+                renderCharts();
+            }
+
+            document.querySelectorAll('.view-dropdown .dropdown-item').forEach(function(item) {
+                item.classList.remove('active');
+                if (item.getAttribute('data-view') === view) {
+                    item.classList.add('active');
+                }
+            });
+        }
+
+        // =====================================
+        // LOAD DASHBOARDS
+        // =====================================
+
+        async function loadDashboards(showNotification) {
+            if (showNotification === undefined) showNotification = false;
+            
+            try {
+                var response = await fetch(API_BASE);
+                if (!response.ok) throw new Error('Failed to load dashboards');
+                allDashboards = await response.json();
+                renderTable();
+                updateStats();
+                if (document.getElementById('meterView').classList.contains('active')) {
+                    renderMeterView();
+                }
+                if (document.getElementById('chartView').classList.contains('active')) {
+                    renderCharts();
+                }
+            } catch (error) {
+                console.error('Error loading dashboards:', error);
+                if (showNotification) {
+                    showToast('Failed to load dashboards: ' + error.message, true);
+                }
+                document.getElementById('monitorTableBody').innerHTML = `
+                        <tr>
+                            <td colspan="9" class="text-center py-4 text-danger">
+                                <i class="fas fa-exclamation-circle me-2"></i> 
+                                Failed to load dashboards. Make sure the backend is running.
+                            </td>
+                        </tr>
+                    `;
+            }
+        }
+
+        // =====================================
+        // REFRESH FUNCTION
+        // =====================================
+
+        function refreshData() {
+            var refreshBtn = document.getElementById('btnRefresh');
+            if (isRefreshing) return;
+            
+            isRefreshing = true;
+            
+            if (refreshBtn) {
+                refreshBtn.classList.add('spinning');
+                refreshBtn.disabled = true;
+            }
+            
+            showToast('🔄 Refreshing data...', false, 'info');
+            
+            loadDashboards(true).finally(function() {
+                isRefreshing = false;
+                if (refreshBtn) {
+                    refreshBtn.classList.remove('spinning');
+                    refreshBtn.disabled = false;
+                }
+                countdownValue = 5;
+            });
+        }
+
+        // =====================================
+        // GET FILTERED DATA
+        // =====================================
+
+        function getFilteredData() {
+            if (currentFilter === 'all') {
+                return allDashboards;
+            }
+            return allDashboards.filter(function(d) {
+                return d.status && d.status.toUpperCase() === currentFilter.toUpperCase();
+            });
+        }
+
+        // =====================================
+        // FILTER - FIXED FOR TABLE VIEW
+        // =====================================
+
+        function filterByStatus(status) {
+            currentFilter = status;
+
+            document.querySelectorAll('.stat-card').forEach(function(card) {
+                card.classList.remove('active-total', 'active-up', 'active-down');
+            });
+
+            if (status === 'all') {
+                document.getElementById('statTotal').classList.add('active-total');
+            } else if (status === 'UP') {
+                document.getElementById('statUp').classList.add('active-up');
+            } else if (status === 'DOWN') {
+                document.getElementById('statDown').classList.add('active-down');
+            }
+
+            renderTable();
+            renderMeterView();
+            if (document.getElementById('chartView').classList.contains('active')) {
+                renderCharts();
+            }
+        }
+
+        function clearFilter() {
+            currentFilter = 'all';
+            document.querySelectorAll('.stat-card').forEach(function(card) {
+                card.classList.remove('active-total', 'active-up', 'active-down');
+            });
+            document.getElementById('statTotal').classList.add('active-total');
+            renderTable();
+            renderMeterView();
+            if (document.getElementById('chartView').classList.contains('active')) {
+                renderCharts();
+            }
+        }
+
+        // =====================================
+        // RENDER TABLE - FIXED
+        // =====================================
+
+        function renderTable() {
+            var tbody = document.getElementById('monitorTableBody');
+            if (!tbody) return;
+
+            var filtered = getFilteredData();
+            document.getElementById('dashboardCount').textContent = filtered.length + ' dashboards';
+
+            // DESTROY DataTable if it exists
+            if (dataTable) {
+                try {
+                    dataTable.destroy();
+                    dataTable = null;
+                } catch (e) {
+                    console.log('DataTable already destroyed');
+                }
+            }
+
+            // Also destroy via jQuery if exists
+            if ($.fn.DataTable.isDataTable('#monitorTable')) {
+                $('#monitorTable').DataTable().clear().destroy();
+            }
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `
+                        <tr>
+                            <td colspan="9" class="text-center py-4 text-muted">
+                                <i class="fas fa-inbox fa-2x d-block mb-2"></i>
+                                ${allDashboards.length === 0 ? 'No dashboards added yet. Click "Add" to start monitoring.' : 'No dashboards with status: ' + currentFilter}
+                            </td>
+                        </tr>
+                    `;
+                return;
+            }
+
+            var sorted = [...filtered].sort(function(a, b) { return b.id - a.id; });
+
+            var html = '';
+            for (var i = 0; i < sorted.length; i++) {
+                var d = sorted[i];
+                var status = d.status || 'CHECKING';
+                var statusClass = getStatusClass(status);
+                var responseTimeDisplay = d.responseTime != null ? d.responseTime + ' ms' : '-';
+                var uptimeDisplay = d.uptimePercentage != null ? d.uptimePercentage.toFixed(1) + '%' : '100%';
+
+                html += `
+                        <tr>
+                            <td>${i + 1}</td>
+                            <td><strong>${escapeHtml(d.clientName)}</strong></td>
+                            <td>
+                                <a href="${d.dashboardUrl}" target="_blank" style="color: #0D9488; text-decoration: none; font-size: 13px;">
+                                    <i class="fas fa-external-link-alt"></i> ${escapeHtml(d.dashboardUrl.substring(0, 40))}${d.dashboardUrl.length > 40 ? '...' : ''}
+                                </a>
+                            </td>
+                            <td>
+                                <span class="status-badge ${statusClass}">
+                                    <span class="status-dot-small ${statusClass}"></span>
+                                    ${status}
+                                </span>
+                            </td>
+                            <td>${d.statusCode != null ? d.statusCode : '-'}</td>
+                            <td>${responseTimeDisplay}</td>
+                            <td>${uptimeDisplay}</td>
+                            <td>${formatDate(d.lastChecked)}</td>
+                            <td>
+                                <button class="btn-check" onclick="checkDashboard(${d.id})">
+                                    <i class="fas fa-play"></i> Check
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger ms-1" onclick="deleteDashboard(${d.id})">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+            }
+            tbody.innerHTML = html;
+
+            // RECREATE DataTable only if there are rows
+            if (filtered.length > 0) {
+                dataTable = $('#monitorTable').DataTable({
+                    pageLength: 15,
+                    order: [[0, 'asc']],
+                    scrollX: true,
+                    language: {
+                        emptyTable: "No dashboards found",
+                        search: "Search:",
+                        lengthMenu: "Show _MENU_ entries",
+                        info: "Showing _START_ to _END_ of _TOTAL_ entries",
+                        infoFiltered: "(filtered from _MAX_ total entries)"
+                    },
+                    columnDefs: [
+                        { orderable: false, targets: [1, 2, 3, 4, 5, 6, 7, 8] }
+                    ]
+                });
+            }
+        }
+
+        // =====================================
+        // RENDER METER VIEW
+        // =====================================
+
+        function renderMeterView() {
+            var grid = document.getElementById('meterGrid');
+            if (!grid) return;
+
+            var filtered = getFilteredData();
+            document.getElementById('meterCount').textContent = filtered.length + ' dashboards';
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `
+                        <div class="text-center py-5 text-muted" style="grid-column: 1 / -1;">
+                            <i class="fas fa-inbox fa-3x d-block mb-3" style="opacity:0.3;"></i>
+                            <h6>No dashboards found</h6>
+                            <p class="small">${currentFilter !== 'all' ? 'Try clearing the filter' : 'Add your first dashboard'}</p>
+                        </div>
+                    `;
+                return;
+            }
+
+            var sorted = [...filtered].sort(function(a, b) { return b.id - a.id; });
+
+            var html = '';
+            for (var i = 0; i < sorted.length; i++) {
+                var d = sorted[i];
+                var status = d.status || 'CHECKING';
+                var statusClass = status.toLowerCase();
+                var responseTime = d.responseTime || 0;
+                var maxResponse = 5000;
+                var percentage = Math.min((responseTime / maxResponse) * 100, 100);
+
+                var statusIcon = '';
+                if (statusClass === 'up') statusIcon = 'fa-check-circle';
+                else if (statusClass === 'down') statusIcon = 'fa-times-circle';
+                else statusIcon = 'fa-clock';
+
+                var lastChecked = d.lastChecked ? formatDate(d.lastChecked) : 'Never';
+
+                html += `
+                        <div class="meter-item ${statusClass}" onclick="checkDashboard(${d.id})">
+                            <div class="status-icon ${statusClass}">
+                                <i class="fas ${statusIcon}"></i>
+                            </div>
+                            <div class="client-name" title="${escapeHtml(d.clientName)}">${escapeHtml(d.clientName)}</div>
+                            <div class="client-sub">${escapeHtml(d.dashboardUrl.substring(0, 30))}...</div>
+                            <div class="meter-bar">
+                                <div class="meter-fill ${statusClass}" style="width: ${percentage}%"></div>
+                            </div>
+                            <div class="status-text">
+                                <span>
+                                    <span class="pulse-dot ${statusClass}"></span>
+                                    ${status}
+                                </span>
+                                <span class="status-label ${statusClass}">${d.statusCode != null ? d.statusCode : 'N/A'}</span>
+                            </div>
+                            <div class="response-time">
+                                ${responseTime} <small>ms</small>
+                            </div>
+                            <div class="last-checked">
+                                <i class="far fa-clock me-1"></i> ${lastChecked}
+                            </div>
+                        </div>
+                    `;
+            }
+            grid.innerHTML = html;
+        }
+
+        // =====================================
+        // RENDER CHARTS
+        // =====================================
+
+        function renderCharts() {
+            renderStatusChart();
+            renderResponseChart();
+        }
+
+        function renderStatusChart() {
+            var ctx = document.getElementById('statusChart').getContext('2d');
+
+            if (statusChart) {
+                statusChart.destroy();
+            }
+
+            var filtered = getFilteredData();
+            var up = filtered.filter(function(d) { return d.status && d.status.toUpperCase() === 'UP'; }).length;
+            var down = filtered.filter(function(d) { return d.status && d.status.toUpperCase() === 'DOWN'; }).length;
+            var checking = filtered.filter(function(d) { return !d.status || d.status.toUpperCase() === 'CHECKING'; })
+            .length;
+
+            var isDark = document.body.classList.contains('dark-mode');
+            var textColor = isDark ? '#F8FAFC' : '#0F172A';
+
+            statusChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['UP', 'DOWN', 'CHECKING'],
+                    datasets: [{
+                        data: [up, down, checking],
+                        backgroundColor: ['#10B981', '#EF4444', '#F59E0B'],
+                        borderColor: isDark ? '#1E293B' : '#FFFFFF',
+                        borderWidth: 3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: textColor,
+                                font: {
+                                    size: 14,
+                                    weight: '600'
+                                },
+                                padding: 20
+                            }
+                        }
+                    },
+                    cutout: '65%'
+                }
+            });
+        }
+
+        function renderResponseChart() {
+            var ctx = document.getElementById('responseChart').getContext('2d');
+
+            if (responseChart) {
+                responseChart.destroy();
+            }
+
+            var filtered = getFilteredData();
+            var sorted = filtered
+                .filter(function(d) { return d.responseTime != null && d.responseTime > 0; })
+                .sort(function(a, b) { return b.id - a.id; })
+                .slice(0, 10)
+                .reverse();
+
+            if (sorted.length === 0) {
+                return;
+            }
+
+            var labels = sorted.map(function(d) { return d.clientName.substring(0, 15) + '...'; });
+            var data = sorted.map(function(d) { return d.responseTime; });
+            var colors = sorted.map(function(d) {
+                return d.status && d.status.toUpperCase() === 'UP' ? '#10B981' : '#EF4444';
+            });
+
+            var isDark = document.body.classList.contains('dark-mode');
+            var textColor = isDark ? '#F8FAFC' : '#0F172A';
+            var gridColor = isDark ? '#1E293B' : '#E2E8F0';
+
+            responseChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Response Time (ms)',
+                        data: data,
+                        backgroundColor: colors,
+                        borderRadius: 8,
+                        borderSkipped: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: gridColor
+                            },
+                            ticks: {
+                                color: textColor
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                color: textColor,
+                                font: {
+                                    size: 11
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // =====================================
+        // GET STATUS CLASS
+        // =====================================
+
+        function getStatusClass(status) {
+            if (!status) return 'checking';
+            var s = status.toUpperCase();
+            if (s === 'UP') return 'up';
+            if (s === 'DOWN') return 'down';
+            return 'checking';
+        }
+
+        // =====================================
+        // UPDATE STATISTICS
+        // =====================================
+
+        function updateStats() {
+            var total = allDashboards.length;
+            var up = 0;
+            var down = 0;
+
+            for (var i = 0; i < allDashboards.length; i++) {
+                var d = allDashboards[i];
+                if (d.status && d.status.toUpperCase() === 'UP') up++;
+                else if (d.status && d.status.toUpperCase() === 'DOWN') down++;
+            }
+
+            document.getElementById('totalDashboards').innerText = total;
+            document.getElementById('upDashboards').innerHTML = up + ' <span class="status-dot up"></span>';
+            document.getElementById('downDashboards').innerHTML = down + ' <span class="status-dot down"></span>';
+
+            var upDashboards = [];
+            for (var i = 0; i < allDashboards.length; i++) {
+                var d = allDashboards[i];
+                if (d.status && d.status.toUpperCase() === 'UP' && d.responseTime != null && d.responseTime > 0) {
+                    upDashboards.push(d);
+                }
+            }
+
+            if (upDashboards.length > 0) {
+                var sum = 0;
+                for (var i = 0; i < upDashboards.length; i++) {
+                    sum += upDashboards[i].responseTime;
+                }
+                var avg = sum / upDashboards.length;
+                document.getElementById('avgResponse').innerText = Math.round(avg) + ' ms';
+            } else {
+                document.getElementById('avgResponse').innerText = '0 ms';
+            }
+
+            // Auto-select Total card by default
+            if (currentFilter === 'all') {
+                document.getElementById('statTotal').classList.add('active-total');
+            }
+        }
+
+        // =====================================
+        // CHECK DASHBOARD
+        // =====================================
+
+        async function checkDashboard(id) {
+            try {
+                showToast('Checking dashboard...');
+                var response = await fetch(API_BASE + '/' + id + '/check', { method: 'POST' });
+                if (!response.ok) throw new Error('Failed to check dashboard');
+                var updated = await response.json();
+                var index = -1;
+                for (var i = 0; i < allDashboards.length; i++) {
+                    if (allDashboards[i].id === updated.id) {
+                        index = i;
+                        break;
+                    }
+                }
+                if (index !== -1) allDashboards[index] = updated;
+                renderTable();
+                updateStats();
+                renderMeterView();
+                if (document.getElementById('chartView').classList.contains('active')) {
+                    renderCharts();
+                }
+                countdownValue = 5;
+                showToast('✅ ' + updated.clientName + ' - ' + updated.status + ' (' + (updated.responseTime || 0) + 'ms)');
+            } catch (error) {
+                showToast('Failed to check dashboard: ' + error.message, true);
+            }
+        }
+
+        // =====================================
+        // CHECK ALL DASHBOARDS
+        // =====================================
+
+        async function checkAllDashboards() {
+            if (isCheckingAll) {
+                showToast('Already checking...');
+                return;
+            }
+            try {
+                isCheckingAll = true;
+                var btn = document.getElementById('btnCheckAll');
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking...';
+                btn.disabled = true;
+
+                showToast('Checking all dashboards...');
+                var response = await fetch(API_BASE + '/check-all', { method: 'POST' });
+                if (!response.ok) throw new Error('Failed to check all dashboards');
+                var updated = await response.json();
+
+                if (Array.isArray(updated) && updated.length > 0) {
+                    var map = {};
+                    for (var i = 0; i < updated.length; i++) {
+                        map[updated[i].id] = updated[i];
+                    }
+                    for (var i = 0; i < allDashboards.length; i++) {
+                        if (map[allDashboards[i].id]) {
+                            allDashboards[i] = map[allDashboards[i].id];
+                        }
+                    }
+                }
+
+                renderTable();
+                updateStats();
+                renderMeterView();
+                if (document.getElementById('chartView').classList.contains('active')) {
+                    renderCharts();
+                }
+                countdownValue = 5;
+                var up = 0;
+                var down = 0;
+                for (var i = 0; i < updated.length; i++) {
+                    if (updated[i].status && updated[i].status.toUpperCase() === 'UP') up++;
+                    else if (updated[i].status && updated[i].status.toUpperCase() === 'DOWN') down++;
+                }
+                showToast('✅ Checked all - UP: ' + up + ', DOWN: ' + down);
+            } catch (error) {
+                showToast('Failed to check all: ' + error.message, true);
+            } finally {
+                isCheckingAll = false;
+                var btn = document.getElementById('btnCheckAll');
+                btn.innerHTML = '<i class="fas fa-play"></i> Check All';
+                btn.disabled = false;
+            }
+        }
+
+        // =====================================
+        // DELETE DASHBOARD
+        // =====================================
+
+        async function deleteDashboard(id) {
+            var dashboard = null;
+            for (var i = 0; i < allDashboards.length; i++) {
+                if (allDashboards[i].id === id) {
+                    dashboard = allDashboards[i];
+                    break;
+                }
+            }
+            if (!dashboard) return;
+            if (!confirm('Delete "' + dashboard.clientName + '"?')) return;
+            try {
+                var response = await fetch(API_BASE + '/' + id, { method: 'DELETE' });
+                if (!response.ok) throw new Error('Failed to delete');
+                showToast('✅ "' + dashboard.clientName + '" deleted');
+                await loadDashboards(false);
+            } catch (error) {
+                showToast('Failed to delete: ' + error.message, true);
+            }
+        }
+
+        // =====================================
+        // ADD DASHBOARD
+        // =====================================
+
+        async function addDashboard() {
+            var clientName = document.getElementById('clientName').value.trim();
+            var dashboardUrl = document.getElementById('dashboardUrl').value.trim();
+
+            if (!clientName) return showToast('Please enter client name', true);
+            if (!dashboardUrl) return showToast('Please enter dashboard URL', true);
+            if (!dashboardUrl.startsWith('http://') && !dashboardUrl.startsWith('https://')) {
+                return showToast('Please enter a valid URL starting with http:// or https://', true);
+            }
+
+            try {
+                var response = await fetch(API_BASE, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ clientName: clientName, dashboardUrl: dashboardUrl })
+                });
+                if (!response.ok) throw new Error('Failed to add dashboard');
+
+                showToast('✅ "' + clientName + '" added successfully!');
+                var modal = bootstrap.Modal.getInstance(document.getElementById('addModal'));
+                if (modal) modal.hide();
+                document.getElementById('clientName').value = '';
+                document.getElementById('dashboardUrl').value = '';
+                await loadDashboards(false);
+            } catch (error) {
+                showToast('Failed to add: ' + error.message, true);
+            }
+        }
+
+        // =====================================
+        // UTILITY FUNCTIONS
+        // =====================================
+
+        function formatDate(dateString) {
+            if (!dateString) return 'Never';
+            try {
+                var date = new Date(dateString);
+                if (isNaN(date.getTime())) return 'Invalid';
+                return date.toLocaleString('en-US', {
+                    day: '2-digit',
+                    month: 'short',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: true
+                });
+            } catch (e) {
+                return dateString;
+            }
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            var div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // =====================================
+        // EVENT LISTENERS
+        // =====================================
+
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!checkAuth()) return;
+
+            applyDarkMode();
+            displayUserName();
+            checkSessionManager();
+
+            document.getElementById('btnAddDashboard').addEventListener('click', function() {
+                new bootstrap.Modal(document.getElementById('addModal')).show();
+            });
+
+            document.getElementById('btnSaveDashboard').addEventListener('click', addDashboard);
+            
+            // Refresh button with notification
+            document.getElementById('btnRefresh').addEventListener('click', refreshData);
+            
+            document.getElementById('btnCheckAll').addEventListener('click', checkAllDashboards);
+
+            document.getElementById('addForm').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    addDashboard();
+                }
+            });
+
+            // Keyboard shortcut: F5 or Ctrl+R to refresh
+            document.addEventListener('keydown', function(e) {
+                if ((e.key === 'F5') || (e.ctrlKey && e.key === 'r')) {
+                    e.preventDefault();
+                    refreshData();
+                }
+            });
+
+            loadDashboards(false);
+
+            // Start auto-refresh after initial load
+            setTimeout(function() {
+                startAutoRefresh();
+            }, 1000);
+
+            setTimeout(function() {
+                document.getElementById('statTotal').classList.add('active-total');
+            }, 500);
+        });
+
+        // =====================================
+        // GLOBAL FUNCTIONS
+        // =====================================
+
+        window.checkDashboard = checkDashboard;
+        window.deleteDashboard = deleteDashboard;
+        window.filterByStatus = filterByStatus;
+        window.clearFilter = clearFilter;
+        window.switchView = switchView;
+        window.applyDarkMode = applyDarkMode;
+        window.showToast = showToast;
+        window.checkSessionManager = checkSessionManager;
+        window.refreshData = refreshData;
+    </script>
+
+</body>
+
+</html>

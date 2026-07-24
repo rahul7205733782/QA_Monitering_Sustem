@@ -1,0 +1,2040 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VoiceOC · Journey Map</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- SESSION MANAGER - Auto Logout for ALL Pages -->
+    <script src="js/session-manager.js"></script>
+
+    <style>
+        /* Pulse Animation for Countdown */
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #F1F5F9;
+            overflow-x: hidden;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        /* ========================================= */
+        /* DARK MODE - COMPLETE */
+        /* ========================================= */
+
+        .dark-mode {
+            background: #020617 !important;
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .top-nav {
+            background: #111827 !important;
+            color: #F8FAFC !important;
+            border-color: #1E293B !important;
+        }
+
+        .dark-mode .top-nav .page-title h3 {
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .top-nav .page-title p {
+            color: #94A3B8 !important;
+        }
+
+        .dark-mode .top-nav .user-badge {
+            background: #1E293B !important;
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .top-nav .badge.bg-success {
+            background: #065F46 !important;
+            color: #34D399 !important;
+        }
+
+        .dark-mode .top-nav .btn-primary {
+            background: #1E3A5F !important;
+            border-color: #1E3A5F !important;
+            color: #60A5FA !important;
+        }
+
+        .dark-mode .top-nav .btn-primary:hover {
+            background: #2D4A7A !important;
+            border-color: #2D4A7A !important;
+        }
+
+        .dark-mode .top-nav .refresh-btn {
+            background: #1E293B !important;
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .top-nav .refresh-btn:hover {
+            background: #334155 !important;
+        }
+
+        .dark-mode .top-nav .refresh-btn.spinning {
+            color: #2DD4BF !important;
+        }
+
+        .dark-mode .stat-card {
+            background: #111827 !important;
+            border-color: #1E293B !important;
+        }
+
+        .dark-mode .stat-card .stat-label {
+            color: #94A3B8 !important;
+        }
+
+        .dark-mode .stat-card .stat-value {
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .stat-card .stat-icon {
+            opacity: 0.05 !important;
+        }
+
+        .dark-mode .stat-card:hover {
+            box-shadow: 0 20px 30px -12px rgba(45, 212, 191, 0.05) !important;
+        }
+
+        .dark-mode .search-section .form-control {
+            background: #1E293B !important;
+            color: #F8FAFC !important;
+            border-color: #334155 !important;
+        }
+
+        .dark-mode .search-section .form-control::placeholder {
+            color: #64748B !important;
+        }
+
+        .dark-mode .search-section .form-control:focus {
+            background: #1E293B !important;
+            border-color: #2DD4BF !important;
+            box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.1) !important;
+        }
+
+        .dark-mode .search-section .text-muted {
+            color: #94A3B8 !important;
+        }
+
+        .dark-mode .table-card {
+            background: #111827 !important;
+            border-color: #1E293B !important;
+        }
+
+        .dark-mode .table-card .table-header h5 {
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .table-card .badge.bg-primary {
+            background: #1E3A5F !important;
+            color: #60A5FA !important;
+        }
+
+        .dark-mode table {
+            background: #111827 !important;
+        }
+
+        .dark-mode table thead th {
+            background: #0F172A !important;
+            color: #94A3B8 !important;
+            border-bottom-color: #1E293B !important;
+        }
+
+        .dark-mode table tbody td {
+            background: #111827 !important;
+            color: #E2E8F0 !important;
+            border-bottom-color: #1E293B !important;
+        }
+
+        .dark-mode table tbody tr:hover td {
+            background: #1E293B !important;
+        }
+
+        .dark-mode table tbody td strong {
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .badge-module {
+            background: #1E293B !important;
+            color: #60A5FA !important;
+        }
+
+        .dark-mode .link-btn {
+            color: #60A5FA !important;
+        }
+
+        .dark-mode .link-btn:hover {
+            color: #93BBFC !important;
+        }
+
+        .dark-mode .btn-outline-danger {
+            color: #F87171 !important;
+            border-color: #7F1D1D !important;
+        }
+
+        .dark-mode .btn-outline-danger:hover {
+            background: #7F1D1D !important;
+            color: #FCA5A5 !important;
+        }
+
+        .dark-mode .empty-state {
+            background: #111827 !important;
+        }
+
+        .dark-mode .empty-state i {
+            color: #334155 !important;
+        }
+
+        .dark-mode .empty-state h5 {
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .empty-state p {
+            color: #94A3B8 !important;
+        }
+
+        .dark-mode .modal-content {
+            background: #111827 !important;
+            border-color: #1E293B !important;
+        }
+
+        .dark-mode .modal-header-primary {
+            background: linear-gradient(95deg, #0F172A 0%, #020617 100%) !important;
+        }
+
+        .dark-mode .modal-header-primary .modal-title {
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .modal-body {
+            background: #111827 !important;
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .modal-body .form-label {
+            color: #94A3B8 !important;
+        }
+
+        .dark-mode .modal-body .form-control {
+            background: #1E293B !important;
+            color: #F8FAFC !important;
+            border-color: #334155 !important;
+        }
+
+        .dark-mode .modal-body .form-control::placeholder {
+            color: #64748B !important;
+        }
+
+        .dark-mode .modal-body .form-control:focus {
+            background: #1E293B !important;
+            border-color: #2DD4BF !important;
+            box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.1) !important;
+        }
+
+        .dark-mode .modal-body .text-muted {
+            color: #94A3B8 !important;
+        }
+
+        .dark-mode .modal-footer {
+            background: #111827 !important;
+            border-top-color: #1E293B !important;
+        }
+
+        .dark-mode .modal-footer .btn-secondary {
+            background: #1E293B !important;
+            border-color: #334155 !important;
+            color: #F8FAFC !important;
+        }
+
+        .dark-mode .modal-footer .btn-secondary:hover {
+            background: #334155 !important;
+        }
+
+        .dark-mode .modal-footer .btn-primary {
+            background: #0D9488 !important;
+            border-color: #0D9488 !important;
+            color: white !important;
+        }
+
+        .dark-mode .modal-footer .btn-primary:hover {
+            background: #0F766E !important;
+            border-color: #0F766E !important;
+        }
+
+        .dark-mode .toast-msg {
+            background: #1E293B !important;
+            color: #F8FAFC !important;
+            border-left-color: #2DD4BF !important;
+        }
+
+        .dark-mode .toast-msg.error {
+            border-left-color: #DC2626 !important;
+        }
+
+        .dark-mode .toast-msg.success {
+            border-left-color: #10B981 !important;
+        }
+
+        .dark-mode .toast-msg.info {
+            border-left-color: #3B82F6 !important;
+        }
+
+        .dark-mode ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        .dark-mode ::-webkit-scrollbar-track {
+            background: #1E293B;
+        }
+
+        .dark-mode ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+
+        .dark-mode ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+
+        /* ========================================= */
+        /* LOADER */
+        /* ========================================= */
+
+        #globalLoader {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.75);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 999999;
+            backdrop-filter: blur(6px);
+        }
+
+        .dark-mode #globalLoader {
+            background: rgba(2, 6, 23, 0.9);
+        }
+
+        /* ========================================= */
+        /* SIDEBAR */
+        /* ========================================= */
+
+        .sidebar {
+            width: 280px;
+            height: 100vh;
+            background: linear-gradient(180deg, #0F172A 0%, #020617 100%);
+            position: fixed;
+            left: 0;
+            top: 0;
+            padding-top: 25px;
+            transition: 0.3s;
+            z-index: 999;
+            overflow-y: auto;
+        }
+
+        .sidebar.collapsed {
+            width: 90px;
+        }
+
+        .sidebar.collapsed .nav-item span,
+        .sidebar.collapsed .logo-area .qa-tagline {
+            display: none;
+        }
+
+        .logo-area {
+            text-align: center;
+            margin-bottom: 35px;
+            padding: 0 20px;
+        }
+
+        .logo-area h2 {
+            color: white;
+            font-weight: 800;
+            font-size: 1.7rem;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .logo-area h2 i {
+            color: #2DD4BF;
+            font-size: 1.8rem;
+        }
+
+        .logo-area .qa-tagline {
+            color: #10B981 !important;
+            font-weight: 700 !important;
+            font-size: 11px !important;
+            letter-spacing: 2px;
+            margin-top: 8px;
+            text-align: center;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 0 10px;
+        }
+
+        .logo-area .qa-tagline .tick-icon {
+            color: #10B981;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        .logo-area .qa-tagline .tick-icon i {
+            font-size: 12px;
+        }
+
+        .logo-area .qa-tagline .tag-text {
+            flex-shrink: 0;
+            padding: 0 2px;
+            color: #10B981;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .dark-mode .logo-area .qa-tagline {
+            color: #34D399 !important;
+        }
+
+        .dark-mode .logo-area .qa-tagline .tick-icon {
+            color: #34D399;
+        }
+
+        .dark-mode .logo-area .qa-tagline .tag-text {
+            color: #34D399;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: #94A3B8;
+            margin: 4px 12px;
+            padding: 12px 18px;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .nav-item:hover {
+            background: rgba(45, 212, 191, 0.12);
+            color: white;
+            transform: translateX(6px);
+        }
+
+        .nav-item.active {
+            background: linear-gradient(95deg, #0D9488, #0F766E);
+            color: white;
+        }
+
+        .nav-item i {
+            width: 24px;
+            font-size: 18px;
+        }
+
+        /* ========================================= */
+        /* MAIN */
+        /* ========================================= */
+
+        .main-content {
+            margin-left: 280px;
+            padding: 30px;
+            transition: 0.3s;
+        }
+
+        .main-content.expanded {
+            margin-left: 90px;
+        }
+
+        /* ========================================= */
+        /* TOPBAR */
+        /* ========================================= */
+
+        .top-nav {
+            background: white;
+            padding: 18px 25px;
+            border-radius: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border: 1px solid #E2E8F0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .top-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .page-title h3 {
+            margin: 0;
+            font-weight: 800;
+            color: #0F172A;
+            transition: color 0.3s ease;
+        }
+
+        .page-title p {
+            margin: 5px 0 0;
+            color: #64748B;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+        .top-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .refresh-btn {
+            border: none;
+            background: #F1F5F9;
+            padding: 10px 18px;
+            border-radius: 50px;
+            transition: 0.3s;
+            cursor: pointer;
+            font-size: 16px;
+            position: relative;
+        }
+
+        .refresh-btn:hover {
+            background: #E2E8F0;
+        }
+
+        .refresh-btn.spinning i {
+            animation: spin 0.8s linear infinite;
+        }
+
+        .refresh-btn .refresh-tooltip {
+            position: absolute;
+            bottom: -32px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #0F172A;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.3s;
+        }
+
+        .dark-mode .refresh-btn .refresh-tooltip {
+            background: #1E293B;
+        }
+
+        .refresh-btn:hover .refresh-tooltip {
+            opacity: 1;
+        }
+
+        .user-badge {
+            background: #F1F5F9;
+            padding: 10px 18px;
+            border-radius: 50px;
+            font-weight: 700;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        /* ========================================= */
+        /* STAT CARDS */
+        /* ========================================= */
+
+        .stat-card {
+            background: white;
+            border-radius: 26px;
+            padding: 25px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #E2E8F0;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.12);
+        }
+
+        .stat-card:active {
+            transform: scale(0.97);
+        }
+
+        .stat-icon {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 50px;
+            opacity: 0.1;
+        }
+
+        .stat-label {
+            color: #64748B;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            transition: color 0.3s ease;
+        }
+
+        .stat-value {
+            font-size: 42px;
+            font-weight: 800;
+            color: #0F172A;
+            transition: color 0.3s ease;
+        }
+
+        /* ========================================= */
+        /* TABLE */
+        /* ========================================= */
+
+        .table-card {
+            background: white;
+            border-radius: 26px;
+            padding: 28px;
+            border: 1px solid #E2E8F0;
+            margin-top: 25px;
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        table {
+            width: 100%;
+        }
+
+        th {
+            color: #64748B;
+            font-size: 12px;
+            padding: 15px 10px;
+            text-transform: uppercase;
+            border-bottom: 2px solid #E2E8F0;
+            transition: color 0.3s ease, border-color 0.3s ease;
+        }
+
+        td {
+            padding: 15px 10px;
+            border-bottom: 1px solid #F1F5F9;
+            transition: color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .badge-module {
+            background: #DBEAFE;
+            color: #2563EB;
+            padding: 5px 12px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 700;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .link-btn {
+            color: #2563EB;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.3s ease;
+        }
+
+        .link-btn:hover {
+            text-decoration: underline;
+            color: #1D4ED8;
+        }
+
+        .pdf-btn {
+            color: #DC2626;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.3s ease;
+        }
+
+        .pdf-btn:hover {
+            color: #B91C1C;
+            text-decoration: underline;
+        }
+
+        /* ========================================= */
+        /* SEARCH */
+        /* ========================================= */
+
+        .search-section {
+            margin: 20px 0;
+        }
+
+        .search-section .form-control {
+            border-radius: 50px;
+            padding: 12px 20px;
+            border: 1px solid #E2E8F0;
+            transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .search-section .form-control:focus {
+            border-color: #0D9488;
+            box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1);
+        }
+
+        /* ========================================= */
+        /* MODAL */
+        /* ========================================= */
+
+        .modal-content {
+            border-radius: 20px !important;
+            border: none !important;
+            box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.2);
+            transition: background 0.3s ease;
+        }
+
+        .modal-header {
+            border-radius: 20px 20px 0 0 !important;
+            padding: 20px 28px;
+            border: none;
+        }
+
+        .modal-header-primary {
+            background: linear-gradient(95deg, #0D9488, #0F766E);
+            color: white;
+        }
+
+        .modal-header .btn-close-white {
+            filter: brightness(0) invert(1);
+        }
+
+        .modal-body {
+            padding: 28px;
+        }
+
+        .modal-footer {
+            padding: 16px 28px;
+            border-top: 1px solid #E2E8F0;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-label {
+            font-weight: 600;
+            font-size: 14px;
+            color: #0F172A;
+            transition: color 0.3s ease;
+        }
+
+        .form-control {
+            border-radius: 12px;
+            border: 1px solid #E2E8F0;
+            padding: 12px 16px;
+            font-size: 14px;
+            transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #0D9488;
+            box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1);
+        }
+
+        .form-control.file-input {
+            padding: 8px 12px;
+        }
+
+        .required-field::after {
+            content: " *";
+            color: #DC2626;
+            font-weight: 700;
+        }
+
+        /* ========================================= */
+        /* EMPTY STATE */
+        /* ========================================= */
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #64748B;
+            transition: background 0.3s ease;
+            cursor: pointer;
+        }
+
+        .empty-state:hover {
+            background: #F8FAFC;
+            border-radius: 20px;
+        }
+
+        .dark-mode .empty-state:hover {
+            background: #1E293B;
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            color: #E2E8F0;
+            margin-bottom: 16px;
+            transition: color 0.3s ease;
+        }
+
+        .empty-state h5 {
+            color: #0F172A;
+            font-weight: 700;
+            transition: color 0.3s ease;
+        }
+
+        .empty-state .upload-hint {
+            color: #0D9488;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        .dark-mode .empty-state .upload-hint {
+            color: #2DD4BF;
+        }
+
+        /* ========================================= */
+        /* TOAST */
+        /* ========================================= */
+
+        .toast-msg {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #1E293B;
+            color: white;
+            padding: 14px 24px;
+            border-radius: 50px;
+            z-index: 9999;
+            display: none;
+            animation: slideInRight 0.3s ease;
+            border-left: 4px solid #2DD4BF;
+            transition: background 0.3s ease, color 0.3s ease;
+            max-width: 500px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .toast-msg.error {
+            border-left-color: #DC2626;
+        }
+
+        .toast-msg.success {
+            border-left-color: #10B981;
+        }
+
+        .toast-msg.info {
+            border-left-color: #3B82F6;
+        }
+
+        /* ========================================= */
+        /* PDF PREVIEW MODAL */
+        /* ========================================= */
+
+        .pdf-preview-container {
+            width: 100%;
+            height: 80vh;
+        }
+
+        .pdf-preview-container embed {
+            width: 100%;
+            height: 100%;
+            border-radius: 0;
+        }
+
+        /* ========================================= */
+        /* RESPONSIVE */
+        /* ========================================= */
+
+        @media(max-width:992px) {
+            .sidebar {
+                width: 90px;
+            }
+
+            .sidebar .nav-item span,
+            .sidebar .logo-area .qa-tagline {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 90px;
+            }
+        }
+
+        @media(max-width:768px) {
+            .main-content {
+                margin-left: 0;
+                padding: 15px;
+            }
+
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .top-nav {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+            }
+
+            .top-right {
+                flex-wrap: wrap;
+            }
+
+            .stat-value {
+                font-size: 28px;
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #F1F5F9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #CBD5E1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94A3B8;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <!-- LOADER -->
+    <div id="globalLoader">
+        <div class="spinner-border text-light"></div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div class="logo-area">
+            <h2>
+                <i class="fas fa-microphone-alt"></i>
+                VoiceOC
+            </h2>
+            <div class="qa-tagline">
+                <span class="tick-icon"><i class="fas fa-check-circle"></i></span>
+                <span class="tag-text">QA DAILY TASKS</span>
+            </div>
+        </div>
+
+        <div class="nav-item" onclick="goPage('dashboard.html')">
+            <i class="fas fa-chart-line"></i>
+            <span>Dashboard</span>
+        </div>
+        <div class="nav-item" onclick="goPage('tasks.html')">
+            <i class="fas fa-tasks"></i>
+            <span>Tasks</span>
+        </div>
+        <div class="nav-item" onclick="goPage('clientdetails.html')">
+            <i class="fas fa-building"></i>
+            <span>Clients Detail</span>
+        </div>
+        <div class="nav-item" onclick="goPage('bugtracker.html')">
+            <i class="fas fa-bug"></i>
+            <span>Bug Tracker</span>
+        </div>
+        <div class="nav-item" onclick="goPage('json-sheet.html')">
+            <i class="fas fa-code"></i>
+            <span>JSON Sheets</span>
+        </div>
+        
+        <div class="nav-item" onclick="window.location.href='response-sheet.html'">
+    <i class="fas fa-file-excel"></i>
+    <span>Response Sheet</span>
+</div>
+
+        <div class="nav-item active">
+            <i class="fas fa-route"></i>
+            <span>Journey Map</span>
+        </div>
+        <div class="nav-item" onclick="goPage('api-doc.html')">
+            <i class="fas fa-book"></i>
+            <span>API Doc</span>
+        </div>
+        <div class="nav-item" onclick="goPage('dashboard-monitor.html')">
+            <i class="fas fa-heartbeat"></i>
+            <span>Monitor</span>
+        </div>
+        
+        <div class="nav-item" onclick="window.location.href='json-diff.html'">
+	    <i class="fas fa-code-branch"></i>
+	    <span>JSON Diff</span>
+	</div>
+        <div class="nav-item" onclick="goPage('reports.html')">
+            <i class="fas fa-chart-pie"></i>
+            <span>Reports</span>
+        </div>
+        <div class="nav-item" onclick="goPage('settings.html')">
+            <i class="fas fa-gear"></i>
+            <span>Settings</span>
+        </div>
+        <div class="nav-item" id="logoutBtn">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Logout</span>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+
+        <!-- TOP NAV -->
+        <div class="top-nav">
+            <div class="top-left">
+                <div class="page-title">
+                    <h3><i class="fas fa-route" style="color:#0D9488;"></i> Journey Map</h3>
+                    <p>Upload and manage journey map sheets &amp; PDFs</p>
+                </div>
+            </div>
+            <div class="top-right">
+                <span class="badge bg-success px-3 py-2">LIVE</span>
+                <div id="liveClock"></div>
+                <button class="btn btn-primary px-4 py-2" id="btnAddSheet" style="border-radius:50px; font-weight:600;">
+                    <i class="fas fa-upload"></i> Upload Sheet
+                </button>
+                <button class="refresh-btn" id="btnRefresh" title="Refresh data">
+                    <i class="fas fa-sync-alt"></i>
+                    <span class="refresh-tooltip">Refresh</span>
+                </button>
+                <div class="user-badge">
+                    <i class="fas fa-user-check"></i>
+                    <span id="userNameDisplay">Loading...</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- STATISTICS CARDS -->
+        <div class="row g-4">
+            <div class="col-md-3">
+                <div class="stat-card" id="statTotal">
+                    <div class="stat-icon"><i class="fas fa-route"></i></div>
+                    <div class="stat-label">Total Journeys</div>
+                    <div class="stat-value" id="totalJourneys">0</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card" id="statModules">
+                    <div class="stat-icon"><i class="fas fa-cubes"></i></div>
+                    <div class="stat-label">Modules</div>
+                    <div class="stat-value" id="totalModules">0</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card" id="statToday">
+                    <div class="stat-icon"><i class="fas fa-calendar-day"></i></div>
+                    <div class="stat-label">Today's Uploads</div>
+                    <div class="stat-value" id="todaySheets">0</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card" id="statLatest">
+                    <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                    <div class="stat-label">Latest</div>
+                    <div class="stat-value" id="latestSheet" style="font-size:24px;">--</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SEARCH -->
+        <div class="search-section">
+            <div class="row">
+                <div class="col-lg-8">
+                    <input type="text" class="form-control" id="searchSheet" placeholder="🔍 Search by journey name, module..." />
+                </div>
+                <div class="col-lg-4 text-end">
+                    <small class="text-muted" id="lastUpdated">Updated: Just now</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- TABLE -->
+        <div class="table-card">
+            <div class="table-header">
+                <h5><i class="fas fa-list-ul"></i> Journey Maps</h5>
+                <span class="badge bg-primary" id="sheetCount">0 journeys</span>
+            </div>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Journey Name</th>
+                            <th>Module</th>
+                            <th>Sheet Link</th>
+                            <th>PDF</th>
+                            <th>Created Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="sheetsTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- UPLOAD SHEET MODAL -->
+    <div class="modal fade" id="addSheetModal" tabindex="-1">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header modal-header-primary">
+                    <h5 class="modal-title"><i class="fas fa-upload me-2"></i>Upload Journey Map</h5>
+                    <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addSheetForm">
+                        <div class="mb-3">
+                            <label class="form-label required-field">Journey Name</label>
+                            <input type="text" class="form-control" id="journeyName" placeholder="e.g., Q4 Product Launch" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label required-field">Module</label>
+                            <input type="text" class="form-control" id="journeyModule" placeholder="e.g., AI Assistant, Chatbot" required />
+                        </div>
+                        
+                        <hr class="my-4">
+                        <h6 class="text-muted mb-3"><i class="fas fa-link me-1"></i> Sheet Link <small class="text-muted">(optional)</small></h6>
+                        <div class="mb-3">
+                            <label class="form-label">Google Sheet Link</label>
+                            <input type="url" class="form-control" id="sheetLink" placeholder="https://docs.google.com/spreadsheets/..." />
+                            <small class="text-muted">Paste Google Drive / Excel / Sheet link</small>
+                        </div>
+
+                        <hr class="my-4">
+                        <h6 class="text-muted mb-3"><i class="fas fa-file-pdf me-1"></i> PDF <small class="text-muted">(optional)</small></h6>
+                        <p class="text-muted small">You can either upload a PDF file or paste a link to a PDF</p>
+
+                        <div class="mb-3">
+                            <label class="form-label">Upload PDF File</label>
+                            <input type="file" class="form-control file-input" id="pdfUpload" accept=".pdf" />
+                            <small class="text-muted">Upload PDF file (max 10MB)</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">PDF Link</label>
+                            <input type="url" class="form-control" id="pdfLink" placeholder="https://example.com/journey-map.pdf" />
+                            <small class="text-muted">Paste a link to a PDF file</small>
+                        </div>
+
+                        <hr class="my-4">
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-1"></i>
+                            <small>You must provide <strong>at least one</strong>: Sheet Link, PDF Upload, or PDF Link.</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Created Date</label>
+                            <input type="text" class="form-control" id="createdDate" readonly />
+                            <small class="text-muted">Auto-filled with current date &amp; time</small>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button class="btn btn-primary" id="btnSaveSheet">
+                        <i class="fas fa-save me-1"></i> Upload Sheet
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- VIEW SHEET MODAL -->
+    <div class="modal fade" id="viewSheetModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header modal-header-primary">
+                    <h5 class="modal-title"><i class="fas fa-route me-2"></i> Journey Map Details</h5>
+                    <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="viewSheetBody">
+                    <div id="sheetDetailContent"></div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" id="btnOpenSheet">
+                        <i class="fas fa-external-link-alt me-1"></i> Open Sheet
+                    </button>
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PDF PREVIEW MODAL -->
+    <div class="modal fade" id="pdfPreviewModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header modal-header-primary">
+                    <h5 class="modal-title"><i class="fas fa-file-pdf me-2"></i> PDF Preview</h5>
+                    <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="pdf-preview-container" id="pdfPreviewContainer"></div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-danger" id="btnDownloadPDF">
+                        <i class="fas fa-download me-1"></i> Download PDF
+                    </button>
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST -->
+    <div class="toast-msg" id="toastMsg">
+        <span id="toastText"></span>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        const API_URL = 'http://localhost:8080/api/journey-maps';
+        let sheetsData = [];
+        let isRefreshing = false;
+
+        // =====================================
+        // DISPLAY USERNAME
+        // =====================================
+        function displayUserName() {
+            try {
+                const userDataStr = localStorage.getItem('voiceoc_user');
+                const userNameDisplay = document.getElementById('userNameDisplay');
+                if (userDataStr && userNameDisplay) {
+                    try {
+                        const userData = JSON.parse(userDataStr);
+                        userNameDisplay.innerText = userData.fullName || userData.username || 'User';
+                    } catch (parseError) {
+                        userNameDisplay.innerText = userDataStr;
+                    }
+                } else if (userNameDisplay) {
+                    userNameDisplay.innerText = 'User';
+                }
+            } catch (error) {
+                console.error('Error displaying username:', error);
+            }
+        }
+
+        // =====================================
+        // APPLY DARK MODE
+        // =====================================
+        function applyDarkMode() {
+            const settings = JSON.parse(localStorage.getItem('voiceoc_settings') || '{}');
+            if (settings.darkMode) {
+                document.body.classList.add('dark-mode');
+            } else {
+                document.body.classList.remove('dark-mode');
+            }
+        }
+
+        // =====================================
+        // AUTH CHECK
+        // =====================================
+        function checkAuth() {
+            if (localStorage.getItem('voiceoc_logged_in') !== 'true') {
+                window.location.href = 'index.html';
+                return false;
+            }
+            return true;
+        }
+
+        // =====================================
+        // HIDE LOADER
+        // =====================================
+        window.onload = () => {
+            setTimeout(() => {
+                const loader = document.getElementById('globalLoader');
+                if (loader) {
+                    loader.style.display = 'none';
+                }
+            }, 1000);
+        };
+
+        // =====================================
+        // TOAST FUNCTION
+        // =====================================
+        function showToast(message, isError = false, type = 'success') {
+            const toastText = document.getElementById('toastText');
+            const toast = document.getElementById('toastMsg');
+            if (toastText) toastText.innerText = message;
+            if (toast) {
+                toast.className = 'toast-msg';
+                if (isError) {
+                    toast.classList.add('error');
+                } else if (type === 'info') {
+                    toast.classList.add('info');
+                } else {
+                    toast.classList.add('success');
+                }
+                toast.style.display = 'block';
+                clearTimeout(toast._timeout);
+                toast._timeout = setTimeout(() => {
+                    toast.style.display = 'none';
+                }, 4000);
+            }
+        }
+
+        // =====================================
+        // NAVIGATION
+        // =====================================
+        function goPage(page) {
+            window.location.href = page;
+        }
+
+        // =====================================
+        // LOGOUT
+        // =====================================
+        function logout() {
+            localStorage.removeItem('voiceoc_logged_in');
+            localStorage.removeItem('voiceoc_user');
+            showToast('Logged out successfully');
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 1000);
+        }
+        document.getElementById('logoutBtn')?.addEventListener('click', logout);
+
+        // =====================================
+        // LIVE CLOCK
+        // =====================================
+        function updateClock() {
+            const liveClock = document.getElementById('liveClock');
+            if (liveClock) {
+                liveClock.innerText = new Date().toLocaleTimeString();
+            }
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // =====================================
+        // SET CURRENT DATE
+        // =====================================
+        function setCurrentDate() {
+            const now = new Date();
+            const formatted = now.toLocaleString('en-US', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true
+            });
+            document.getElementById('createdDate').value = formatted;
+        }
+
+        // =====================================
+        // GET MOCK DATA
+        // =====================================
+        function getMockData() {
+            const now = new Date();
+            const yesterday = new Date(now);
+            yesterday.setDate(yesterday.getDate() - 1);
+            return [
+                {
+                    id: 1,
+                    name: 'Q4 Product Launch Journey',
+                    module: 'AI Assistant',
+                    sheetLink: 'https://docs.google.com/spreadsheets/d/example1',
+                    pdfLink: null,
+                    pdfData: null,
+                    pdfFileName: null,
+                    createdDate: now.toISOString()
+                },
+                {
+                    id: 2,
+                    name: 'User Onboarding Flow',
+                    module: 'Chatbot',
+                    sheetLink: null,
+                    pdfLink: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+                    pdfData: null,
+                    pdfFileName: 'onboarding-flow.pdf',
+                    createdDate: yesterday.toISOString()
+                }
+            ];
+        }
+
+        // =====================================
+        // LOAD SHEETS
+        // =====================================
+        async function loadSheets(showNotification = false) {
+            try {
+                const refreshBtn = document.getElementById('btnRefresh');
+                if (refreshBtn) {
+                    refreshBtn.classList.add('spinning');
+                    refreshBtn.disabled = true;
+                }
+
+                let usingMock = false;
+                try {
+                    const response = await fetch(API_URL);
+                    if (!response.ok) throw new Error('API returned ' + response.status);
+                    sheetsData = await response.json();
+                } catch (apiError) {
+                    console.warn('API unavailable, using mock data:', apiError.message);
+                    sheetsData = getMockData();
+                    usingMock = true;
+                    if (showNotification) {
+                        showToast('📋 Using sample data (API offline)', false, 'info');
+                    }
+                }
+
+                if (Array.isArray(sheetsData)) {
+                    sheetsData.sort((a, b) => (b.id || 0) - (a.id || 0));
+                } else {
+                    sheetsData = [];
+                }
+
+                renderTable();
+                updateStats();
+                updateLastUpdated();
+
+                if (showNotification && !usingMock) {
+                    showToast('🔄 Data refreshed successfully!', false, 'info');
+                }
+
+                if (refreshBtn) {
+                    refreshBtn.classList.remove('spinning');
+                    refreshBtn.disabled = false;
+                }
+            } catch (error) {
+                console.error('Error loading sheets:', error);
+                const refreshBtn = document.getElementById('btnRefresh');
+                if (refreshBtn) {
+                    refreshBtn.classList.remove('spinning');
+                    refreshBtn.disabled = false;
+                }
+                if (showNotification) {
+                    showToast('❌ Failed to refresh data', true);
+                }
+            }
+        }
+
+        // =====================================
+        // RENDER TABLE
+        // =====================================
+        function renderTable() {
+            const tbody = document.getElementById('sheetsTableBody');
+            if (!tbody) return;
+            document.getElementById('sheetCount').textContent = sheetsData.length + ' journeys';
+
+            if (sheetsData.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7">
+                            <div class="empty-state" id="emptyState">
+                                <i class="fas fa-route"></i>
+                                <h5>No Journey Maps</h5>
+                                <p class="upload-hint">📤 Click here to upload your first journey map</p>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                setTimeout(() => {
+                    const emptyState = document.getElementById('emptyState');
+                    if (emptyState) {
+                        emptyState.addEventListener('click', () => {
+                            document.getElementById('btnAddSheet').click();
+                        });
+                    }
+                }, 100);
+                return;
+            }
+
+            tbody.innerHTML = sheetsData.map((sheet, index) => {
+                const hasSheetLink = sheet.sheetLink && sheet.sheetLink.trim() !== '';
+                const hasPdfLink = sheet.pdfLink && sheet.pdfLink.trim() !== '';
+                const hasPdfData = sheet.pdfData && sheet.pdfData.length > 0;
+
+                let sheetLinkHtml = '<span class="text-muted">—</span>';
+                if (hasSheetLink) {
+                    sheetLinkHtml = `<a href="${escapeHtml(sheet.sheetLink)}" target="_blank" class="link-btn" onclick="event.stopPropagation();">
+                        <i class="fas fa-external-link-alt"></i> Open Sheet
+                    </a>`;
+                }
+
+                let pdfHtml = '<span class="text-muted">—</span>';
+                if (hasPdfLink) {
+                    pdfHtml = `<a href="${escapeHtml(sheet.pdfLink)}" target="_blank" class="pdf-btn" onclick="event.stopPropagation();">
+                        <i class="fas fa-file-pdf"></i> View PDF
+                    </a>`;
+                } else if (hasPdfData) {
+                    pdfHtml = `<button class="btn btn-sm btn-outline-danger" onclick="previewPDF(${sheet.id})" title="Preview PDF">
+                        <i class="fas fa-file-pdf"></i> Preview
+                    </button>`;
+                }
+
+                return `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td><strong>${escapeHtml(sheet.name)}</strong></td>
+                        <td><span class="badge-module">${escapeHtml(sheet.module)}</span></td>
+                        <td>${sheetLinkHtml}</td>
+                        <td>${pdfHtml}</td>
+                        <td>${formatDate(sheet.createdDate)}</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary" onclick="viewSheet(${sheet.id})" title="View Details">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger" onclick="deleteSheet(${sheet.id})" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // =====================================
+        // VIEW SHEET DETAILS
+        // =====================================
+        function viewSheet(id) {
+            const sheet = sheetsData.find(s => s.id === id);
+            if (!sheet) {
+                showToast('Journey not found', true);
+                return;
+            }
+
+            const hasSheetLink = sheet.sheetLink && sheet.sheetLink.trim() !== '';
+            const hasPdfLink = sheet.pdfLink && sheet.pdfLink.trim() !== '';
+            const hasPdfData = sheet.pdfData && sheet.pdfData.length > 0;
+
+            let linksHtml = '';
+            if (hasSheetLink) {
+                linksHtml += `<div class="mb-2">
+                    <label class="form-label fw-bold">Sheet Link</label>
+                    <div class="p-3 bg-light rounded" style="word-break: break-all;">
+                        <a href="${escapeHtml(sheet.sheetLink)}" target="_blank" class="link-btn">
+                            <i class="fas fa-external-link-alt"></i> ${escapeHtml(sheet.sheetLink)}
+                        </a>
+                    </div>
+                </div>`;
+            }
+            if (hasPdfLink) {
+                linksHtml += `<div class="mb-2">
+                    <label class="form-label fw-bold">PDF Link</label>
+                    <div class="p-3 bg-light rounded" style="word-break: break-all;">
+                        <a href="${escapeHtml(sheet.pdfLink)}" target="_blank" class="pdf-btn">
+                            <i class="fas fa-file-pdf"></i> ${escapeHtml(sheet.pdfLink)}
+                        </a>
+                    </div>
+                </div>`;
+            }
+            if (hasPdfData) {
+                const fileSize = Math.round(sheet.pdfData.length / 1024);
+                linksHtml += `<div class="mb-2">
+                    <label class="form-label fw-bold">Uploaded PDF</label>
+                    <div class="p-3 bg-light rounded">
+                        <button class="btn btn-danger" onclick="previewPDF(${sheet.id})">
+                            <i class="fas fa-file-pdf"></i> Preview ${sheet.pdfFileName ? escapeHtml(sheet.pdfFileName) : 'PDF'}
+                        </button>
+                        <span class="ms-2 text-muted">(${fileSize} KB)</span>
+                    </div>
+                </div>`;
+            }
+            if (!hasSheetLink && !hasPdfLink && !hasPdfData) {
+                linksHtml = `<p class="text-muted">No links or PDF attached</p>`;
+            }
+
+            const html = `
+                <div style="animation: fadeInUp 0.3s ease;">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <h5 class="mb-1">${escapeHtml(sheet.name)}</h5>
+                            <p class="text-muted mb-0"><span class="badge-module">${escapeHtml(sheet.module)}</span></p>
+                        </div>
+                        <div class="col-md-6 text-end">
+                            <span class="badge bg-success">${formatDate(sheet.createdDate)}</span>
+                        </div>
+                    </div>
+                    <hr>
+                    ${linksHtml}
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <small class="text-muted">Created: ${formatDate(sheet.createdDate)}</small>
+                        </div>
+                        <div class="col-md-6 text-end">
+                            <small class="text-muted">ID: #${sheet.id}</small>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('sheetDetailContent').innerHTML = html;
+            const openBtn = document.getElementById('btnOpenSheet');
+            if (hasSheetLink) {
+                openBtn.style.display = 'inline-flex';
+                openBtn.onclick = function() {
+                    window.open(sheet.sheetLink, '_blank');
+                };
+            } else {
+                openBtn.style.display = 'none';
+            }
+
+            const modal = new bootstrap.Modal(document.getElementById('viewSheetModal'));
+            modal.show();
+        }
+
+        // =====================================
+        // PREVIEW PDF
+        // =====================================
+        function previewPDF(id) {
+            const sheet = sheetsData.find(s => s.id === id);
+            if (!sheet) {
+                showToast('Journey not found', true);
+                return;
+            }
+
+            const container = document.getElementById('pdfPreviewContainer');
+            const downloadBtn = document.getElementById('btnDownloadPDF');
+
+            if (sheet.pdfLink) {
+                container.innerHTML = `
+                    <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:20px;padding:40px;">
+                        <i class="fas fa-file-pdf" style="font-size:60px;color:#DC2626;"></i>
+                        <h5>External PDF</h5>
+                        <a href="${escapeHtml(sheet.pdfLink)}" target="_blank" class="btn btn-danger btn-lg">
+                            <i class="fas fa-external-link-alt"></i> Open PDF in New Tab
+                        </a>
+                        <p class="text-muted">${escapeHtml(sheet.pdfLink)}</p>
+                    </div>
+                `;
+                downloadBtn.style.display = 'none';
+            } else if (sheet.pdfData && sheet.pdfData.length > 0) {
+                container.innerHTML = `
+                    <embed src="data:application/pdf;base64,${sheet.pdfData}" 
+                           type="application/pdf" 
+                           style="width:100%;height:100%;border-radius:0;" />
+                `;
+                downloadBtn.style.display = 'inline-flex';
+                downloadBtn.onclick = function() {
+                    const link = document.createElement('a');
+                    link.href = `data:application/pdf;base64,${sheet.pdfData}`;
+                    link.download = sheet.pdfFileName || 'journey-map.pdf';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                };
+            } else {
+                showToast('No PDF available', true);
+                return;
+            }
+
+            const modal = new bootstrap.Modal(document.getElementById('pdfPreviewModal'));
+            modal.show();
+        }
+
+        // =====================================
+        // UPDATE STATISTICS
+        // =====================================
+        function updateStats() {
+            const total = sheetsData.length;
+            document.getElementById('totalJourneys').innerText = total;
+
+            const modules = new Set(sheetsData.map(s => s.module));
+            document.getElementById('totalModules').innerText = modules.size;
+
+            const today = new Date().toDateString();
+            const todaySheets = sheetsData.filter(s => {
+                const d = new Date(s.createdDate);
+                return d.toDateString() === today;
+            });
+            document.getElementById('todaySheets').innerText = todaySheets.length;
+
+            if (sheetsData.length > 0) {
+                const latest = sheetsData[0];
+                const name = latest.name || 'Untitled';
+                const displayName = name.length > 15 ? name.substring(0, 15) + '...' : name;
+                document.getElementById('latestSheet').innerHTML = `${escapeHtml(displayName)}<br><small style="font-size:0.6rem;color:#94A3B8;">${formatDate(latest.createdDate)}</small>`;
+            } else {
+                document.getElementById('latestSheet').innerText = '--';
+            }
+        }
+
+        // =====================================
+        // SAVE SHEET
+        // =====================================
+        async function saveSheet() {
+            const name = document.getElementById('journeyName').value.trim();
+            const module = document.getElementById('journeyModule').value.trim();
+            const sheetLink = document.getElementById('sheetLink').value.trim();
+            const pdfLink = document.getElementById('pdfLink').value.trim();
+            const pdfFile = document.getElementById('pdfUpload').files[0];
+
+            if (!name) {
+                showToast('Please enter journey name', true);
+                document.getElementById('journeyName').focus();
+                return;
+            }
+            if (!module) {
+                showToast('Please enter module name', true);
+                document.getElementById('journeyModule').focus();
+                return;
+            }
+
+            const hasSheetLink = sheetLink && sheetLink.length > 0;
+            const hasPdfLink = pdfLink && pdfLink.length > 0;
+            const hasPdfFile = pdfFile && pdfFile instanceof File;
+
+            if (!hasSheetLink && !hasPdfLink && !hasPdfFile) {
+                showToast('Please provide a Sheet Link, PDF Link, or upload a PDF file', true);
+                return;
+            }
+
+            if (hasSheetLink && !sheetLink.includes('drive.google.com') && !sheetLink.includes('docs.google.com') && !sheetLink.includes('sheets')) {
+                showToast('Please enter a valid Google Drive or Sheet link', true);
+                return;
+            }
+
+            if (hasPdfLink && !pdfLink.toLowerCase().endsWith('.pdf') && !pdfLink.includes('pdf')) {
+                showToast('Please enter a valid PDF link', true);
+                return;
+            }
+
+            if (hasPdfFile && pdfFile.type !== 'application/pdf') {
+                showToast('Please upload a valid PDF file', true);
+                return;
+            }
+
+            const saveBtn = document.getElementById('btnSaveSheet');
+            const originalHtml = saveBtn.innerHTML;
+            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Uploading...';
+            saveBtn.disabled = true;
+
+            try {
+                let pdfData = null;
+                let pdfFileName = null;
+
+                if (hasPdfFile) {
+                    pdfFileName = pdfFile.name;
+                    const reader = new FileReader();
+                    pdfData = await new Promise((resolve, reject) => {
+                        reader.onload = (e) => {
+                            try {
+                                const base64 = e.target.result.split(',')[1];
+                                resolve(base64);
+                            } catch (err) {
+                                reject(err);
+                            }
+                        };
+                        reader.onerror = reject;
+                        reader.readAsDataURL(pdfFile);
+                    });
+                }
+
+                const sheetData = {
+                    name: name,
+                    module: module,
+                    sheetLink: hasSheetLink ? sheetLink : null,
+                    pdfLink: hasPdfLink ? pdfLink : null,
+                    pdfData: pdfData,
+                    pdfFileName: pdfFileName,
+                    createdDate: new Date().toISOString(),
+                    stagesJson: '[]',
+                    description: '',
+                    estimatedCompletion: null,
+                    progress: 0,
+                    status: 'not-started'
+                };
+
+                console.log('📤 Sending data:', {
+                    ...sheetData,
+                    pdfData: sheetData.pdfData ? `✅ ${sheetData.pdfData.length} chars` : '❌ NULL'
+                });
+
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(sheetData)
+                });
+
+                if (!response.ok) {
+                    const error = await response.text();
+                    throw new Error(error || 'Failed to save journey');
+                }
+
+                showToast('✅ Journey map uploaded successfully!');
+                const modal = bootstrap.Modal.getInstance(document.getElementById('addSheetModal'));
+                if (modal) modal.hide();
+
+                document.getElementById('journeyName').value = '';
+                document.getElementById('journeyModule').value = '';
+                document.getElementById('sheetLink').value = '';
+                document.getElementById('pdfLink').value = '';
+                document.getElementById('pdfUpload').value = '';
+
+                await loadSheets(false);
+            } catch (error) {
+                console.error('Error saving sheet:', error);
+                showToast('Failed to upload: ' + error.message, true);
+            } finally {
+                saveBtn.innerHTML = originalHtml;
+                saveBtn.disabled = false;
+            }
+        }
+
+        // =====================================
+        // DELETE SHEET
+        // =====================================
+        async function deleteSheet(id) {
+            const sheet = sheetsData.find(s => s.id === id);
+            if (!confirm('Are you sure you want to delete "' + (sheet?.name || 'journey') + '"?')) return;
+
+            try {
+                const response = await fetch(`${API_URL}/${id}`, {
+                    method: 'DELETE'
+                });
+                if (!response.ok) {
+                    const error = await response.text();
+                    throw new Error(error || 'Failed to delete journey');
+                }
+                showToast('✅ Journey deleted successfully');
+                await loadSheets(false);
+            } catch (error) {
+                console.error('Error deleting sheet:', error);
+                showToast('Failed to delete: ' + error.message, true);
+            }
+        }
+
+        // =====================================
+        // SEARCH SHEETS
+        // =====================================
+        function searchSheets() {
+            const keyword = document.getElementById('searchSheet').value.toLowerCase().trim();
+            const tbody = document.getElementById('sheetsTableBody');
+            const rows = tbody.querySelectorAll('tr');
+
+            if (keyword === '') {
+                rows.forEach(row => row.style.display = '');
+                return;
+            }
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(keyword) ? '' : 'none';
+            });
+        }
+
+        // =====================================
+        // REFRESH DATA
+        // =====================================
+        function refreshData() {
+            const refreshBtn = document.getElementById('btnRefresh');
+            if (isRefreshing) return;
+            isRefreshing = true;
+            if (refreshBtn) {
+                refreshBtn.classList.add('spinning');
+            }
+            showToast('🔄 Refreshing data...', false, 'info');
+            loadSheets(true).finally(() => {
+                isRefreshing = false;
+                if (refreshBtn) {
+                    refreshBtn.classList.remove('spinning');
+                }
+            });
+        }
+
+        // =====================================
+        // UTILITY FUNCTIONS
+        // =====================================
+        function formatDate(dateString) {
+            if (!dateString) return 'N/A';
+            try {
+                const date = new Date(dateString);
+                return date.toLocaleString('en-US', {
+                    day: '2-digit',
+                    month: 'short',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: true
+                });
+            } catch (e) {
+                return dateString;
+            }
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function updateLastUpdated() {
+            const now = new Date();
+            const time = now.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            document.getElementById('lastUpdated').textContent = `Updated: ${time}`;
+        }
+
+        // =====================================
+        // EVENT LISTENERS
+        // =====================================
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!checkAuth()) return;
+            applyDarkMode();
+            displayUserName();
+            loadSheets(false);
+
+            document.getElementById('btnAddSheet').addEventListener('click', () => {
+                setCurrentDate();
+                const modal = new bootstrap.Modal(document.getElementById('addSheetModal'));
+                modal.show();
+            });
+
+            document.getElementById('btnRefresh').addEventListener('click', refreshData);
+            document.getElementById('btnSaveSheet').addEventListener('click', saveSheet);
+            document.getElementById('searchSheet').addEventListener('input', searchSheets);
+
+            document.getElementById('addSheetForm').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    saveSheet();
+                }
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if ((e.key === 'F5') || (e.ctrlKey && e.key === 'r')) {
+                    e.preventDefault();
+                    refreshData();
+                }
+            });
+
+            // =====================================
+            // STAT CARD CLICK HANDLERS
+            // =====================================
+            document.getElementById('statTotal')?.addEventListener('click', function() {
+                const total = sheetsData.length;
+                if (total === 0) {
+                    showToast('📊 No journeys found. Click "Upload Sheet" to add one!', false, 'info');
+                } else {
+                    showToast(`📊 Total Journeys: ${total}`, false, 'info');
+                    document.querySelector('.table-card')?.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+
+            document.getElementById('statModules')?.addEventListener('click', function() {
+                const modules = [...new Set(sheetsData.map(s => s.module).filter(Boolean))];
+                if (modules.length === 0) {
+                    showToast('📦 No modules found. Add some journeys!', false, 'info');
+                } else {
+                    const moduleList = modules.join(', ');
+                    showToast(`📦 Modules (${modules.length}): ${moduleList}`, false, 'info');
+                }
+            });
+
+            document.getElementById('statToday')?.addEventListener('click', function() {
+                const today = new Date().toDateString();
+                const todaySheets = sheetsData.filter(s => {
+                    const d = new Date(s.createdDate);
+                    return d.toDateString() === today;
+                });
+                if (todaySheets.length === 0) {
+                    showToast('📅 No uploads today. Upload a journey map!', false, 'info');
+                } else {
+                    const names = todaySheets.map(s => s.name).join(', ');
+                    showToast(`📅 Today's uploads (${todaySheets.length}): ${names}`, false, 'info');
+                    document.querySelector('.table-card')?.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+
+            document.getElementById('statLatest')?.addEventListener('click', function() {
+                if (sheetsData.length === 0) {
+                    showToast('⏰ No journeys yet. Upload one now!', false, 'info');
+                } else {
+                    const latest = sheetsData[0];
+                    showToast(`⏰ Latest: "${latest.name}" (${latest.module})`, false, 'info');
+                    viewSheet(latest.id);
+                }
+            });
+
+            // Expose functions globally
+            window.goPage = goPage;
+            window.viewSheet = viewSheet;
+            window.deleteSheet = deleteSheet;
+            window.previewPDF = previewPDF;
+            window.showToast = showToast;
+            window.refreshData = refreshData;
+        });
+    </script>
+
+</body>
+
+</html>
