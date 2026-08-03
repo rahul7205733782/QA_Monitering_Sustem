@@ -1028,7 +1028,7 @@
             </div>
             <div class="col-md-5">
                 <label class="fw-bold small text-muted">OR Paste JSON</label>
-                <textarea id="jsonInput" rows="5" class="form-control" placeholder='[{"text_hi":"नमस्ते","text_en":"Hello"}]'></textarea>
+                <textarea id="jsonInput" rows="5" class="form-control" placeholder='[{"hi":"नमस्ते","en":"Hello"}]'></textarea>
                 <button class="btn btn-sm btn-outline-secondary w-100 mt-1" id="parseJsonBtn">Parse JSON</button>
             </div>
         </div>
@@ -1131,6 +1131,503 @@
         let jsonData = null;
         let detectedLanguages = [];
         let selectedLanguages = [];
+
+        // =====================================
+        // NON-LANGUAGE FIELD PATTERNS (to exclude)
+        // =====================================
+        const excludePatterns = [
+            /^id$/i,
+            /^code$/i,
+            /^aiCode$/i,
+            /^action$/i,
+            /^type$/i,
+            /^status$/i,
+            /^timestamp$/i,
+            /^date$/i,
+            /^created/i,
+            /^updated/i,
+            /^deleted/i,
+            /^is/i,
+            /^has/i,
+            /^count$/i,
+            /^total$/i,
+            /^index$/i,
+            /^position$/i,
+            /^order$/i,
+            /^priority$/i,
+            /^category$/i,
+            /^tag$/i,
+            /^label$/i,
+            /^name$/i,
+            /^title$/i,
+            /^description$/i,
+            /^note$/i,
+            /^comment$/i,
+            /^url$/i,
+            /^link$/i,
+            /^email$/i,
+            /^phone$/i,
+            /^mobile$/i,
+            /^address$/i,
+            /^city$/i,
+            /^state$/i,
+            /^country$/i,
+            /^zip$/i,
+            /^pincode$/i,
+            /^latitude$/i,
+            /^longitude$/i,
+            /^price$/i,
+            /^cost$/i,
+            /^amount$/i,
+            /^currency$/i,
+            /^rating$/i,
+            /^score$/i,
+            /^feedback$/i,
+            /^response$/i,
+            /^message$/i,
+            /^text$/i,
+            /^body$/i,
+            /^content$/i,
+            /^data$/i,
+            /^result$/i,
+            /^output$/i,
+            /^input$/i,
+            /^request$/i,
+            /^reply$/i,
+            /^answer$/i,
+            /^solution$/i,
+            /^error$/i,
+            /^success$/i,
+            /^warning$/i,
+            /^info$/i,
+            /^debug$/i,
+            /^trace$/i,
+            /^log$/i,
+            /^res_arr/i,
+            /^action_type$/i,
+            /^isArray$/i,
+            /^sections$/i,
+            /^rows$/i,
+            /^buttons$/i,
+            /^button$/i
+        ];
+
+        function isLanguageField(key) {
+            for (const pattern of excludePatterns) {
+                if (pattern.test(key)) {
+                    return false;
+                }
+            }
+            
+            // Check if it's a text field
+            if (key.startsWith('text_') || key.startsWith('text-')) {
+                return true;
+            }
+            
+            // Check for language code
+            const languageCodes = ['en', 'hi', 'bn', 'ta', 'te', 'ml', 'kn', 'gu', 'mr', 'ur', 'or', 'pa', 'ar', 'fr', 'es', 'de', 'it', 'pt', 'ru', 'zh', 'ja', 'ko'];
+            for (const code of languageCodes) {
+                if (key === code || key === 'text_' + code || key === code + '_text') {
+                    return true;
+                }
+            }
+            
+            // If key contains language code with underscore
+            for (const code of languageCodes) {
+                if (key.includes('_' + code) || key.includes(code + '_')) {
+                    return true;
+                }
+            }
+            
+            return false;
+        }
+
+        // =====================================
+        // IMPROVED LANGUAGE DETECTION - WITH BENGALI SUPPORT
+        // =====================================
+        
+        // Language detection with specific character ranges and common words
+        const languageDetectors = {
+            'en': {
+                name: 'English',
+                priority: 1,
+                test: function(text) {
+                    if (!/[A-Za-z]/.test(text)) return false;
+                    const englishWords = ['the', 'be', 'to', 'of', 'and', 'a', 'in', 'that', 'have', 'i', 'it', 'for', 'not', 'on', 'with', 'he', 'as', 'you', 'do', 'at', 'this', 'but', 'his', 'by', 'from', 'they', 'we', 'say', 'her', 'she', 'or', 'an', 'will', 'my', 'one', 'all', 'would', 'there', 'their', 'what', 'so', 'up', 'out', 'if', 'about', 'who', 'get', 'which', 'go', 'me', 'when', 'make', 'can', 'like', 'time', 'no', 'just', 'him', 'know', 'take', 'people', 'into', 'year', 'your', 'good', 'some', 'could', 'them', 'see', 'other', 'than', 'then', 'now', 'look', 'only', 'come', 'its', 'over', 'think', 'also', 'back', 'after', 'use', 'two', 'how', 'our', 'work', 'first', 'well', 'way', 'even', 'new', 'want', 'because', 'any', 'these', 'give', 'day', 'most', 'us'];
+                    const textLower = text.toLowerCase();
+                    let matches = 0;
+                    for (const word of englishWords) {
+                        if (textLower.includes(word)) {
+                            matches++;
+                            if (matches >= 2) return true;
+                        }
+                    }
+                    return matches >= 2;
+                }
+            },
+            'bn': {
+                name: 'Bengali',
+                priority: 2,
+                test: function(text) {
+                    // Bengali script range: \u0980-\u09FF
+                    if (!/[\u0980-\u09FF]/.test(text)) return false;
+                    // Check for Bengali specific characters
+                    const bengaliChars = ['\u0985', '\u0986', '\u0987', '\u0988', '\u0989', '\u098A', '\u098B', '\u098F', '\u0990', '\u0993', '\u0994', '\u0995', '\u0996', '\u0997', '\u0998', '\u0999', '\u099A', '\u099B', '\u099C', '\u099D', '\u099E', '\u099F', '\u09A0', '\u09A1', '\u09A2', '\u09A3', '\u09A4', '\u09A5', '\u09A6', '\u09A7', '\u09A8', '\u09AA', '\u09AB', '\u09AC', '\u09AD', '\u09AE', '\u09AF', '\u09B0', '\u09B2', '\u09B6', '\u09B7', '\u09B8', '\u09B9'];
+                    for (const char of bengaliChars) {
+                        if (text.includes(char)) {
+                            return true;
+                        }
+                    }
+                    // Check for Bengali common words
+                    const bengaliWords = ['হয়', 'আমি', 'তুমি', 'আপনি', 'এবং', 'না', 'থেকে', 'জন্য', 'সহ', 'কি', 'যে', 'এটি', 'ও', 'এই', 'সে', 'আমার', 'তোমার', 'আমাদের', 'তাদের', 'কিন্তু', 'তাই', 'এখন', 'আবার', 'সব', 'বেশি', 'কম', 'ঠিক', 'ভাল', 'খারাপ', 'আছে', 'ছিল', 'হবে', 'করবে', 'করেছে'];
+                    const textLower = text.toLowerCase();
+                    let matches = 0;
+                    for (const word of bengaliWords) {
+                        if (textLower.includes(word)) {
+                            matches++;
+                            if (matches >= 1) return true;
+                        }
+                    }
+                    return matches >= 1;
+                }
+            },
+            'hi': {
+                name: 'Hindi',
+                priority: 3,
+                test: function(text) {
+                    // Devanagari range: \u0900-\u097F (but NOT Bengali \u0980-\u09FF)
+                    if (!/[\u0900-\u097F]/.test(text)) return false;
+                    // Check if it has Bengali characters - if yes, it's not Hindi
+                    if (/[\u0980-\u09FF]/.test(text)) return false;
+                    const hindiWords = ['है', 'में', 'को', 'से', 'का', 'की', 'के', 'नहीं', 'हो', 'और', 'आप', 'यह', 'वह', 'मैं', 'तुम', 'हम', 'आपका', 'आपकी', 'बहुत', 'क्या', 'क्यों', 'कैसे', 'कब', 'कहाँ', 'कौन', 'किस', 'किसी', 'अपना', 'अपनी', 'अपने'];
+                    const textLower = text.toLowerCase();
+                    let matches = 0;
+                    for (const word of hindiWords) {
+                        if (textLower.includes(word)) {
+                            matches++;
+                            if (matches >= 2) return true;
+                        }
+                    }
+                    return matches >= 2;
+                }
+            },
+            'ta': {
+                name: 'Tamil',
+                priority: 4,
+                test: function(text) {
+                    if (!/[\u0B80-\u0BFF]/.test(text)) return false;
+                    const tamilWords = ['உள்ளது', 'நான்', 'நீங்கள்', 'மற்றும்', 'இல்லை', 'இது', 'அவர்', 'அவள்', 'எனக்கு', 'உனக்கு', 'எங்கள்', 'உங்கள்', 'அவர்கள்', 'இந்த', 'அது', 'என்ன', 'ஏன்', 'எப்படி', 'எப்போது', 'எங்கே', 'யார்'];
+                    const textLower = text.toLowerCase();
+                    let matches = 0;
+                    for (const word of tamilWords) {
+                        if (textLower.includes(word)) {
+                            matches++;
+                            if (matches >= 2) return true;
+                        }
+                    }
+                    return matches >= 2;
+                }
+            },
+            'te': {
+                name: 'Telugu',
+                priority: 5,
+                test: function(text) {
+                    if (!/[\u0C00-\u0C7F]/.test(text)) return false;
+                    const teluguWords = ['ఉంది', 'నేను', 'మీరు', 'మరియు', 'కాదు', 'ఇది', 'అతను', 'ఆమె', 'నాకు', 'మీకు', 'మాకు', 'వారు', 'ఈ', 'అది', 'ఏమి', 'ఎందుకు', 'ఎలా', 'ఎప్పుడు', 'ఎక్కడ', 'ఎవరు'];
+                    const textLower = text.toLowerCase();
+                    let matches = 0;
+                    for (const word of teluguWords) {
+                        if (textLower.includes(word)) {
+                            matches++;
+                            if (matches >= 2) return true;
+                        }
+                    }
+                    return matches >= 2;
+                }
+            },
+            'ml': {
+                name: 'Malayalam',
+                priority: 6,
+                test: function(text) {
+                    if (!/[\u0D00-\u0D7F]/.test(text)) return false;
+                    const malayalamWords = ['ഉണ്ട്', 'ഞാൻ', 'നിങ്ങൾ', 'ഒപ്പം', 'ഇല്ല', 'ഇത്', 'അവൻ', 'അവൾ', 'എനിക്ക്', 'നിനക്ക്', 'ഞങ്ങൾ', 'നിങ്ങൾക്ക്', 'അവർ', 'ഈ', 'അത്', 'എന്ത്', 'എന്തുകൊണ്ട്', 'എങ്ങനെ', 'എപ്പോൾ', 'എവിടെ', 'ആര്'];
+                    const textLower = text.toLowerCase();
+                    let matches = 0;
+                    for (const word of malayalamWords) {
+                        if (textLower.includes(word)) {
+                            matches++;
+                            if (matches >= 2) return true;
+                        }
+                    }
+                    return matches >= 2;
+                }
+            },
+            'kn': {
+                name: 'Kannada',
+                priority: 7,
+                test: function(text) {
+                    if (!/[\u0C80-\u0CFF]/.test(text)) return false;
+                    const kannadaWords = ['ಇದೆ', 'ನಾನು', 'ನೀವು', 'ಮತ್ತು', 'ಇಲ್ಲ', 'ಇದು', 'ಅವನು', 'ಅವಳು', 'ನನಗೆ', 'ನಿಮಗೆ', 'ನಮಗೆ', 'ನಿಮ್ಮ', 'ಅವರು', 'ಈ', 'ಅದು', 'ಏನು', 'ಏಕೆ', 'ಹೇಗೆ', 'ಯಾವಾಗ', 'ಎಲ್ಲಿ', 'ಯಾರು'];
+                    const textLower = text.toLowerCase();
+                    let matches = 0;
+                    for (const word of kannadaWords) {
+                        if (textLower.includes(word)) {
+                            matches++;
+                            if (matches >= 2) return true;
+                        }
+                    }
+                    return matches >= 2;
+                }
+            },
+            'gu': {
+                name: 'Gujarati',
+                priority: 8,
+                test: function(text) {
+                    if (!/[\u0A80-\u0AFF]/.test(text)) return false;
+                    const gujaratiWords = ['છે', 'હું', 'તમે', 'અને', 'નથી', 'આ', 'તે', 'મને', 'તમને', 'અમને', 'તમારા', 'તેઓ'];
+                    const textLower = text.toLowerCase();
+                    let matches = 0;
+                    for (const word of gujaratiWords) {
+                        if (textLower.includes(word)) {
+                            matches++;
+                            if (matches >= 2) return true;
+                        }
+                    }
+                    return matches >= 2;
+                }
+            },
+            'mr': {
+                name: 'Marathi',
+                priority: 9,
+                test: function(text) {
+                    if (!/[\u0900-\u097F]/.test(text)) return false;
+                    if (/[\u0980-\u09FF]/.test(text)) return false;
+                    const marathiWords = ['आहे', 'मी', 'तू', 'आणि', 'नाही', 'हे', 'तो', 'ती', 'मला', 'तुला', 'आम्ही', 'तुम्ही', 'ते', 'हा', 'ही', 'काय', 'का', 'कसे', 'कधी', 'कुठे', 'कोण'];
+                    const textLower = text.toLowerCase();
+                    let matches = 0;
+                    for (const word of marathiWords) {
+                        if (textLower.includes(word)) {
+                            matches++;
+                            if (matches >= 2) return true;
+                        }
+                    }
+                    return matches >= 2;
+                }
+            },
+            'ur': {
+                name: 'Urdu',
+                priority: 10,
+                test: function(text) {
+                    if (!/[\u0600-\u06FF]/.test(text)) return false;
+                    const urduWords = ['ہے', 'میں', 'تم', 'اور', 'نہیں', 'یہ', 'وہ', 'مجھے', 'آپ', 'ہم', 'آپکا', 'انہوں'];
+                    const textLower = text.toLowerCase();
+                    let matches = 0;
+                    for (const word of urduWords) {
+                        if (textLower.includes(word)) {
+                            matches++;
+                            if (matches >= 2) return true;
+                        }
+                    }
+                    return matches >= 2;
+                }
+            },
+            'ar': {
+                name: 'Arabic',
+                priority: 11,
+                test: function(text) {
+                    if (!/[\u0600-\u06FF]/.test(text)) return false;
+                    const arabicWords = ['هو', 'هي', 'أنا', 'أنت', 'و', 'لا', 'هذا', 'ذلك', 'مع', 'في', 'على', 'من', 'إلى'];
+                    const textLower = text.toLowerCase();
+                    let matches = 0;
+                    for (const word of arabicWords) {
+                        if (textLower.includes(word)) {
+                            matches++;
+                            if (matches >= 2) return true;
+                        }
+                    }
+                    return matches >= 2;
+                }
+            },
+            'or': {
+                name: 'Odia',
+                priority: 12,
+                test: function(text) {
+                    if (!/[\u0B00-\u0B7F]/.test(text)) return false;
+                    return true;
+                }
+            },
+            'pa': {
+                name: 'Punjabi',
+                priority: 13,
+                test: function(text) {
+                    if (!/[\u0A00-\u0A7F]/.test(text)) return false;
+                    return true;
+                }
+            },
+            'fr': {
+                name: 'French',
+                priority: 14,
+                test: function(text) {
+                    if (!/[A-Za-z]/.test(text)) return false;
+                    const frenchWords = ['le', 'la', 'les', 'un', 'une', 'de', 'des', 'et', 'en', 'est', 'que', 'qui', 'dans', 'par', 'avec', 'pour', 'sur', 'sans'];
+                    const textLower = text.toLowerCase();
+                    let matches = 0;
+                    for (const word of frenchWords) {
+                        if (textLower.includes(word)) {
+                            matches++;
+                            if (matches >= 2) return true;
+                        }
+                    }
+                    return false;
+                }
+            },
+            'es': {
+                name: 'Spanish',
+                priority: 15,
+                test: function(text) {
+                    if (!/[A-Za-z]/.test(text)) return false;
+                    const spanishWords = ['el', 'la', 'los', 'las', 'un', 'una', 'de', 'del', 'en', 'que', 'es', 'por', 'con', 'para', 'como', 'sobre', 'sin', 'entre'];
+                    const textLower = text.toLowerCase();
+                    let matches = 0;
+                    for (const word of spanishWords) {
+                        if (textLower.includes(word)) {
+                            matches++;
+                            if (matches >= 2) return true;
+                        }
+                    }
+                    return false;
+                }
+            },
+            'de': {
+                name: 'German',
+                priority: 16,
+                test: function(text) {
+                    if (!/[A-Za-z]/.test(text)) return false;
+                    const germanWords = ['der', 'die', 'das', 'den', 'dem', 'des', 'und', 'ist', 'nicht', 'mit', 'von', 'zu', 'auf', 'für', 'über', 'bei', 'an', 'in', 'aus', 'nach'];
+                    const textLower = text.toLowerCase();
+                    let matches = 0;
+                    for (const word of germanWords) {
+                        if (textLower.includes(word)) {
+                            matches++;
+                            if (matches >= 2) return true;
+                        }
+                    }
+                    return false;
+                }
+            }
+        };
+
+        function detectLanguageByContent(text) {
+            if (!text || typeof text !== 'string') return null;
+            
+            text = text.trim();
+            if (text.length === 0) return null;
+            
+            // Try each language detector
+            let bestMatch = null;
+            let bestScore = 0;
+            
+            for (const [code, detector] of Object.entries(languageDetectors)) {
+                try {
+                    if (detector.test(text)) {
+                        // Score based on text length and matches
+                        const score = text.length > 50 ? 10 : 5;
+                        if (score > bestScore) {
+                            bestScore = score;
+                            bestMatch = code;
+                        }
+                    }
+                } catch (e) {
+                    // Skip if test fails
+                }
+            }
+            
+            // If no language matched and it has Latin script, default to English
+            if (!bestMatch && /[A-Za-z]/.test(text)) {
+                return 'en';
+            }
+            
+            // If no language matched and it has Bengali script, it's Bengali
+            if (!bestMatch && /[\u0980-\u09FF]/.test(text)) {
+                return 'bn';
+            }
+            
+            return bestMatch;
+        }
+
+        function detectLanguagesFromJson(data) {
+            if (!data || !Array.isArray(data) || data.length === 0) {
+                return [];
+            }
+
+            // Collect all keys and filter out non-language fields
+            const allKeys = new Set();
+            data.forEach(item => {
+                if (item && typeof item === 'object') {
+                    Object.keys(item).forEach(key => {
+                        if (isLanguageField(key)) {
+                            allKeys.add(key);
+                        }
+                    });
+                }
+            });
+
+            // Analyze each key's content to detect language
+            const languageMap = new Map();
+            
+            allKeys.forEach(key => {
+                let languageScores = {};
+                let totalSamples = 0;
+                
+                // Sample up to 10 items per key
+                const samples = data.slice(0, 10);
+                
+                samples.forEach(item => {
+                    const value = item[key];
+                    if (value && typeof value === 'string' && value.trim().length > 0) {
+                        const detected = detectLanguageByContent(value);
+                        if (detected) {
+                            if (!languageScores[detected]) {
+                                languageScores[detected] = 0;
+                            }
+                            languageScores[detected]++;
+                            totalSamples++;
+                        }
+                    }
+                });
+                
+                // If we have enough samples
+                if (totalSamples >= 1) {
+                    let bestLang = null;
+                    let bestScore = 0;
+                    
+                    for (const [lang, score] of Object.entries(languageScores)) {
+                        if (score > bestScore) {
+                            bestScore = score;
+                            bestLang = lang;
+                        }
+                    }
+                    
+                    if (bestLang) {
+                        const langInfo = languageDetectors[bestLang];
+                        if (langInfo) {
+                            languageMap.set(key, {
+                                field: key,
+                                displayName: langInfo.name,
+                                code: bestLang,
+                                priority: langInfo.priority
+                            });
+                        }
+                    }
+                }
+            });
+            
+            // Convert to array and sort by priority (English first)
+            const result = Array.from(languageMap.values());
+            result.sort((a, b) => a.priority - b.priority);
+            
+            return result;
+        }
 
         // =====================================
         // NAVIGATION
@@ -1262,7 +1759,7 @@
         });
 
         // =====================================
-        // PARSE JSON
+        // PARSE JSON - IMPROVED
         // =====================================
         document.getElementById('parseJsonBtn').addEventListener('click', parseJson);
 
@@ -1318,9 +1815,35 @@
 
                 jsonData = data;
                 document.getElementById('totalRecords').textContent = data.length;
-                document.getElementById('statusBadge').innerHTML = '⏳ Detecting languages...';
-                updatePreview(data, []);
-                detectLanguages(input);
+                document.getElementById('statusBadge').innerHTML = '⏳ Detecting languages from content...';
+                
+                // Detect languages by analyzing content
+                const detected = detectLanguagesFromJson(data);
+                
+                if (detected.length === 0) {
+                    document.getElementById('statusBadge').innerHTML = '⚠️ No languages detected';
+                    showToast('Could not detect any languages from the content', true);
+                    document.getElementById('languageContainer').innerHTML = 
+                        '<span class="text-muted">No languages detected in the content</span>';
+                    return;
+                }
+                
+                detectedLanguages = detected.map(l => l.field);
+                selectedLanguages = [...detectedLanguages];
+                
+                // Render languages
+                renderLanguages(detected);
+                
+                // Update preview
+                updatePreview(data, selectedLanguages);
+                
+                document.getElementById('totalLanguages').textContent = detected.length;
+                document.getElementById('selectedCount').textContent = selectedLanguages.length;
+                document.getElementById('statusBadge').innerHTML = '✅ Languages detected from content';
+                
+                // Show which languages were detected
+                const langNames = detected.map(l => l.displayName + ' (' + l.field + ')').join(', ');
+                showToast(`✅ Detected ${detected.length} languages: ${langNames}`);
 
             } catch (e) {
                 let errorMsg = e.message;
@@ -1347,10 +1870,10 @@
             let fields = langs;
             if (!fields || fields.length === 0) {
                 const firstItem = data[0];
-                fields = Object.keys(firstItem).slice(0, 5);
+                fields = Object.keys(firstItem).filter(key => isLanguageField(key)).slice(0, 5);
             }
 
-            status.textContent = data.length + ' records' + (fields.length ? ', ' + fields.length + ' fields' : '');
+            status.textContent = data.length + ' records' + (fields.length ? ', ' + fields.length + ' language fields' : '');
             let html = '<table><thead><tr>';
             fields.forEach(f => html += '<th>' + f + '</th>');
             html += '</tr></thead><tbody>';
@@ -1371,48 +1894,12 @@
         }
 
         // =====================================
-        // DETECT LANGUAGES
-        // =====================================
-        function detectLanguages(jsonStr) {
-            fetch(API_BASE + '/detect-languages', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ jsonData: jsonStr })
-                })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.error) {
-                        showToast(data.error, true);
-                        document.getElementById('statusBadge').innerHTML = '❌ Error';
-                        return;
-                    }
-                    if (data.languages) {
-                        detectedLanguages = data.languages.map(l => l.field);
-                        selectedLanguages = [...detectedLanguages];
-                        renderLanguages(data.languages);
-                        updatePreview(jsonData, selectedLanguages);
-                        document.getElementById('totalLanguages').textContent = detectedLanguages.length;
-                        document.getElementById('selectedCount').textContent = selectedLanguages.length;
-                        document.getElementById('statusBadge').innerHTML = '✅ Languages detected';
-                        showToast('✅ Detected ' + detectedLanguages.length + ' languages');
-                    } else {
-                        document.getElementById('statusBadge').innerHTML = '⚠️ No languages found';
-                        showToast('No language fields (text_*) found in JSON', true);
-                    }
-                })
-                .catch(e => {
-                    showToast('Error detecting languages: ' + e.message, true);
-                    document.getElementById('statusBadge').innerHTML = '❌ Error';
-                });
-        }
-
-        // =====================================
         // RENDER LANGUAGES
         // =====================================
         function renderLanguages(languages) {
             const container = document.getElementById('languageContainer');
             if (!languages || languages.length === 0) {
-                container.innerHTML = '<span class="text-muted">No language fields found</span>';
+                container.innerHTML = '<span class="text-muted">No languages detected</span>';
                 return;
             }
             container.innerHTML = '';
@@ -1435,7 +1922,7 @@
                     updatePreview(jsonData, selectedLanguages);
                 });
                 label.appendChild(cb);
-                label.appendChild(document.createTextNode(lang.displayName));
+                label.appendChild(document.createTextNode(lang.displayName + ' (' + lang.field + ')'));
                 container.appendChild(label);
             });
         }
@@ -1463,25 +1950,19 @@
         // CLEAR ALL - Reset everything to fresh state
         // =====================================
         function clearAll() {
-            // Clear JSON input
             document.getElementById('jsonInput').value = '';
-
-            // Clear file name display
             document.getElementById('fileNameDisplay').textContent = '';
             document.getElementById('fileNameDisplay').style.display = 'none';
 
-            // Reset state
             jsonData = null;
             detectedLanguages = [];
             selectedLanguages = [];
 
-            // Reset stats
             document.getElementById('totalRecords').textContent = '0';
             document.getElementById('totalLanguages').textContent = '0';
             document.getElementById('selectedCount').textContent = '0';
             document.getElementById('statusBadge').innerHTML = '✅ Ready';
 
-            // Reset preview
             document.getElementById('previewArea').innerHTML =
                 `<div class="text-center text-muted py-4">
                     <i class="fas fa-code" style="font-size:36px;"></i>
@@ -1489,21 +1970,17 @@
                 </div>`;
             document.getElementById('previewStatus').textContent = 'No data';
 
-            // Reset language container
             document.getElementById('languageContainer').innerHTML =
                 '<span class="text-muted">Upload or parse JSON to detect languages</span>';
 
-            // Reset file input
             document.getElementById('fileInput').value = '';
-
-            // Reset file name
             document.getElementById('excelFileName').value = 'Response_Sheet';
 
             showToast('🧹 All cleared! Ready for new task', false, 'info');
         }
 
         // =====================================
-        // GENERATE EXCEL
+        // GENERATE EXCEL - FIXED: Use detected language name for headers
         // =====================================
         document.getElementById('generateBtn').addEventListener('click', function() {
             if (!jsonData) {
@@ -1520,6 +1997,20 @@
             btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Generating...';
             btn.disabled = true;
 
+            // Build language mapping with detected names
+            const languageMapping = {};
+            const detectedLangs = detectLanguagesFromJson(jsonData);
+            
+            // Create a map of field -> display name
+            detectedLangs.forEach(lang => {
+                languageMapping[lang.field] = lang.displayName;
+            });
+
+            // Get the display names for selected languages
+            const languageHeaders = selectedLanguages.map(field => {
+                return languageMapping[field] || field;
+            });
+
             fetch(API_BASE + '/generate', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -1527,6 +2018,7 @@
                         jsonData: JSON.stringify(jsonData),
                         fileName: document.getElementById('excelFileName').value.trim() || 'Response_Sheet',
                         selectedLanguages: selectedLanguages,
+                        languageHeaders: languageHeaders, // Send detected language names
                         uploadedBy: 'Rahul Kumar'
                     })
                 })
@@ -1541,8 +2033,6 @@
                         document.getElementById('statusBadge').innerHTML = '✅ Generated';
                         loadHistory();
                         window.open(API_BASE + '/download/' + data.historyId, '_blank');
-
-                        // ✅ AUTO CLEAR AFTER SUCCESSFUL DOWNLOAD
                         setTimeout(clearAll, 1500);
                     }
                 })
@@ -1659,16 +2149,12 @@
                 setTimeout(parseJson, 500);
             }
 
-            // Refresh button
             document.getElementById('refreshBtn')?.addEventListener('click', function() {
                 showToast('🔄 Refreshing...', false, 'info');
                 loadHistory();
             });
 
-            // Clear All button
             document.getElementById('clearAllBtn')?.addEventListener('click', clearAll);
-
-            // Clear All History button
             document.getElementById('clearAllHistoryBtn')?.addEventListener('click', clearAllHistory);
         });
 
@@ -1679,21 +2165,15 @@
             if (e.ctrlKey && e.key === 's') {
                 e.preventDefault();
                 const sample = [{
-                    "aiCode": "res_greet",
-                    "text_hi": "आपकी भाषा प्राथमिकता क्या है?",
-                    "text_en": "What is your language preference?",
-                    "text_ml": "നിങ്ങളുടെ ഭാഷാ മുൻഗണന എന്താണ്?",
-                    "text_ta": "உங்கள் மொழி விருப்பம் என்ன?",
-                    "text_te": "మీ భాషా ప్రాధాన్యత ఏమిటి?",
-                    "text_bn": "আপনার ভাষার পছন্দ কী?"
+                    "aiCode": "res_enter_incorrect_otp",
+                    "text_en": "You have again entered incorrect OTP and have run out of maximum trials ☹️.\n\n⭕ *Note:* Your session has ended, you may start a new session at any time by sending *hi*",
+                    "text_kn": "OTP এবারও ভুল এবং এটিই ছিল শেষ ট্রায়াল ☹️।\n\n⭕ *বিঃদ্রঃ:* আপনার সেশন শেষ হয়ে গেছে, আপনি যেকোনো সময় *হাই* পাঠিয়ে নতুন চালু করতে পারেন。",
+                    "type": "1"
                 }, {
-                    "aiCode": "res_book_appointment",
-                    "text_hi": "आप कैसे आगे बढ़ना चाहेंगे?\n\n*1.* नया उपयोगकर्ता\n*2.* पंजीकृत उपयोगकर्ता",
-                    "text_en": "How would you like to proceed?\n\n*1.* New User\n*2.* Registered User",
-                    "text_ml": "നിങ്ങൾ എങ്ങനെ തുടരാൻ ആഗ്രഹിക്കുന്നു?\n\n*1.* പുതിയ ഉപയോക്താവ്\n*2.* രജിസ്റ്റർ ചെയ്ത ഉപയോക്താവ്",
-                    "text_ta": "நீங்கள் எவ்வாறு தொடர விரும்புகிறீர்கள்?\n\n*1.* புதிய பயனர்\n*2.* பதிவு செய்யப்பட்ட பயனர்",
-                    "text_te": "మీరు ఎలా కొనసాగాలనుకుంటున్నారు?\n\n*1.* కొత్త వినియోగదారు\n*2.* నమోదు చేసిన వినియోగదారు",
-                    "text_bn": "আপনি কীভাবে এগিয়ে যেতে চান?\n\n*1.* নতুন ব্যবহারকারী\n*2.* নিবন্ধিত ব্যবহারকারী"
+                    "aiCode": "res_language_info",
+                    "text_en": "Welcome to *Woodlands Hospital*, You may choose from the following services :\n\n*1.* Book An Appointment\n*2.* Find A Doctor\n*3.* Get Lab Reports\n*4.* Manage Appointment\n*5.* Share Feedback",
+                    "text_kn": "*উডল্যান্ডস হাসপাতালে * আপনাকে স্বাগতম, আপনি নিম্নলিখিত পরিষেবাগুলি থেকে বিকল্প বেছে নিন:\n\n*১.* অ্যাপয়েন্টমেন্ট বুকিং\n*২.* ডাক্তারের তালিকা\n*৩.* ল্যাব রিপোর্ট\n*৪.* অ্যাপয়েন্টমেন্ট সংশোধন\n*৫.* মতামত শেয়ারিং",
+                    "type": "1"
                 }];
                 document.getElementById('jsonInput').value = JSON.stringify(sample, null, 2);
                 document.getElementById('fileNameDisplay').textContent = '📋 Sample data loaded';
@@ -1717,10 +2197,10 @@
         window.clearAllHistory = clearAllHistory;
 
         console.log('💡 Press Ctrl+S to load sample data');
-        console.log('💡 Dark mode is controlled from Settings page');
-        console.log('💡 Click "Clear All" to reset everything');
-        console.log('💡 After downloading, form auto-clears in 1.5 seconds');
-        console.log('💡 Delete individual history records with the trash button');
+        console.log('💡 Language detection now properly detects Bengali from content');
+        console.log('💡 English is always detected and shown first');
+        console.log('💡 Excel headers will use the DETECTED language name (Bengali, not Kannada)');
+        console.log('💡 Even if field is named text_kn, the Excel will show "Bengali" as the header');
     </script>
 </body>
 </html>

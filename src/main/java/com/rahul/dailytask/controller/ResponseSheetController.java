@@ -64,7 +64,7 @@ public class ResponseSheetController {
     }
 
     // =====================================
-    // GENERATE EXCEL
+    // GENERATE EXCEL - FIXED TO ACCEPT HEADERS
     // =====================================
     @PostMapping("/generate")
     public ResponseEntity<?> generateExcel(@RequestBody Map<String, Object> request) {
@@ -74,7 +74,15 @@ public class ResponseSheetController {
             String jsonData = (String) request.get("jsonData");
             String fileName = (String) request.getOrDefault("fileName", "Response_Sheet");
             List<String> selectedLanguages = (List<String>) request.get("selectedLanguages");
+            List<String> languageHeaders = (List<String>) request.get("languageHeaders"); // <--- GET THIS
             String uploadedBy = (String) request.getOrDefault("uploadedBy", "system");
+
+            // Safety fallback: If frontend didn't send headers, generate them from raw fields
+            if (languageHeaders == null || languageHeaders.isEmpty()) {
+                languageHeaders = selectedLanguages.stream()
+                        .map(JsonToExcelUtil::getLanguageDisplayName)
+                        .toList();
+            }
 
             if (jsonData == null || jsonData.isEmpty()) {
                 return ResponseEntity.badRequest().body(Map.of("error", "jsonData is required"));
@@ -84,8 +92,9 @@ public class ResponseSheetController {
                 return ResponseEntity.badRequest().body(Map.of("error", "Please select at least one language"));
             }
 
+            // Pass BOTH lists to the service
             ResponseSheetHistory history = responseSheetService.generateExcel(
-                    jsonData, fileName, selectedLanguages, uploadedBy
+                    jsonData, fileName, selectedLanguages, languageHeaders, uploadedBy
             );
 
             Map<String, Object> response = new HashMap<>();
@@ -168,10 +177,7 @@ public class ResponseSheetController {
         try {
             System.out.println("🗑️ Deleting history record ID: " + id);
 
-            // Get the file path before deleting
             String filePath = responseSheetService.getFilePath(id);
-
-            // Delete from database
             boolean deleted = responseSheetService.deleteHistory(id);
 
             if (!deleted) {
@@ -179,14 +185,11 @@ public class ResponseSheetController {
                 return ResponseEntity.notFound().build();
             }
 
-            // Also delete the actual Excel file if it exists
             if (filePath != null) {
                 File file = new File(filePath);
                 if (file.exists()) {
                     boolean fileDeleted = file.delete();
                     System.out.println("📄 Excel file deleted: " + fileDeleted + " - " + filePath);
-                } else {
-                    System.out.println("📄 Excel file not found: " + filePath);
                 }
             }
 
@@ -207,10 +210,8 @@ public class ResponseSheetController {
         try {
             System.out.println("🗑️ Clearing ALL history records");
 
-            // Get all file paths before deleting
             List<ResponseSheetHistory> histories = responseSheetService.getHistory();
 
-            // Delete all Excel files
             int filesDeleted = 0;
             for (ResponseSheetHistory history : histories) {
                 String filePath = history.getFilePath();
@@ -218,15 +219,12 @@ public class ResponseSheetController {
                     File file = new File(filePath);
                     if (file.exists()) {
                         boolean deleted = file.delete();
-                        if (deleted) {
-                            filesDeleted++;
-                        }
+                        if (deleted) filesDeleted++;
                         System.out.println("📄 Excel file deleted: " + deleted + " - " + filePath);
                     }
                 }
             }
 
-            // Clear all history from database
             responseSheetService.clearAllHistory();
 
             System.out.println("✅ All history cleared! Files deleted: " + filesDeleted);

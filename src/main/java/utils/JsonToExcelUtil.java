@@ -13,46 +13,46 @@ import java.util.*;
 
 public class JsonToExcelUtil {
 
-    // Language display names mapping
+    // Language display names mapping (COMPLETELY CLEANED - No flags or emojis)
     private static final Map<String, String> LANGUAGE_DISPLAY_NAMES = new HashMap<>();
 
     static {
         // Indian Languages
-        LANGUAGE_DISPLAY_NAMES.put("text_en", "English 🇬🇧");
-        LANGUAGE_DISPLAY_NAMES.put("text_hi", "Hindi 🇮🇳");
-        LANGUAGE_DISPLAY_NAMES.put("text_ml", "Malayalam 🇮🇳");
-        LANGUAGE_DISPLAY_NAMES.put("text_ta", "Tamil 🇮🇳");
-        LANGUAGE_DISPLAY_NAMES.put("text_te", "Telugu 🇮🇳");
-        LANGUAGE_DISPLAY_NAMES.put("text_bn", "Bengali 🇮🇳");
-        LANGUAGE_DISPLAY_NAMES.put("text_kn", "Kannada 🇮🇳");
-        LANGUAGE_DISPLAY_NAMES.put("text_mr", "Marathi 🇮🇳");
-        LANGUAGE_DISPLAY_NAMES.put("text_gu", "Gujarati 🇮🇳");
-        LANGUAGE_DISPLAY_NAMES.put("text_or", "Odia 🇮🇳");
-        LANGUAGE_DISPLAY_NAMES.put("text_pa", "Punjabi 🇮🇳");
-        LANGUAGE_DISPLAY_NAMES.put("text_ur", "Urdu 🇮🇳");
+        LANGUAGE_DISPLAY_NAMES.put("text_en", "English");
+        LANGUAGE_DISPLAY_NAMES.put("text_hi", "Hindi");
+        LANGUAGE_DISPLAY_NAMES.put("text_ml", "Malayalam");
+        LANGUAGE_DISPLAY_NAMES.put("text_ta", "Tamil");
+        LANGUAGE_DISPLAY_NAMES.put("text_te", "Telugu");
+        LANGUAGE_DISPLAY_NAMES.put("text_bn", "Bengali");
+        LANGUAGE_DISPLAY_NAMES.put("text_kn", "Kannada");
+        LANGUAGE_DISPLAY_NAMES.put("text_mr", "Marathi");
+        LANGUAGE_DISPLAY_NAMES.put("text_gu", "Gujarati");
+        LANGUAGE_DISPLAY_NAMES.put("text_or", "Odia");
+        LANGUAGE_DISPLAY_NAMES.put("text_pa", "Punjabi");
+        LANGUAGE_DISPLAY_NAMES.put("text_ur", "Urdu");
 
         // International Languages
-        LANGUAGE_DISPLAY_NAMES.put("text_ar", "Arabic 🇸🇦");
-        LANGUAGE_DISPLAY_NAMES.put("text_fr", "French 🇫🇷");
-        LANGUAGE_DISPLAY_NAMES.put("text_de", "German 🇩🇪");
-        LANGUAGE_DISPLAY_NAMES.put("text_es", "Spanish 🇪🇸");
-        LANGUAGE_DISPLAY_NAMES.put("text_pt", "Portuguese 🇵🇹");
-        LANGUAGE_DISPLAY_NAMES.put("text_ru", "Russian 🇷🇺");
-        LANGUAGE_DISPLAY_NAMES.put("text_zh", "Chinese 🇨🇳");
-        LANGUAGE_DISPLAY_NAMES.put("text_ja", "Japanese 🇯🇵");
-        LANGUAGE_DISPLAY_NAMES.put("text_ko", "Korean 🇰🇷");
-        LANGUAGE_DISPLAY_NAMES.put("text_it", "Italian 🇮🇹");
-        LANGUAGE_DISPLAY_NAMES.put("text_nl", "Dutch 🇳🇱");
-        LANGUAGE_DISPLAY_NAMES.put("text_tr", "Turkish 🇹🇷");
-        LANGUAGE_DISPLAY_NAMES.put("text_vi", "Vietnamese 🇻🇳");
-        LANGUAGE_DISPLAY_NAMES.put("text_th", "Thai 🇹🇭");
+        LANGUAGE_DISPLAY_NAMES.put("text_ar", "Arabic");
+        LANGUAGE_DISPLAY_NAMES.put("text_fr", "French");
+        LANGUAGE_DISPLAY_NAMES.put("text_de", "German");
+        LANGUAGE_DISPLAY_NAMES.put("text_es", "Spanish");
+        LANGUAGE_DISPLAY_NAMES.put("text_pt", "Portuguese");
+        LANGUAGE_DISPLAY_NAMES.put("text_ru", "Russian");
+        LANGUAGE_DISPLAY_NAMES.put("text_zh", "Chinese");
+        LANGUAGE_DISPLAY_NAMES.put("text_ja", "Japanese");
+        LANGUAGE_DISPLAY_NAMES.put("text_ko", "Korean");
+        LANGUAGE_DISPLAY_NAMES.put("text_it", "Italian");
+        LANGUAGE_DISPLAY_NAMES.put("text_nl", "Dutch");
+        LANGUAGE_DISPLAY_NAMES.put("text_tr", "Turkish");
+        LANGUAGE_DISPLAY_NAMES.put("text_vi", "Vietnamese");
+        LANGUAGE_DISPLAY_NAMES.put("text_th", "Thai");
     }
 
     /**
-     * Get language display name with flag emoji
+     * Get language display name without any emojis or flags
      */
     public static String getLanguageDisplayName(String field) {
-        return LANGUAGE_DISPLAY_NAMES.getOrDefault(field, field + " 🌐");
+        return LANGUAGE_DISPLAY_NAMES.getOrDefault(field, field.replace("text_", "").replace("_", " "));
     }
 
     /**
@@ -106,11 +106,12 @@ public class JsonToExcelUtil {
     /**
      * Generate Excel from JSON with selected languages
      */
-    public static String generateExcel(String jsonData, String fileName, List<String> selectedLanguages, String outputDir) {
+    public static String generateExcel(String jsonData, String fileName, List<String> selectedLanguages, List<String> languageHeaders, String outputDir) {
         try {
             System.out.println("📊 generateExcel() called");
             System.out.println("   File name: " + fileName);
-            System.out.println("   Selected languages: " + selectedLanguages);
+            System.out.println("   Selected languages (Keys): " + selectedLanguages);
+            System.out.println("   Language Headers (Display): " + languageHeaders);
 
             ObjectMapper mapper = new ObjectMapper();
             JsonNode root = mapper.readTree(jsonData);
@@ -136,11 +137,19 @@ public class JsonToExcelUtil {
             headerStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
             headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 
-            for (int i = 0; i < selectedLanguages.size(); i++) {
-                String lang = selectedLanguages.get(i);
-                String displayName = getLanguageDisplayName(lang);
+            // Prepare the final headers
+            List<String> finalHeaders = new ArrayList<>();
+            if (languageHeaders != null && languageHeaders.size() == selectedLanguages.size()) {
+                finalHeaders.addAll(languageHeaders);
+            } else {
+                for (String lang : selectedLanguages) {
+                    finalHeaders.add(getLanguageDisplayName(lang));
+                }
+            }
+
+            for (int i = 0; i < finalHeaders.size(); i++) {
                 Cell cell = header.createCell(i);
-                cell.setCellValue(displayName);
+                cell.setCellValue(finalHeaders.get(i));
                 cell.setCellStyle(headerStyle);
             }
 
@@ -181,7 +190,7 @@ public class JsonToExcelUtil {
             workbook.close();
 
             System.out.println("✅ Excel Generated: " + excelPath);
-            System.out.println("   Languages: " + selectedLanguages);
+            System.out.println("   Headers used: " + finalHeaders);
             System.out.println("   Records: " + root.size());
 
             return excelPath;
@@ -193,7 +202,7 @@ public class JsonToExcelUtil {
     }
 
     /**
-     * Generate Excel from JSON file path (Legacy support)
+     * Legacy method to generate Excel (for backward compatibility)
      */
     public static void generateExcel(String jsonPath, String excelPath, List<String> selectedLanguages) {
         try {
@@ -207,7 +216,7 @@ public class JsonToExcelUtil {
                 outputDir = "Reports";
             }
 
-            generateExcel(jsonData, fileName, selectedLanguages, outputDir);
+            generateExcel(jsonData, fileName, selectedLanguages, null, outputDir);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -235,7 +244,7 @@ public class JsonToExcelUtil {
                 outputDir = "Reports";
             }
 
-            generateExcel(jsonData, fileName, allLanguages, outputDir);
+            generateExcel(jsonData, fileName, allLanguages, null, outputDir);
 
         } catch (Exception e) {
             e.printStackTrace();
